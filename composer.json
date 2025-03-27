@@ -1,0 +1,6 @@
+{
+    "require": {
+        "arkitecht/laravel-twilio": "^1.7",
+        "phpmailer/phpmailer": "^6.9"
+    }
+}

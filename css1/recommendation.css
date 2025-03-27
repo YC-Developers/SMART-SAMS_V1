@@ -1,0 +1,103 @@
+.recommendation-section .btn-primary {
+    background: linear-gradient(130deg, #231a6f, #0f054c);
+    border: none;
+    transition: all 0.3s ease;
+  }
+
+  .recommendation-section .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .recommendation-section .custom-input:focus {
+    border-color: #231a6f;
+    box-shadow: 0 0 0 0.2rem rgba(35, 26, 111, 0.25);
+  }
+
+  .recommendation-section .payment-option input[type="radio"]:checked+.payment-label {
+    border-color: #231a6f;
+    box-shadow: 0 5px 15px rgba(35, 26, 111, 0.2);
+  }
+
+  .recommendation-section .hover-effect:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(35, 26, 111, 0.15);
+  }
+
+  .payment-methods {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .payment-option {
+    text-align: center;
+  }
+
+  .payment-option input[type="radio"] {
+    display: none;
+  }
+
+  .payment-label {
+    display: block;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid #e9ecef;
+  }
+
+  .payment-label:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .payment-option input[type="radio"]:checked+.payment-label {
+    border-color: #004080;
+    box-shadow: 0 5px 15px rgba(0, 64, 128, 0.2);
+  }
+
+  .payment-icon {
+    width: 60px;
+    height: 40px;
+    object-fit: contain;
+    margin-bottom: 8px;
+  }
+
+  .payment-label span {
+    display: block;
+    font-size: 14px;
+    color: #495057;
+    margin-top: 5px;
+  }
+  .hover-effect {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .hover-effect:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .custom-input {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .custom-input:focus {
+    border-color: #004080;
+    box-shadow: 0 0 0 0.2rem rgba(0, 64, 128, 0.25);
+  }
+
+  .custom-radio {
+    width: 18px;
+    height: 18px;
+  }
+
+  .feature-list li {
+    padding: 8px 0;
+  }
+  
