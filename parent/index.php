@@ -53,23 +53,9 @@ include '../Includes/session2.php';
                             <div class="stat-card">
                                 <h4>Today's Status</h4>
                                 <div id="todayStatus">
-                                    <?php
-                                                        date_default_timezone_set('Africa/Kigali'); // Set the timezone
-                                                        $now = new DateTime();
-                                                        $time = $now->format('H:i a');
-                                    
-                                                        if ($time >= '06:00 am' && $time <= '23:00 pm') {
-                                                            echo '<p class="status-text">Morning: <span id="morningStatus">Loading...</span></p>
-';
-                                                        }
+                                    <p class="status-text">Morning: <span id="morningStatus">Loading...</span></p>
+<p class="status-text">Evening: <span id="eveningStatus">Loading...</span></p>
 
-                                                        if ($time >= '18:00 pm' && $time <= '23:00 pm') {
-                                                              echo '<p class="status-text">Evening: <span id="eveningStatus">Loading...</span></p>
-';
-                                                        }
-
-
-                                    ?>
                                 </div>
                                 <p><?php echo date('F j, Y'); ?></p>
                             </div>
