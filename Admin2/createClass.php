@@ -1,109 +1,197 @@
 <?php
-error_reporting(0);
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 include '../Includes/dbcon.php';
 include '../Includes/session.php';
 
+$statusMsg = '';
+$errors = [];
+
 //------------------------SAVE--------------------------------------------------
-
 if (isset($_POST['save'])) {
+  // Sanitize and validate input data
+  $className = trim($_POST['className']);
+  $totalStudents = trim($_POST['totalStudents']);
+  $boys = trim($_POST['boys']);
+  $girls = trim($_POST['girls']);
+  $level = trim($_POST['level']);
 
-  $className = $_POST['className'];
-  $totalStudents = $_POST['totalStudents'];
-  $boys = $_POST['boys'];
-  $girls = $_POST['girls'];
-  $level = $_POST['level'];
+  // Validate inputs
+  if (empty($className)) {
+    $errors[] = "Class name is required.";
+  } elseif (!preg_match('/^[a-zA-Z0-9\s\-]+$/', $className)) {
+    $errors[] = "Class name contains invalid characters.";
+  }
 
+  if (empty($level)) {
+    $errors[] = "Level is required.";
+  }
+
+  if (!is_numeric($totalStudents) || $totalStudents < 0) {
+    $errors[] = "Total students must be a positive number.";
+  }
+
+  if (!is_numeric($boys) || $boys < 0) {
+    $errors[] = "Number of boys must be a positive number.";
+  }
+
+  if (!is_numeric($girls) || $girls < 0) {
+    $errors[] = "Number of girls must be a positive number.";
+  }
+
+  // Check if boys + girls equals total students
+  if (is_numeric($boys) && is_numeric($girls) && is_numeric($totalStudents)) {
+    if (($boys + $girls) != $totalStudents) {
+      $errors[] = "Sum of boys and girls must equal total students.";
+    }
+  }
+
+  // Get school info
   $query = "SELECT * FROM tbladmin WHERE Id = " . $_SESSION['userId'] . "";
   $rs = $conn->query($query);
-  $num = $rs->num_rows;
   $rows = $rs->fetch_assoc();
   $school = $rows['school'];
-  $a = "SELECT * FROM tblclass WHERE className='$className' AND school='$school'";
-  $r = $conn->query($a);
-  $n = $r->num_rows;
-  if ($n > 0) {
 
-    $statusMsg = "<div class='alert alert-danger'  style='margin-right:700px;'>Class Is Exist</div>";
-  } else {
+  // Check if class already exists
+  $a = "SELECT * FROM tblclass WHERE className=? AND school=?";
+  $stmt = $conn->prepare($a);
+  $stmt->bind_param("ss", $className, $school);
+  $stmt->execute();
+  $result = $stmt->get_result();
 
+  if ($result->num_rows > 0) {
+    $errors[] = "Class already exists.";
+  }
 
+  // If no errors, proceed with database operation
+  if (empty($errors)) {
+    $query = "INSERT INTO tblclass (level, className, totalStudents, boys, girls, school) VALUES (?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ssiiis", $level, $className, $totalStudents, $boys, $girls, $school);
 
-    $query = mysqli_query($conn, "insert into tblclass(level,className,totalStudents,boys,girls,school) values ('$level','$className','$totalStudents','$boys','$girls','$school')");
-
-    if ($query) {
-
-      $statusMsg = "<div class='alert alert-success'  style='margin-right:700px;'>Created Successfully!</div>";
+    if ($stmt->execute()) {
+      $statusMsg = "<div class='alert alert-success' style='margin-right:700px;'>Created Successfully!</div>";
     } else {
-      $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
+      $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred: " . $conn->error . "</div>";
     }
+  } else {
+    $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>" . implode("<br>", $errors) . "</div>";
   }
 }
 
-//---------------------------------------EDIT-------------------------------------------------------------
-
-
-
-
-
-
 //--------------------EDIT------------------------------------------------------------
-
 if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "edit") {
-  $Id = $_GET['Id'];
+  $Id = intval($_GET['Id']);
 
-  $query = mysqli_query($conn, "select * from tblclass where Id ='$Id'");
+  $query = mysqli_query($conn, "SELECT * FROM tblclass WHERE Id ='$Id'");
   $z = mysqli_fetch_array($query);
 
   //------------UPDATE-----------------------------
-
   if (isset($_POST['update'])) {
+    $className = trim($_POST['className']);
+    $totalStudents = trim($_POST['totalStudents']);
+    $boys = trim($_POST['boys']);
+    $girls = trim($_POST['girls']);
+    $level = trim($_POST['level']);
 
-    $className = $_POST['className'];
-    $totalStudents = $_POST['totalStudents'];
-    $boys = $_POST['boys'];
-    $girls = $_POST['girls'];
-    $level = $_POST["level"];
+    // Validate inputs
+    $errors = [];
+    if (empty($className)) {
+      $errors[] = "Class name is required.";
+    } elseif (!preg_match('/^[a-zA-Z0-9\s\-]+$/', $className)) {
+      $errors[] = "Class name contains invalid characters.";
+    }
 
+    if (empty($level)) {
+      $errors[] = "Level is required.";
+    }
+
+    if (!is_numeric($totalStudents) || $totalStudents < 0) {
+      $errors[] = "Total students must be a positive number.";
+    }
+
+    if (!is_numeric($boys) || $boys < 0) {
+      $errors[] = "Number of boys must be a positive number.";
+    }
+
+    if (!is_numeric($girls) || $girls < 0) {
+      $errors[] = "Number of girls must be a positive number.";
+    }
+
+    // Check if boys + girls equals total students
+    if (is_numeric($boys) && is_numeric($girls) && is_numeric($totalStudents)) {
+      if (($boys + $girls) != $totalStudents) {
+        $errors[] = "Sum of boys and girls must equal total students.";
+      }
+    }
+
+    // Get school info
     $qu = "SELECT * FROM tbladmin WHERE Id = " . $_SESSION['userId'] . "";
     $rs = $conn->query($qu);
-    $num = $rs->num_rows;
     $rows = $rs->fetch_assoc();
     $school = $rows['school'];
 
+    // Check if class already exists (excluding current record)
+    $a = "SELECT * FROM tblclass WHERE className=? AND school=? AND Id != ?";
+    $stmt = $conn->prepare($a);
+    $stmt->bind_param("ssi", $className, $school, $Id);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    $query = mysqli_query($conn, "update tblclass set level='$level',className='$className',totalStudents='$totalStudents',boys='$boys',girls='$girls',school='$school' where Id='$Id'");
+    if ($result->num_rows > 0) {
+      $errors[] = "Class already exists.";
+    }
 
-    if ($query) {
+    if (empty($errors)) {
+      $query = "UPDATE tblclass SET level=?, className=?, totalStudents=?, boys=?, girls=?, school=? WHERE Id=?";
+      $stmt = $conn->prepare($query);
+      $stmt->bind_param("ssiiisi", $level, $className, $totalStudents, $boys, $girls, $school, $Id);
 
-      echo "<script type = \"text/javascript\">
-                window.location = (\"createClass.php\")
-                </script>";
+      if ($stmt->execute()) {
+        echo "<script type='text/javascript'>
+                        window.location = ('createClass.php')
+                      </script>";
+      } else {
+        $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred: " . $conn->error . "</div>";
+      }
     } else {
-      $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
+      $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>" . implode("<br>", $errors) . "</div>";
     }
   }
 }
 
-
-//--------------------------------DELETE------------------------------------------------------------------
-
+//--------------------------------DELETE------------------------------------------
 if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete") {
-  $Id = $_GET['Id'];
+  $Id = intval($_GET['Id']);
 
-  $query = mysqli_query($conn, "DELETE FROM tblclass WHERE Id='$Id'");
+  // Check if class has students before deleting (add this if you have student-class relationships)
+  /*
+    $checkQuery = "SELECT COUNT(*) as studentCount FROM tblstudents WHERE classId = ?";
+    $stmt = $conn->prepare($checkQuery);
+    $stmt->bind_param("i", $Id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    
+    if ($row['studentCount'] > 0) {
+        $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>Cannot delete class - it has students assigned.</div>";
+    } else {
+    */
+  $query = "DELETE FROM tblclass WHERE Id=?";
+  $stmt = $conn->prepare($query);
+  $stmt->bind_param("i", $Id);
 
-  if ($query == TRUE) {
-
-    echo "<script type = \"text/javascript\">
-                window.location = (\"createClass.php\")
-                </script>";
+  if ($stmt->execute()) {
+    echo "<script type='text/javascript'>
+                    window.location = ('createClass.php')
+                  </script>";
   } else {
-
-    $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred!</div>";
+    $statusMsg = "<div class='alert alert-danger' style='margin-right:700px;'>An error Occurred: " . $conn->error . "</div>";
   }
+  /*
+    }
+    */
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -155,38 +243,37 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
                     <div class="form-group row mb-3">
                       <div class="col-xl-6">
                         <label class="form-control-label">Select Level<span class="text-danger ml-2">*</span></label>
-                        <select name="level" id="" class="form-control">
+                        <select name="level" class="form-control" required>
+                          <option value="">--Select Level--</option>
                           <?php
                           $a = "SELECT * FROM levels WHERE school='$s'";
                           $ris = $conn->query($a);
-                          echo "<option>--Select Level--</option>";
-
                           while ($row = $ris->fetch_assoc()) {
-                            echo '<option value="' . $row["levelS"] . '">' . $row["levelS"] . '</option>
-                              ';
+                            $selected = (isset($z['level']) && $z['level'] == $row["levelS"]) ? 'selected' : '';
+                            echo '<option value="' . htmlspecialchars($row["levelS"]) . '" ' . $selected . '>' .
+                              htmlspecialchars($row["levelS"]) . '</option>';
                           }
                           ?>
                         </select>
-
                       </div>
                       <div class="col-xl-6">
                         <label class="form-control-label">Class Name<span class="text-danger ml-2">*</span></label>
-                        <input type="text" class="form-control" name="className" value="<?php echo $z['className']; ?>" id="exampleInputFirstName" placeholder="Class Name">
+                        <input type="text" class="form-control" name="className" value="<?php echo htmlspecialchars($z['className'] ?? ''); ?>" placeholder="Class Name" required>
                       </div>
 
                       <div class="col-xl-6">
                         <label class="form-control-label">Total Students<span class="text-danger ml-2">*</span></label>
-                        <input type="text" class="form-control" name="totalStudents" value="<?php echo $z['totalStudents']; ?>" id="exampleInputFirstName" placeholder="Total Students">
+                        <input type="number" min="0" class="form-control" name="totalStudents" value="<?php echo htmlspecialchars($z['totalStudents'] ?? ''); ?>" placeholder="Total Students" required>
                       </div>
 
                       <div class="col-xl-6">
                         <label class="form-control-label">Boys<span class="text-danger ml-2">*</span></label>
-                        <input type="text" class="form-control" name="boys" value="<?php echo $z['boys']; ?>" id="exampleInputFirstName" placeholder="Boys">
+                        <input type="number" min="0" class="form-control" name="boys" value="<?php echo htmlspecialchars($z['boys'] ?? ''); ?>" placeholder="Boys" required>
                       </div>
 
                       <div class="col-xl-6">
                         <label class="form-control-label">Girls<span class="text-danger ml-2">*</span></label>
-                        <input type="text" class="form-control" name="girls" value="<?php echo $z['girls']; ?>" id="exampleInputFirstName" placeholder="Girls">
+                        <input type="number" min="0" class="form-control" name="girls" value="<?php echo htmlspecialchars($z['girls'] ?? ''); ?>" placeholder="Girls" required>
                       </div>
                     </div>
                     <?php
@@ -197,13 +284,12 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
                     <?php
                     } else {
                     ?>
-                      <button type="submit" name="save" class="btn asa">Save</button>
+                      <button type="submit" name="save" class="btn btn-primary">Save</button>
                     <?php
                     }
                     ?>
                   </form>
                 </div>
-
               </div>
 
               <!-- Input Group -->
@@ -224,15 +310,12 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
                             <th>Girls</th>
                             <th>Edit</th>
                             <th>Delete</th>
-
                           </tr>
                         </thead>
 
                         <tbody>
-
                           <?php
-
-                          $query = "SELECT * FROM tblclass where school='$s'";
+                          $query = "SELECT * FROM tblclass WHERE school='$s'";
                           $rs = $conn->query($query);
                           $num = $rs->num_rows;
                           $sn = 0;
@@ -240,24 +323,19 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
                             while ($rows = $rs->fetch_assoc()) {
                               $sn = $sn + 1;
                               echo "
-                              <tr>
-                                <td>" . $sn . "</td>
-                                <td>" . $rows['className'] . "</td>
-                                <td>" . $rows['totalStudents'] . "</td>
-                                <td>" . $rows['boys'] . "</td>
-                                <td>" . $rows['girls'] . "</td>
-                                <td><a href='?action=edit&Id=" . $rows['Id'] . "' class='aso'><i class='fas fa-fw fa-edit aso'></i>Edit</a></td>
-                                <td><a href='?action=delete&Id=" . $rows['Id'] . "' style='color: red'><i class='fas fa-fw fa-trash' style='color: red'></i>Delete</a></td>
-
-                                </tr>";
+                                  <tr>
+                                    <td>" . $sn . "</td>
+                                    <td>" . htmlspecialchars($rows['className']) . "</td>
+                                    <td>" . htmlspecialchars($rows['totalStudents']) . "</td>
+                                    <td>" . htmlspecialchars($rows['boys']) . "</td>
+                                    <td>" . htmlspecialchars($rows['girls']) . "</td>
+                                    <td><a href='?action=edit&Id=" . $rows['Id'] . "' class='btn btn-sm btn-info'><i class='fas fa-fw fa-edit'></i> Edit</a></td>
+                                    <td><a href='?action=delete&Id=" . $rows['Id'] . "' class='btn btn-sm btn-danger' onclick='return confirm(\"Are you sure you want to delete this class?\");'><i class='fas fa-fw fa-trash'></i> Delete</a></td>
+                                  </tr>";
                             }
                           } else {
-                            echo
-                            "<div class='alert alert-danger' role='alert'>
-                            No Record Found!
-                            </div>";
+                            echo "<tr><td colspan='7'><div class='alert alert-danger' role='alert'>No Record Found!</div></td></tr>";
                           }
-
                           ?>
                         </tbody>
                       </table>
@@ -266,19 +344,6 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
                 </div>
               </div>
             </div>
-            <!--Row-->
-
-            <!-- Documentation Link -->
-            <!-- <div class="row">
-            <div class="col-lg-12 text-center">
-              <p>For more documentations you can visit<a href="https://getbootstrap.com/docs/4.3/components/forms/"
-                  target="_blank">
-                  bootstrap forms documentations.</a> and <a
-                  href="https://getbootstrap.com/docs/4.3/components/input-group/" target="_blank">bootstrap input
-                  groups documentations</a></p>
-            </div>
-          </div> -->
-
           </div>
           <!---Container Fluid-->
         </div>
@@ -304,8 +369,8 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
     <!-- Page level custom scripts -->
     <script>
       $(document).ready(function() {
-        $('#dataTable').DataTable(); // ID From dataTable 
-        $('#dataTableHover').DataTable(); // ID From dataTable with Hover
+        $('#dataTable').DataTable();
+        $('#dataTableHover').DataTable();
       });
     </script>
 </body>

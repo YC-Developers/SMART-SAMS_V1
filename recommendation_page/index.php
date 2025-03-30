@@ -388,7 +388,7 @@
             <div class="container">
                 <p>
                     &copy; All Rights Reserved By
-                    <a href="#">SMART-SAMS 2024</a> 
+                    <a href="#">SMART-SAMS | EDU SYSTEM</a> 
                 </p>
             </div>
         </section>

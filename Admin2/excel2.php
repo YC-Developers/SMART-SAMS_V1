@@ -1,5 +1,4 @@
-
-<?php 
+<?php
 error_reporting(0);
 include '../Includes/dbcon.php';
 include '../Includes/session.php';
@@ -17,47 +16,47 @@ include '../Includes/session.php';
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="img/logo/attnlg.jpg" rel="icon">
-<?php include 'includes/title.php';?>
+  <?php include 'includes/title.php'; ?>
   <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/ruang-admin.min.css" rel="stylesheet">
 
 
 
-   <script>
+  <script>
     function classArmDropdown(str) {
-    if (str == "") {
+      if (str == "") {
         document.getElementById("txtHint").innerHTML = "";
         return;
-    } else { 
+      } else {
         if (window.XMLHttpRequest) {
-            // code for IE7+, Firefox, Chrome, Opera, Safari
-            xmlhttp = new XMLHttpRequest();
+          // code for IE7+, Firefox, Chrome, Opera, Safari
+          xmlhttp = new XMLHttpRequest();
         } else {
-            // code for IE6, IE5
-            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+          // code for IE6, IE5
+          xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
         }
         xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("txtHint").innerHTML = this.responseText;
-            }
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("txtHint").innerHTML = this.responseText;
+          }
         };
-        xmlhttp.open("GET","ajaxClassArms2.php?cid="+str,true);
+        xmlhttp.open("GET", "ajaxClassArms2.php?cid=" + str, true);
         xmlhttp.send();
+      }
     }
-}
-</script>
+  </script>
 </head>
 
 <body id="page-top">
   <div id="wrapper">
     <!-- Sidebar -->
-      <?php include "Includes/sidebar.php";?>
+    <?php include "Includes/sidebar.php"; ?>
     <!-- Sidebar -->
     <div id="content-wrapper" class="d-flex flex-column">
       <div id="content">
         <!-- TopBar -->
-       <?php include "Includes/topbar.php";?>
+        <?php include "Includes/topbar.php"; ?>
         <!-- Topbar -->
 
         <!-- Container Fluid-->
@@ -72,122 +71,118 @@ include '../Includes/session.php';
 
           <div class="row">
             <div class="col-lg-12">
-            <div class="container">
-	<h1>Import Excel File</h1>
-	<form method="POST" action="uploadexcel2.php" enctype="multipart/form-data">
-    <div class="form-group row mb-3">
-        			<label>Choose File</label>
-			<input type="file" name="uploadFile" class="form-control" />
-		
-      
-                        <div class="col-xl-6">
-                        <label class="form-control-label">Select Class<span class="text-danger ml-2">*</span></label>
-                         <?php
+              <div class="container">
+                <h1>Import Excel File</h1>
+                <form method="POST" action="uploadexcel2.php" enctype="multipart/form-data">
+                  <div class="form-group row mb-3">
+                    <label>Choose File</label>
+                    <input type="file" name="uploadFile" class="form-control" />
 
-$qq = "SELECT * FROM tbladmin WHERE Id = ".$_SESSION['userId']."";
-$rs = $conn->query($qq);
-$num = $rs->num_rows;
-$rows = $rs->fetch_assoc();
-$school = $rows['school'];
 
-                        $qry= "SELECT * FROM tblclass WHERE school='$school' ORDER BY className ASC";
-                        $result = $conn->query($qry);
-                        $num = $result->num_rows;		
-                        if ($num > 0){
-                          echo ' <select required name="class" onchange="classArmDropdown(this.value)" class="form-control mb-3">';
-                          echo'<option value="">--Select Class--</option>';
-                          while ($rows = $result->fetch_assoc()){
-                          echo'<option value="'.$rows['Id'].'" >'.$rows['className'].'</option>';
-                              }
+                    <div class="col-xl-6">
+                      <label class="form-control-label">Select Class<span class="text-danger ml-2">*</span></label>
+                      <?php
 
-                                  echo '</select>';
-                              }
-                            ?>  
-                            
-                        
-		<div class="form-group">
-			<button type="submit" name="submit" class="btn btn asa">Import</button>
-		</div>
-	</form>
-</div>      
+                      $qq = "SELECT * FROM tbladmin WHERE Id = " . $_SESSION['userId'] . "";
+                      $rs = $conn->query($qq);
+                      $num = $rs->num_rows;
+                      $rows = $rs->fetch_assoc();
+                      $school = $rows['school'];
+
+                      $qry = "SELECT * FROM tblclass WHERE school='$school' ORDER BY className ASC";
+                      $result = $conn->query($qry);
+                      $num = $result->num_rows;
+                      if ($num > 0) {
+                        echo ' <select required name="class" onchange="classArmDropdown(this.value)" class="form-control mb-3">';
+                        echo '<option value="">--Select Class--</option>';
+                        while ($rows = $result->fetch_assoc()) {
+                          echo '<option value="' . $rows['Id'] . '" >' . $rows['className'] . '</option>';
+                        }
+
+                        echo '</select>';
+                      }
+                      ?>
+
+
+                      <div class="form-group">
+                        <button type="submit" name="submit" class="btn btn asa">Import</button>
+                      </div>
+                </form>
+              </div>
 
               <!-- Input Group -->
-                 <div class="row">
-              <div class="col-lg-12">
-              <div class="card mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-dark">All Student In ETS</h6>
-                </div>
-                <div class="table-responsive p-3">
-                  <table class="table align-items-center table-flush table-hover" id="dataTableHover">
-                    <thead class="thead-light">
-                      <tr>
-                        <th>#</th>
-                        <th>Full Name</th>
-                        <th>Gender</th>
-                        <th>Admission No</th>
-                        <th>Class</th>
-                        <th>Class Arm</th>
-                        <th>Date Created</th>
-                      </tr>
-                    </thead>
-                
-                    <tbody>
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="card mb-4">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h6 class="m-0 font-weight-bold text-dark">All Student In ETS</h6>
+                    </div>
+                    <div class="table-responsive p-3">
+                      <table class="table align-items-center table-flush table-hover" id="dataTableHover">
+                        <thead class="thead-light">
+                          <tr>
+                            <th>#</th>
+                            <th>Full Name</th>
+                            <th>Gender</th>
+                            <th>Admission No</th>
+                            <th>Class</th>
+                            <th>Class Arm</th>
+                            <th>Date Created</th>
+                          </tr>
+                        </thead>
 
-                  <?php
-                           $qq = "SELECT * FROM tbladmin WHERE Id = ".$_SESSION['userId']."";
-                           $rs = $conn->query($qq);
-                           $num = $rs->num_rows;
-                           $rows = $rs->fetch_assoc();
-                           $school = $rows['school'];
-                      
+                        <tbody>
+
+                          <?php
+                          $qq = "SELECT * FROM tbladmin WHERE Id = " . $_SESSION['userId'] . "";
+                          $rs = $conn->query($qq);
+                          $num = $rs->num_rows;
+                          $rows = $rs->fetch_assoc();
+                          $school = $rows['school'];
+
                           $query = "SELECT tblstudents.Id,tblclass.className,tblclassarms.classArmName,tblclassarms.Id AS classArmId,tblstudents.name,tblstudents.gender,tblstudents.admissionNumber,tblstudents.dateCreated
                           FROM tblstudents
                           INNER JOIN tblclass ON tblclass.Id = tblstudents.classId
                           INNER JOIN tblclassarms ON tblclassarms.Id = tblstudents.classArmId
                           WHERE tblclass.school = '$school'
                           ";
-                      $rs = $conn->query($query);
-                      $num = $rs->num_rows;
-                      $sn=0;
-                      $status="";
-                      if($num > 0)
-                      { 
-                        while ($rows = $rs->fetch_assoc())
-                          {
-                             $sn = $sn + 1;
-                            echo"
+                          $rs = $conn->query($query);
+                          $num = $rs->num_rows;
+                          $sn = 0;
+                          $status = "";
+                          if ($num > 0) {
+                            while ($rows = $rs->fetch_assoc()) {
+                              $sn = $sn + 1;
+                              echo "
                               <tr>
-                                <td>".$sn."</td>
-                                <td>".$rows['name']."</td>
-                                <td>".$rows['gender']."</td>
-                                <td>".$rows['admissionNumber']."</td>
-                                <td>".$rows['className']."</td>
-                                <td>".$rows['classArmName']."</td>
-                                 <td>".$rows['dateCreated']."</td>
+                                <td>" . $sn . "</td>
+                                <td>" . $rows['name'] . "</td>
+                                <td>" . $rows['gender'] . "</td>
+                                <td>" . $rows['admissionNumber'] . "</td>
+                                <td>" . $rows['className'] . "</td>
+                                <td>" . $rows['classArmName'] . "</td>
+                                 <td>" . $rows['dateCreated'] . "</td>
                               </tr>";
-                          }
-                      }
-                      else
-                      {
-                           echo   
-                           "<div class='alert alert-danger' role='alert'>
+                            }
+                          } else {
+                            echo
+                            "<div class='alert alert-danger' role='alert'>
                             No Record Found!
                             </div>";
-                      }
-                      
-                      ?>
-                    </tbody>
-                  </table>
+                          }
+
+                          ?>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            </div>
-          </div>
-          <!--Row-->
+            <!--Row-->
 
-          <!-- Documentation Link -->
-          <!-- <div class="row">
+            <!-- Documentation Link -->
+            <!-- <div class="row">
             <div class="col-lg-12 text-center">
               <p>For more documentations you can visit<a href="https://getbootstrap.com/docs/4.3/components/forms/"
                   target="_blank">
@@ -197,35 +192,35 @@ $school = $rows['school'];
             </div>
           </div> -->
 
+          </div>
+          <!---Container Fluid-->
         </div>
-        <!---Container Fluid-->
+        <!-- Footer -->
+        <?php include "Includes/footer.php"; ?>
+        <!-- Footer -->
       </div>
-      <!-- Footer -->
-       <?php include "Includes/footer.php";?>
-      <!-- Footer -->
     </div>
-  </div>
 
-  <!-- Scroll to top -->
-  <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-  </a>
+    <!-- Scroll to top -->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fas fa-angle-up"></i>
+    </a>
 
-  <script src="../vendor/jquery/jquery.min.js"></script>
-  <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
-  <script src="js/ruang-admin.min.js"></script>
-   <!-- Page level plugins -->
-  <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
-  <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="../vendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="js/ruang-admin.min.js"></script>
+    <!-- Page level plugins -->
+    <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-  <!-- Page level custom scripts -->
-  <script>
-    $(document).ready(function () {
-      $('#dataTable').DataTable(); // ID From dataTable 
-      $('#dataTableHover').DataTable(); // ID From dataTable with Hover
-    });
-  </script>
+    <!-- Page level custom scripts -->
+    <script>
+      $(document).ready(function() {
+        $('#dataTable').DataTable(); // ID From dataTable 
+        $('#dataTableHover').DataTable(); // ID From dataTable with Hover
+      });
+    </script>
 </body>
 
 </html>
