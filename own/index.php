@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                             $schoolCredentials = [
                                 'username' => strtolower(str_replace(' ', '', $order['school_admin'])),
                                 'password' => bin2hex(random_bytes(4)), // Simple temporary password
-                                'login_url' => 'https://yourdomain.com/school_login.php'
+                                'login_url' => 'http://localhost:8000/login.php'
                             ];
                             
                             // Store credentials in the order record

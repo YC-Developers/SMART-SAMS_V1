@@ -23,11 +23,11 @@
         "comments": "swskwpsqwkpw",
         "status": "completed",
         "credentials_sent": true,
-        "credentials_sent_at": "2025-03-30 22:04:07",
+        "credentials_sent_at": "2025-03-30 22:24:31",
         "credentials_data": {
             "username": "gisubizoshimaaimeyannick",
-            "password": "6aa3fb25",
-            "login_url": "https:\/\/yourdomain.com\/school_login.php"
+            "password": "77ed4fba",
+            "login_url": "http:\/\/localhost:8000\/login.php"
         }
     }
 ]
