@@ -9,7 +9,7 @@
         "school_name": "SAINT ANNIBALE",
         "payment_method": "visa",
         "comments": "I NEED AS SOON AS POSSIBLE",
-        "status": "completed"
+        "status": "cancelled"
     },
     {
         "order_id": "SMART_67e98bc2b8a51",
@@ -21,6 +21,6 @@
         "school_name": "SAINT ANNIBALE",
         "payment_method": "momo",
         "comments": "swskwpsqwkpw",
-        "status": "pending"
+        "status": "cancelled"
     }
 ]
