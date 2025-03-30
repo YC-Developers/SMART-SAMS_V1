@@ -1,6 +1,10 @@
 <?php
 include '../Includes/dbcon.php';
 include '../Includes/session3.php';
+require_once '../vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 // Function to get all orders from log files
 function getAllOrders() {
@@ -24,6 +28,79 @@ function getAllOrders() {
 
 $orders = getAllOrders();
 
+// Function to send approval email using PHPMailer
+function sendApprovalEmail($order, $schoolCredentials) {
+    $mail = new PHPMailer(true);
+    
+    try {
+        // Server settings
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com'; 
+        $mail->SMTPAuth = true;
+        $mail->Username = 'gisubizoaimeyannick@gmail.com'; 
+        $mail->Password = 'nhlb yyxd ntuf oreg'; 
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+        
+        // Recipients
+        $mail->setFrom('no-reply@smart-sams.com', 'SMART-SAMS');
+        $mail->addAddress($order['email'], $order['school_admin']);
+        
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = "Your School Management System Order #" . $order['order_id'] . " Has Been Approved";
+        
+        $mail->Body = "
+        <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background-color: #4e73df; color: white; padding: 15px; text-align: center; border-radius: 5px 5px 0 0; }
+            .content { padding: 20px; background-color: #f9f9f9; border-radius: 0 0 5px 5px; }
+            .credentials { background-color: #e9ecef; padding: 15px; border-radius: 5px; margin: 15px 0; }
+            .footer { margin-top: 20px; font-size: 12px; text-align: center; color: #6c757d; }
+          </style>
+        </head>
+        <body>
+          <div class='container'>
+            <div class='header'>
+              <h2>Order Approved!</h2>
+            </div>
+            <div class='content'>
+              <p>Dear " . htmlspecialchars($order['school_admin']) . ",</p>
+              <p>We're pleased to inform you that your order #" . $order['order_id'] . " has been approved and your school management system is now ready to use.</p>
+              
+              <div class='credentials'>
+                <h3>Your School Credentials</h3>
+                <p><strong>School Name:</strong> " . htmlspecialchars($order['school_name']) . "</p>
+                <p><strong>Admin Username:</strong> " . htmlspecialchars($schoolCredentials['username']) . "</p>
+                <p><strong>Temporary Password:</strong> " . htmlspecialchars($schoolCredentials['password']) . "</p>
+                <p><strong>Login URL:</strong> <a href='" . htmlspecialchars($schoolCredentials['login_url']) . "'>" . htmlspecialchars($schoolCredentials['login_url']) . "</a></p>
+              </div>
+              
+              <p>Please log in and change your password immediately after your first login.</p>
+              <p>If you have any questions, please don't hesitate to contact our support team.</p>
+              
+              <div class='footer'>
+                <p>Best regards,<br>SMART-SAMS Team</p>
+              </div>
+            </div>
+          </div>
+        </body>
+        </html>
+        ";
+        
+        $mail->AltBody = "Dear " . $order['school_admin'] . ",\n\nYour order #" . $order['order_id'] . " has been approved.\n\nSchool: " . $order['school_name'] . "\nUsername: " . $schoolCredentials['username'] . "\nPassword: " . $schoolCredentials['password'] . "\nLogin URL: " . $schoolCredentials['login_url'] . "\n\nPlease log in and change your password.";
+        
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        error_log("Email could not be sent. Mailer Error: {$mail->ErrorInfo}");
+        return false;
+    }
+}
+
 // Handle status update if requested
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
     $orderId = filter_input(INPUT_POST, 'order_id', FILTER_SANITIZE_STRING);
@@ -39,15 +116,56 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
             if (is_array($ordersInFile)) {
                 foreach ($ordersInFile as &$order) {
                     if ($order['order_id'] === $orderId) {
+                        $previousStatus = $order['status'];
                         $order['status'] = $newStatus;
                         $updated = true;
+                        
+                        // If status changed to completed, send approval email
+                        if ($newStatus == 'completed' && $previousStatus != 'completed') {
+                            // Generate or retrieve school credentials
+                            $schoolCredentials = [
+                                'username' => strtolower(str_replace(' ', '', $order['school_admin'])),
+                                'password' => bin2hex(random_bytes(4)), // Simple temporary password
+                                'login_url' => 'https://yourdomain.com/school_login.php'
+                            ];
+                            
+                            // Store credentials in the order record
+                            $order['credentials_sent'] = true;
+                            $order['credentials_sent_at'] = date('Y-m-d H:i:s');
+                            $order['credentials_data'] = $schoolCredentials;
+                            
+                            if (sendApprovalEmail($order, $schoolCredentials)) {
+                                $_SESSION['status_message'] = "Order status updated and approval email sent!";
+                                
+                                // Log the email sending
+                                $emailLog = [
+                                    'order_id' => $orderId,
+                                    'email' => $order['email'],
+                                    'sent_at' => date('Y-m-d H:i:s'),
+                                    'status' => 'success'
+                                ];
+                                file_put_contents(__DIR__ . '/../recommendation_page/logs/email_logs.json', json_encode($emailLog) . "\n", FILE_APPEND);
+                            } else {
+                                $_SESSION['status_message'] = "Order status updated but email could not be sent!";
+                                
+                                // Log the failed attempt
+                                $emailLog = [
+                                    'order_id' => $orderId,
+                                    'email' => $order['email'],
+                                    'sent_at' => date('Y-m-d H:i:s'),
+                                    'status' => 'failed'
+                                ];
+                                file_put_contents(__DIR__ . '/../recommendation_page/logs/email_logs.json', json_encode($emailLog) . "\n", FILE_APPEND);
+                            }
+                        } else {
+                            $_SESSION['status_message'] = "Order status updated successfully!";
+                        }
                         break;
                     }
                 }
                 
                 if ($updated) {
                     file_put_contents($logFile, json_encode($ordersInFile, JSON_PRETTY_PRINT));
-                    $_SESSION['status_message'] = "Order status updated successfully!";
                     header("Location: index.php");
                     exit();
                 }
@@ -112,6 +230,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
     .badge-in-progress {
       background-color: #17a2b8;
       color: white;
+    }
+    .order-details {
+      background-color: #f8f9fa;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    .order-details h5 {
+      color: #4e73df;
+      margin-bottom: 15px;
+    }
+    .credentials-box {
+      background-color: #e9f7ef;
+      border-left: 4px solid #28a745;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+    .action-buttons {
+      margin-top: 20px;
+    }
+    .resend-btn {
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -260,7 +401,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                     </thead>
                     <tbody>
                       <?php foreach ($orders as $order): ?>
-                        <tr>
+                        <tr class="<?= 
+                          $order['status'] == 'completed' ? 'status-completed' : 
+                          ($order['status'] == 'in-progress' ? 'status-in-progress' : 
+                          ($order['status'] == 'cancelled' ? 'status-cancelled' : 'status-pending'))
+                        ?>">
                           <td><?= htmlspecialchars($order['order_id']) ?></td>
                           <td><?= htmlspecialchars($order['school_name']) ?></td>
                           <td><?= htmlspecialchars($order['school_admin']) ?></td>
@@ -277,7 +422,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                           <td><?= date('M j, Y H:i', strtotime($order['timestamp'])) ?></td>
                           <td>
                             <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#orderModal<?= str_replace('-', '', $order['order_id']) ?>">
-                              View
+                              <i class="fas fa-eye"></i> View
                             </button>
                           </td>
                         </tr>
@@ -294,41 +439,64 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
             <div class="modal fade" id="orderModal<?= str_replace('-', '', $order['order_id']) ?>" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
               <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
-                  <div class="modal-header">
+                  <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="orderModalLabel">Order Details - <?= htmlspecialchars($order['order_id']) ?></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div class="modal-body">
-                    <div class="row">
-                      <div class="col-md-6">
-                        <p><strong>School Name:</strong> <?= htmlspecialchars($order['school_name']) ?></p>
-                        <p><strong>Admin Name:</strong> <?= htmlspecialchars($order['school_admin']) ?></p>
-                        <p><strong>Email:</strong> <?= htmlspecialchars($order['email']) ?></p>
-                        <p><strong>Phone:</strong> <?= htmlspecialchars($order['phone']) ?></p>
-                      </div>
-                      <div class="col-md-6">
-                        <p><strong>Billing Plan:</strong> <?= htmlspecialchars($order['billing_plan']) ?></p>
-                        <p><strong>Payment Method:</strong> <?= htmlspecialchars($order['payment_method']) ?></p>
-                        <p><strong>Order Date:</strong> <?= date('M j, Y H:i', strtotime($order['timestamp'])) ?></p>
-                        <p><strong>Status:</strong> 
-                          <span class="badge badge-<?= 
-                            $order['status'] == 'completed' ? 'completed' : 
-                            ($order['status'] == 'in-progress' ? 'in-progress' : 
-                            ($order['status'] == 'cancelled' ? 'cancelled' : 'pending'))
-                          ?>">
-                            <?= ucfirst($order['status']) ?>
-                          </span>
-                        </p>
+                    <div class="order-details">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <h5>School Information</h5>
+                          <p><strong>School Name:</strong> <?= htmlspecialchars($order['school_name']) ?></p>
+                          <p><strong>Admin Name:</strong> <?= htmlspecialchars($order['school_admin']) ?></p>
+                          <p><strong>Email:</strong> <?= htmlspecialchars($order['email']) ?></p>
+                          <p><strong>Phone:</strong> <?= htmlspecialchars($order['phone']) ?></p>
+                        </div>
+                        <div class="col-md-6">
+                          <h5>Order Information</h5>
+                          <p><strong>Billing Plan:</strong> <?= htmlspecialchars($order['billing_plan']) ?></p>
+                          <p><strong>Payment Method:</strong> <?= htmlspecialchars($order['payment_method']) ?></p>
+                          <p><strong>Order Date:</strong> <?= date('M j, Y H:i', strtotime($order['timestamp'])) ?></p>
+                          <p><strong>Status:</strong> 
+                            <span class="badge badge-<?= 
+                              $order['status'] == 'completed' ? 'completed' : 
+                              ($order['status'] == 'in-progress' ? 'in-progress' : 
+                              ($order['status'] == 'cancelled' ? 'cancelled' : 'pending'))
+                            ?>">
+                              <?= ucfirst($order['status']) ?>
+                            </span>
+                          </p>
+                        </div>
                       </div>
                     </div>
+                    
                     <?php if (!empty($order['comments'])): ?>
-                      <div class="row mt-3">
-                        <div class="col-md-12">
-                          <h6>Additional Comments:</h6>
-                          <p><?= nl2br(htmlspecialchars($order['comments'])) ?></p>
-                        </div>
+                      <div class="order-details">
+                        <h5>Additional Comments</h5>
+                        <p><?= nl2br(htmlspecialchars($order['comments'])) ?></p>
+                      </div>
+                    <?php endif; ?>
+                    
+                    <?php if ($order['status'] == 'completed'): ?>
+                      <div class="credentials-box">
+                        <h5><i class="fas fa-check-circle text-success"></i> Credentials Sent</h5>
+                        <p>An email with login credentials was sent to <?= htmlspecialchars($order['email']) ?>.</p>
+                        
+                        <?php if (isset($order['credentials_sent_at'])): ?>
+                          <p><strong>Sent on:</strong> <?= date('M j, Y H:i', strtotime($order['credentials_sent_at'])) ?></p>
+                        <?php endif; ?>
+                        
+                        <!-- Resend credentials button -->
+                        <form method="post" class="resend-btn">
+                          <input type="hidden" name="order_id" value="<?= htmlspecialchars($order['order_id']) ?>">
+                          <input type="hidden" name="new_status" value="completed">
+                          <button type="submit" name="update_status" class="btn btn-info btn-sm">
+                            <i class="fas fa-paper-plane"></i> Resend Credentials
+                          </button>
+                        </form>
                       </div>
                     <?php endif; ?>
                     
@@ -346,13 +514,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                           </select>
                         </div>
                         <div class="col-sm-2">
-                          <button type="submit" name="update_status" class="btn btn-primary">Update</button>
+                          <button type="submit" name="update_status" class="btn btn-primary btn-block">
+                            <i class="fas fa-save"></i> Update
+                          </button>
                         </div>
                       </div>
                     </form>
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
                   </div>
                 </div>
               </div>
@@ -385,7 +555,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
     $(document).ready(function () {
       $('#dataTableHover').DataTable({
         "order": [[5, "desc"]], // Default sort by date (column 5) descending
-        "pageLength": 10
+        "pageLength": 10,
+        "responsive": true
       });
     });
   </script>

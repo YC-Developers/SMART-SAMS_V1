@@ -9,7 +9,7 @@
         "school_name": "SAINT ANNIBALE",
         "payment_method": "visa",
         "comments": "I NEED AS SOON AS POSSIBLE",
-        "status": "cancelled"
+        "status": "completed"
     },
     {
         "order_id": "SMART_67e98bc2b8a51",
@@ -21,6 +21,13 @@
         "school_name": "SAINT ANNIBALE",
         "payment_method": "momo",
         "comments": "swskwpsqwkpw",
-        "status": "cancelled"
+        "status": "completed",
+        "credentials_sent": true,
+        "credentials_sent_at": "2025-03-30 22:04:07",
+        "credentials_data": {
+            "username": "gisubizoshimaaimeyannick",
+            "password": "6aa3fb25",
+            "login_url": "https:\/\/yourdomain.com\/school_login.php"
+        }
     }
 ]
