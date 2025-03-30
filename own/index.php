@@ -99,16 +99,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
     }
     .badge-pending {
       background-color: #ffc107;
-      color: #212529;
+      color: white;
     }
     .badge-completed {
       background-color: #28a745;
+      color: white;
     }
     .badge-cancelled {
       background-color: #dc3545;
+      color: white;
     }
     .badge-in-progress {
       background-color: #17a2b8;
+      color: white;
     }
   </style>
 </head>
@@ -127,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
         <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">AMS Owner Dashboard</h1>
+            <h1 class="h3 mb-0 text-gray-800">SMART - SAMS | Owner Dashboard</h1>
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="./">Home</a></li>
               <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
