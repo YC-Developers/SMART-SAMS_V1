@@ -112,10 +112,8 @@ function sendApprovalEmail($order, $schoolCredentials)
                   <p>We're pleased to inform you that your order #" . $order['order_id'] . " has been approved and your school management system is now ready to use.</p>
                   
                   <div class='credentials'>
-                    <h3>Your School Credentials</h3>
+                    <h3>Your School Credentials are listed below:</h3>
                     <p><strong>School Name:</strong> " . htmlspecialchars($order['school_name']) . "</p>
-                    <p><strong>Admin Username:</strong> " . htmlspecialchars($schoolCredentials['username']) . "</p>
-                    <p><strong>Temporary Password:</strong> " . htmlspecialchars($schoolCredentials['password']) . "</p>
                     <p><strong>Login URL:</strong> <a href='" . htmlspecialchars($schoolCredentials['login_url']) . "'>" . htmlspecialchars($schoolCredentials['login_url']) . "</a></p>
                   </div>
                   
