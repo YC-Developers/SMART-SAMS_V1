@@ -7,50 +7,52 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 // Function to get all orders from log files
-function getAllOrders() {
-    $logFile = __DIR__ . '/../recommendation_page/logs/orders_2025-03.json';
-    $allOrders = [];
+function getAllOrders()
+{
+  $logFile = __DIR__ . '/../recommendation_page/logs/orders_2025-03.json';
+  $allOrders = [];
 
-    if (file_exists($logFile)) {
-        $orders = json_decode(file_get_contents($logFile), true);
-        if (is_array($orders)) {
-            $allOrders = $orders;
-        }
+  if (file_exists($logFile)) {
+    $orders = json_decode(file_get_contents($logFile), true);
+    if (is_array($orders)) {
+      $allOrders = $orders;
     }
+  }
 
-    // Sort by timestamp (newest first)
-    usort($allOrders, function($a, $b) {
-        return strtotime($b['timestamp']) - strtotime($a['timestamp']);
-    });
+  // Sort by timestamp (newest first)
+  usort($allOrders, function ($a, $b) {
+    return strtotime($b['timestamp']) - strtotime($a['timestamp']);
+  });
 
-    return $allOrders;
+  return $allOrders;
 }
 
 $orders = getAllOrders();
 
 // Function to send approval email using PHPMailer
-function sendApprovalEmail($order, $schoolCredentials) {
-    $mail = new PHPMailer(true);
-    
-    try {
-        // Server settings
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com'; 
-        $mail->SMTPAuth = true;
-        $mail->Username = 'gisubizoaimeyannick@gmail.com'; 
-        $mail->Password = 'nhlb yyxd ntuf oreg'; 
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
-        
-        // Recipients
-        $mail->setFrom('no-reply@smart-sams.com', 'SMART-SAMS');
-        $mail->addAddress($order['email'], $order['school_admin']);
-        
-        // Content
-        $mail->isHTML(true);
-        $mail->Subject = "Your School Management System Order #" . $order['order_id'] . " Has Been Approved";
-        
-        $mail->Body = "
+function sendApprovalEmail($order, $schoolCredentials)
+{
+  $mail = new PHPMailer(true);
+
+  try {
+    // Server settings
+    $mail->isSMTP();
+    $mail->Host = 'smtp.gmail.com';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'gisubizoaimeyannick@gmail.com';
+    $mail->Password = 'nhlb yyxd ntuf oreg';
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port = 587;
+
+    // Recipients
+    $mail->setFrom('no-reply@smart-sams.com', 'SMART-SAMS');
+    $mail->addAddress($order['email'], $order['school_admin']);
+
+    // Content
+    $mail->isHTML(true);
+    $mail->Subject = "Your School Management System Order #" . $order['order_id'] . " Has Been Approved";
+
+    $mail->Body = "
         <html>
         <head>
           <style>
@@ -90,92 +92,151 @@ function sendApprovalEmail($order, $schoolCredentials) {
         </body>
         </html>
         ";
-        
-        $mail->AltBody = "Dear " . $order['school_admin'] . ",\n\nYour order #" . $order['order_id'] . " has been approved.\n\nSchool: " . $order['school_name'] . "\nUsername: " . $schoolCredentials['username'] . "\nPassword: " . $schoolCredentials['password'] . "\nLogin URL: " . $schoolCredentials['login_url'] . "\n\nPlease log in and change your password.";
-        
-        $mail->send();
-        return true;
-    } catch (Exception $e) {
-        error_log("Email could not be sent. Mailer Error: {$mail->ErrorInfo}");
-        return false;
-    }
+
+    $mail->AltBody = "Dear " . $order['school_admin'] . ",\n\nYour order #" . $order['order_id'] . " has been approved.\n\nSchool: " . $order['school_name'] . "\nUsername: " . $schoolCredentials['username'] . "\nPassword: " . $schoolCredentials['password'] . "\nLogin URL: " . $schoolCredentials['login_url'] . "\n\nPlease log in and change your password.";
+
+    $mail->send();
+    return true;
+  } catch (Exception $e) {
+    error_log("Email could not be sent. Mailer Error: {$mail->ErrorInfo}");
+    return false;
+  }
 }
 
 // Handle status update if requested
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
+  $orderId = filter_input(INPUT_POST, 'order_id', FILTER_SANITIZE_STRING);
+  $newStatus = filter_input(INPUT_POST, 'new_status', FILTER_SANITIZE_STRING);
+
+  if ($orderId && $newStatus) {
+    $logFile = __DIR__ . '/../recommendation_page/logs/orders_2025-03.json';
+
+    if (file_exists($logFile)) {
+      $ordersInFile = json_decode(file_get_contents($logFile), true);
+      $updated = false;
+
+      if (is_array($ordersInFile)) {
+        foreach ($ordersInFile as &$order) {
+          if ($order['order_id'] === $orderId) {
+            $previousStatus = $order['status'];
+            $order['status'] = $newStatus;
+            $updated = true;
+
+            // If status changed to completed, send approval email
+            if ($newStatus == 'completed' && $previousStatus != 'completed') {
+              // Generate or retrieve school credentials
+              $schoolCredentials = [
+                'username' => strtolower(str_replace(' ', '', $order['school_admin'])),
+                'password' => bin2hex(random_bytes(4)), // Simple temporary password
+                'login_url' => 'http://localhost:8000/login.php'
+              ];
+
+              // Store credentials in the order record
+              $order['credentials_sent'] = true;
+              $order['credentials_sent_at'] = date('Y-m-d H:i:s');
+              $order['credentials_data'] = $schoolCredentials;
+
+              if (sendApprovalEmail($order, $schoolCredentials)) {
+                $_SESSION['status_message'] = "Order status updated and approval email sent!";
+
+                // Log the email sending
+                $emailLog = [
+                  'order_id' => $orderId,
+                  'email' => $order['email'],
+                  'sent_at' => date('Y-m-d H:i:s'),
+                  'status' => 'success'
+                ];
+                file_put_contents(__DIR__ . '/../recommendation_page/logs/email_logs.json', json_encode($emailLog) . "\n", FILE_APPEND);
+              } else {
+                $_SESSION['status_message'] = "Order status updated but email could not be sent!";
+
+                // Log the failed attempt
+                $emailLog = [
+                  'order_id' => $orderId,
+                  'email' => $order['email'],
+                  'sent_at' => date('Y-m-d H:i:s'),
+                  'status' => 'failed'
+                ];
+                file_put_contents(__DIR__ . '/../recommendation_page/logs/email_logs.json', json_encode($emailLog) . "\n", FILE_APPEND);
+              }
+            } else {
+              $_SESSION['status_message'] = "Order status updated successfully!";
+            }
+            break;
+          }
+        }
+
+        if ($updated) {
+          file_put_contents($logFile, json_encode($ordersInFile, JSON_PRETTY_PRINT));
+          header("Location: index.php");
+          exit();
+        }
+      }
+    }
+
+    //Handle order deletion if requested
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_order'])) {
     $orderId = filter_input(INPUT_POST, 'order_id', FILTER_SANITIZE_STRING);
-    $newStatus = filter_input(INPUT_POST, 'new_status', FILTER_SANITIZE_STRING);
-    
-    if ($orderId && $newStatus) {
+
+    if ($orderId) {
         $logFile = __DIR__ . '/../recommendation_page/logs/orders_2025-03.json';
-        
+        $backupFile = __DIR__ . '/../recommendation_page/logs/orders_backup_'.date('Ymd_His').'.json';
+
         if (file_exists($logFile)) {
+            // Create backup first
+            copy($logFile, $backupFile);
+
             $ordersInFile = json_decode(file_get_contents($logFile), true);
-            $updated = false;
-            
+            $updatedOrders = array();
+
             if (is_array($ordersInFile)) {
-                foreach ($ordersInFile as &$order) {
-                    if ($order['order_id'] === $orderId) {
-                        $previousStatus = $order['status'];
-                        $order['status'] = $newStatus;
-                        $updated = true;
-                        
-                        // If status changed to completed, send approval email
-                        if ($newStatus == 'completed' && $previousStatus != 'completed') {
-                            // Generate or retrieve school credentials
-                            $schoolCredentials = [
-                                'username' => strtolower(str_replace(' ', '', $order['school_admin'])),
-                                'password' => bin2hex(random_bytes(4)), // Simple temporary password
-                                'login_url' => 'http://localhost:8000/login.php'
-                            ];
-                            
-                            // Store credentials in the order record
-                            $order['credentials_sent'] = true;
-                            $order['credentials_sent_at'] = date('Y-m-d H:i:s');
-                            $order['credentials_data'] = $schoolCredentials;
-                            
-                            if (sendApprovalEmail($order, $schoolCredentials)) {
-                                $_SESSION['status_message'] = "Order status updated and approval email sent!";
-                                
-                                // Log the email sending
-                                $emailLog = [
-                                    'order_id' => $orderId,
-                                    'email' => $order['email'],
-                                    'sent_at' => date('Y-m-d H:i:s'),
-                                    'status' => 'success'
-                                ];
-                                file_put_contents(__DIR__ . '/../recommendation_page/logs/email_logs.json', json_encode($emailLog) . "\n", FILE_APPEND);
-                            } else {
-                                $_SESSION['status_message'] = "Order status updated but email could not be sent!";
-                                
-                                // Log the failed attempt
-                                $emailLog = [
-                                    'order_id' => $orderId,
-                                    'email' => $order['email'],
-                                    'sent_at' => date('Y-m-d H:i:s'),
-                                    'status' => 'failed'
-                                ];
-                                file_put_contents(__DIR__ . '/../recommendation_page/logs/email_logs.json', json_encode($emailLog) . "\n", FILE_APPEND);
-                            }
-                        } else {
-                            $_SESSION['status_message'] = "Order status updated successfully!";
-                        }
-                        break;
+                $found = false;
+                foreach ($ordersInFile as $order) {
+                    if ($order['order_id'] !== $orderId) {
+                        $updatedOrders[] = $order;
+                    } else {
+                        $found = true;
                     }
                 }
-                
-                if ($updated) {
-                    file_put_contents($logFile, json_encode($ordersInFile, JSON_PRETTY_PRINT));
-                    header("Location: index.php");
-                    exit();
+
+                if ($found) {
+                    if (file_put_contents($logFile, json_encode($updatedOrders, JSON_PRETTY_PRINT))) {
+                        $_SESSION['status_message'] = "Order deleted successfully!";
+                        
+                        // Log the deletion
+                        $deletionLog = [
+                            'order_id' => $orderId,
+                            'deleted_at' => date('Y-m-d H:i:s'),
+                            'deleted_by' => $_SESSION['userName'] ?? 'system',
+                            'backup_file' => $backupFile
+                        ];
+                        file_put_contents(
+                            __DIR__ . '/../recommendation_page/logs/deletion_logs.json', 
+                            json_encode($deletionLog) . PHP_EOL, 
+                            FILE_APPEND
+                        );
+                    } else {
+                        $_SESSION['status_message'] = "Error: Could not write to orders file.";
+                    }
+                } else {
+                    $_SESSION['status_message'] = "Order not found!";
                 }
+            } else {
+                $_SESSION['status_message'] = "Error: Invalid orders file format.";
             }
+        } else {
+            $_SESSION['status_message'] = "Error: Orders file not found.";
         }
-        
-        if (!isset($_SESSION['status_message'])) {
-            $_SESSION['status_message'] = "Order not found!";
-        }
+
+        header("Location: index.php");
+        exit();
     }
+}
+
+    if (!isset($_SESSION['status_message'])) {
+      $_SESSION['status_message'] = "Order not found!";
+    }
+  }
 }
 ?>
 
@@ -197,50 +258,62 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
     .order-card {
       margin-bottom: 20px;
       border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s;
     }
+
     .order-card:hover {
       transform: translateY(-5px);
     }
+
     .status-pending {
       border-left: 4px solid #ffc107;
     }
+
     .status-completed {
       border-left: 4px solid #28a745;
     }
+
     .status-cancelled {
       border-left: 4px solid #dc3545;
     }
+
     .status-in-progress {
       border-left: 4px solid #17a2b8;
     }
+
     .badge-pending {
       background-color: #ffc107;
       color: white;
     }
+
     .badge-completed {
       background-color: #28a745;
       color: white;
     }
+
     .badge-cancelled {
       background-color: #dc3545;
       color: white;
     }
+
     .badge-in-progress {
       background-color: #17a2b8;
       color: white;
     }
+
     .order-details {
       background-color: #f8f9fa;
       border-radius: 5px;
       padding: 15px;
       margin-bottom: 15px;
     }
+
     .order-details h5 {
       color: #4e73df;
       margin-bottom: 15px;
     }
+
     .credentials-box {
       background-color: #e9f7ef;
       border-left: 4px solid #28a745;
@@ -248,9 +321,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
       border-radius: 5px;
       margin: 15px 0;
     }
+
     .action-buttons {
       margin-top: 20px;
     }
+
     .resend-btn {
       margin-top: 10px;
     }
@@ -260,14 +335,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
 <body id="page-top">
   <div id="wrapper">
     <!-- Sidebar -->
-    <?php include "Includes/sidebar.php";?>
+    <?php include "Includes/sidebar.php"; ?>
     <!-- Sidebar -->
     <div id="content-wrapper" class="d-flex flex-column">
       <div id="content">
         <!-- TopBar -->
-        <?php include "Includes/topbar.php";?>
+        <?php include "Includes/topbar.php"; ?>
         <!-- Topbar -->
-        
+
         <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -291,8 +366,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
 
           <div class="row mb-3">
             <!-- Students Card -->
-            <?php 
-            $query1 = mysqli_query($conn,"SELECT * from tblstudents");                       
+            <?php
+            $query1 = mysqli_query($conn, "SELECT * from tblstudents");
             $students = mysqli_num_rows($query1);
             ?>
             <div class="col-xl-3 col-md-6 mb-4">
@@ -301,7 +376,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-uppercase mb-1">total Students</div>
-                      <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?php echo $students;?></div>
+                      <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?php echo $students; ?></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-user-graduate fa-2x text-info"></i>
@@ -310,10 +385,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                 </div>
               </div>
             </div>
-            
+
             <!-- Class Card -->
-            <?php 
-            $query1 = mysqli_query($conn,"SELECT * from schools");                       
+            <?php
+            $query1 = mysqli_query($conn, "SELECT * from schools");
             $schl = mysqli_num_rows($query1);
             ?>
             <div class="col-xl-3 col-md-6 mb-4">
@@ -322,7 +397,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                   <div class="row align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-uppercase mb-1">total Schools</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $schl;?></div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $schl; ?></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-school fa-2x text-primary"></i>
@@ -331,10 +406,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                 </div>
               </div>
             </div>
-            
+
             <!-- Teachers Card -->
-            <?php 
-            $query1 = mysqli_query($conn,"SELECT * from tblteachers");                       
+            <?php
+            $query1 = mysqli_query($conn, "SELECT * from tblteachers");
             $sessTerm = mysqli_num_rows($query1);
             ?>
             <div class="col-xl-3 col-md-6 mb-4">
@@ -343,7 +418,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-uppercase mb-1">total teachers</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $sessTerm;?></div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $sessTerm; ?></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-users fa-2x text-warning"></i>
@@ -361,9 +436,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-uppercase mb-1">Pending Orders</div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800">
-                        <?php 
-                        $pendingOrders = array_filter($orders, function($o) { 
-                            return $o['status'] == 'pending'; 
+                        <?php
+                        $pendingOrders = array_filter($orders, function ($o) {
+                          return $o['status'] == 'pending';
                         });
                         echo count($pendingOrders);
                         ?>
@@ -401,21 +476,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                     </thead>
                     <tbody>
                       <?php foreach ($orders as $order): ?>
-                        <tr class="<?= 
-                          $order['status'] == 'completed' ? 'status-completed' : 
-                          ($order['status'] == 'in-progress' ? 'status-in-progress' : 
-                          ($order['status'] == 'cancelled' ? 'status-cancelled' : 'status-pending'))
-                        ?>">
+                        <tr class="<?=
+                                    $order['status'] == 'completed' ? 'status-completed' : ($order['status'] == 'in-progress' ? 'status-in-progress' : ($order['status'] == 'cancelled' ? 'status-cancelled' : 'status-pending'))
+                                    ?>">
                           <td><?= htmlspecialchars($order['order_id']) ?></td>
                           <td><?= htmlspecialchars($order['school_name']) ?></td>
                           <td><?= htmlspecialchars($order['school_admin']) ?></td>
                           <td><?= htmlspecialchars($order['billing_plan']) ?></td>
                           <td>
-                            <span class="badge badge-<?= 
-                              $order['status'] == 'completed' ? 'completed' : 
-                              ($order['status'] == 'in-progress' ? 'in-progress' : 
-                              ($order['status'] == 'cancelled' ? 'cancelled' : 'pending'))
-                            ?>">
+                            <span class="badge badge-<?=
+                                                      $order['status'] == 'completed' ? 'completed' : ($order['status'] == 'in-progress' ? 'in-progress' : ($order['status'] == 'cancelled' ? 'cancelled' : 'pending'))
+                                                      ?>">
                               <?= ucfirst($order['status']) ?>
                             </span>
                           </td>
@@ -460,35 +531,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                           <p><strong>Billing Plan:</strong> <?= htmlspecialchars($order['billing_plan']) ?></p>
                           <p><strong>Payment Method:</strong> <?= htmlspecialchars($order['payment_method']) ?></p>
                           <p><strong>Order Date:</strong> <?= date('M j, Y H:i', strtotime($order['timestamp'])) ?></p>
-                          <p><strong>Status:</strong> 
-                            <span class="badge badge-<?= 
-                              $order['status'] == 'completed' ? 'completed' : 
-                              ($order['status'] == 'in-progress' ? 'in-progress' : 
-                              ($order['status'] == 'cancelled' ? 'cancelled' : 'pending'))
-                            ?>">
+                          <p><strong>Status:</strong>
+                            <span class="badge badge-<?=
+                                                      $order['status'] == 'completed' ? 'completed' : ($order['status'] == 'in-progress' ? 'in-progress' : ($order['status'] == 'cancelled' ? 'cancelled' : 'pending'))
+                                                      ?>">
                               <?= ucfirst($order['status']) ?>
                             </span>
                           </p>
                         </div>
                       </div>
                     </div>
-                    
+
                     <?php if (!empty($order['comments'])): ?>
                       <div class="order-details">
                         <h5>Additional Comments</h5>
                         <p><?= nl2br(htmlspecialchars($order['comments'])) ?></p>
                       </div>
                     <?php endif; ?>
-                    
+
                     <?php if ($order['status'] == 'completed'): ?>
                       <div class="credentials-box">
                         <h5><i class="fas fa-check-circle text-success"></i> Credentials Sent</h5>
                         <p>An email with login credentials was sent to <?= htmlspecialchars($order['email']) ?>.</p>
-                        
+
                         <?php if (isset($order['credentials_sent_at'])): ?>
                           <p><strong>Sent on:</strong> <?= date('M j, Y H:i', strtotime($order['credentials_sent_at'])) ?></p>
                         <?php endif; ?>
-                        
+
                         <!-- Resend credentials button -->
                         <form method="post" class="resend-btn">
                           <input type="hidden" name="order_id" value="<?= htmlspecialchars($order['order_id']) ?>">
@@ -499,7 +568,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                         </form>
                       </div>
                     <?php endif; ?>
-                    
+
                     <hr>
                     <form method="post">
                       <input type="hidden" name="order_id" value="<?= htmlspecialchars($order['order_id']) ?>">
@@ -514,6 +583,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                           </select>
                         </div>
                         <div class="col-sm-2">
+
                           <button type="submit" name="update_status" class="btn btn-primary btn-block">
                             <i class="fas fa-save"></i> Update
                           </button>
@@ -522,8 +592,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                     </form>
                   </div>
                   <div class="modal-footer">
+                    <form method="post" class="mr-auto" id="deleteForm<?= str_replace('-', '', $order['order_id']) ?>">
+                      <input type="hidden" name="order_id" value="<?= htmlspecialchars($order['order_id']) ?>">
+                      <button type="button" class="btn btn-danger" onclick="confirmDelete('<?= $order['order_id'] ?>')">
+                        <i class="fas fa-trash"></i> Delete Order
+                      </button>
+                    </form>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times"></i> Close</button>
                   </div>
+
                 </div>
               </div>
             </div>
@@ -533,7 +610,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
         <!---Container Fluid-->
       </div>
       <!-- Footer -->
-      <?php include 'includes/footer.php';?>
+      <?php include 'includes/footer.php'; ?>
       <!-- Footer -->
     </div>
   </div>
@@ -548,17 +625,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
   <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
   <script src="js/ruang-admin.min.js"></script>
   <script src="../vendor/chart.js/Chart.min.js"></script>
-  <script src="js/demo/chart-area-demo.js"></script>  
+  <script src="js/demo/chart-area-demo.js"></script>
   <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
   <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
   <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
       $('#dataTableHover').DataTable({
-        "order": [[5, "desc"]], // Default sort by date (column 5) descending
+        "order": [
+          [5, "desc"]
+        ], // Default sort by date (column 5) descending
         "pageLength": 10,
         "responsive": true
       });
     });
   </script>
+  <script>
+    function confirmDelete(orderId) {
+      if (confirm('Are you sure you want to delete order #' + orderId + '? This action cannot be undone.')) {
+        document.getElementById('deleteForm' + orderId.replace(/-/g, '')).submit();
+      }
+    }
+  </script>
 </body>
+
 </html>
