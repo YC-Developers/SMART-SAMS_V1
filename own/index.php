@@ -28,10 +28,47 @@ function getAllOrders()
 }
 
 $orders = getAllOrders();
-
 // Function to send approval email using PHPMailer
 function sendApprovalEmail($order, $schoolCredentials)
 {
+  global $conn;
+
+  // Get school admins (DOD and DOS) from database
+  $schoolName = $order['school_name'];
+  $dodQuery = $conn->query("SELECT * FROM tbladmin WHERE school = '$schoolName' AND type = 'displine'");
+  $dosQuery = $conn->query("SELECT * FROM tbladmin WHERE school = '$schoolName' AND type = 'study'");
+
+  $dodCredentials = $dodQuery->fetch_assoc();
+  $dosCredentials = $dosQuery->fetch_assoc();
+
+  // If DOD doesn't exist, create default
+  if (!$dodCredentials) {
+    $defaultDodUsername = 'dod.' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $order['school_name']));
+    $defaultDodPassword = bin2hex(random_bytes(4));
+
+    $conn->query("INSERT INTO tbladmin (firstName, lastName, username, password, type, school) 
+                      VALUES ('Default', 'DOD', '$defaultDodUsername', '$defaultDodPassword', 'displine', '$schoolName')");
+
+    $dodCredentials = [
+      'username' => $defaultDodUsername,
+      'password' => $defaultDodPassword
+    ];
+  }
+
+  // If DOS doesn't exist, create default
+  if (!$dosCredentials) {
+    $defaultDosUsername = 'dos.' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $order['school_name']));
+    $defaultDosPassword = bin2hex(random_bytes(4));
+
+    $conn->query("INSERT INTO tbladmin (firstName, lastName, username, password, type, school) 
+                      VALUES ('Default', 'DOS', '$defaultDosUsername', '$defaultDosPassword', 'study', '$schoolName')");
+
+    $dosCredentials = [
+      'username' => $defaultDosUsername,
+      'password' => $defaultDosPassword
+    ];
+  }
+
   $mail = new PHPMailer(true);
 
   try {
@@ -53,57 +90,81 @@ function sendApprovalEmail($order, $schoolCredentials)
     $mail->Subject = "Your School Management System Order #" . $order['order_id'] . " Has Been Approved";
 
     $mail->Body = "
-        <html>
-        <head>
-          <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background-color: #4e73df; color: white; padding: 15px; text-align: center; border-radius: 5px 5px 0 0; }
-            .content { padding: 20px; background-color: #f9f9f9; border-radius: 0 0 5px 5px; }
-            .credentials { background-color: #e9ecef; padding: 15px; border-radius: 5px; margin: 15px 0; }
-            .footer { margin-top: 20px; font-size: 12px; text-align: center; color: #6c757d; }
-          </style>
-        </head>
-        <body>
-          <div class='container'>
-            <div class='header'>
-              <h2>Order Approved!</h2>
-            </div>
-            <div class='content'>
-              <p>Dear " . htmlspecialchars($order['school_admin']) . ",</p>
-              <p>We're pleased to inform you that your order #" . $order['order_id'] . " has been approved and your school management system is now ready to use.</p>
-              
-              <div class='credentials'>
-                <h3>Your School Credentials</h3>
-                <p><strong>School Name:</strong> " . htmlspecialchars($order['school_name']) . "</p>
-                <p><strong>Admin Username:</strong> " . htmlspecialchars($schoolCredentials['username']) . "</p>
-                <p><strong>Temporary Password:</strong> " . htmlspecialchars($schoolCredentials['password']) . "</p>
-                <p><strong>Login URL:</strong> <a href='" . htmlspecialchars($schoolCredentials['login_url']) . "'>" . htmlspecialchars($schoolCredentials['login_url']) . "</a></p>
+            <html>
+            <head>
+              <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background-color: #4e73df; color: white; padding: 15px; text-align: center; border-radius: 5px 5px 0 0; }
+                .content { padding: 20px; background-color: #f9f9f9; border-radius: 0 0 5px 5px; }
+                .credentials { background-color: #e9ecef; padding: 15px; border-radius: 5px; margin: 15px 0; }
+                .admin-creds { background-color: #e2e3e5; padding: 10px; border-radius: 5px; margin: 10px 0; }
+                .footer { margin-top: 20px; font-size: 12px; text-align: center; color: #6c757d; }
+              </style>
+            </head>
+            <body>
+              <div class='container'>
+                <div class='header'>
+                  <h2>Order Approved!</h2>
+                </div>
+                <div class='content'>
+                  <p>Dear " . htmlspecialchars($order['school_admin']) . ",</p>
+                  <p>We're pleased to inform you that your order #" . $order['order_id'] . " has been approved and your school management system is now ready to use.</p>
+                  
+                  <div class='credentials'>
+                    <h3>Your School Credentials</h3>
+                    <p><strong>School Name:</strong> " . htmlspecialchars($order['school_name']) . "</p>
+                    <p><strong>Admin Username:</strong> " . htmlspecialchars($schoolCredentials['username']) . "</p>
+                    <p><strong>Temporary Password:</strong> " . htmlspecialchars($schoolCredentials['password']) . "</p>
+                    <p><strong>Login URL:</strong> <a href='" . htmlspecialchars($schoolCredentials['login_url']) . "'>" . htmlspecialchars($schoolCredentials['login_url']) . "</a></p>
+                  </div>
+                  
+                  <div class='admin-creds'>
+                    <h4>Dean of Discipline (DOD) Credentials</h4>
+                    <p><strong>Username:</strong> " . htmlspecialchars($dodCredentials['username']) . "</p>
+                    <p><strong>Password:</strong> " . htmlspecialchars($dodCredentials['password']) . "</p>
+                  </div>
+                  
+                  <div class='admin-creds'>
+                    <h4>Dean of Study (DOS) Credentials</h4>
+                    <p><strong>Username:</strong> " . htmlspecialchars($dosCredentials['username']) . "</p>
+                    <p><strong>Password:</strong> " . htmlspecialchars($dosCredentials['password']) . "</p>
+                  </div>
+                  
+                  <p><strong>Important:</strong> Please log in and change all passwords immediately after your first login.</p>
+                  <p>If you have any questions, please don't hesitate to contact our support team.</p>
+                  
+                  <div class='footer'>
+                    <p>Best regards,<br>SMART-SAMS Team</p>
+                  </div>
+                </div>
               </div>
-              
-              <p>Please log in and change your password immediately after your first login.</p>
-              <p>If you have any questions, please don't hesitate to contact our support team.</p>
-              
-              <div class='footer'>
-                <p>Best regards,<br>SMART-SAMS Team</p>
-              </div>
-            </div>
-          </div>
-        </body>
-        </html>
-        ";
+            </body>
+            </html>
+            ";
 
-    $mail->AltBody = "Dear " . $order['school_admin'] . ",\n\nYour order #" . $order['order_id'] . " has been approved.\n\nSchool: " . $order['school_name'] . "\nUsername: " . $schoolCredentials['username'] . "\nPassword: " . $schoolCredentials['password'] . "\nLogin URL: " . $schoolCredentials['login_url'] . "\n\nPlease log in and change your password.";
+    $mail->AltBody = "Dear " . $order['school_admin'] . ",\n\nYour order #" . $order['order_id'] . " has been approved.\n\nSchool: " . $order['school_name'] .
+      "\n\nMain Admin:\nUsername: " . $schoolCredentials['username'] . "\nPassword: " . $schoolCredentials['password'] .
+      "\nLogin URL: " . $schoolCredentials['login_url'] .
+      "\n\nDean of Discipline (DOD):\nUsername: " . $dodCredentials['username'] . "\nPassword: " . $dodCredentials['password'] .
+      "\n\nDean of Study (DOS):\nUsername: " . $dosCredentials['username'] . "\nPassword: " . $dosCredentials['password'] .
+      "\n\nPlease log in and change all passwords immediately.";
 
     $mail->send();
-    return true;
+
+    // Update the order record with all credentials sent
+    return [
+      'success' => true,
+      'dod_credentials' => $dodCredentials,
+      'dos_credentials' => $dosCredentials
+    ];
   } catch (Exception $e) {
     error_log("Email could not be sent. Mailer Error: {$mail->ErrorInfo}");
-    return false;
+    return ['success' => false];
   }
 }
 
-// Handle status update if requested
+//Handle status update if requested
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
   $orderId = filter_input(INPUT_POST, 'order_id', FILTER_SANITIZE_STRING);
   $newStatus = filter_input(INPUT_POST, 'new_status', FILTER_SANITIZE_STRING);
@@ -131,13 +192,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                 'login_url' => 'http://localhost:8000/login.php'
               ];
 
-              // Store credentials in the order record
-              $order['credentials_sent'] = true;
-              $order['credentials_sent_at'] = date('Y-m-d H:i:s');
-              $order['credentials_data'] = $schoolCredentials;
+              // Send email with all credentials
+              $emailResult = sendApprovalEmail($order, $schoolCredentials);
 
-              if (sendApprovalEmail($order, $schoolCredentials)) {
+              if ($emailResult['success']) {
                 $_SESSION['status_message'] = "Order status updated and approval email sent!";
+
+                // Store all credentials in the order record
+                $order['credentials_sent'] = true;
+                $order['credentials_sent_at'] = date('Y-m-d H:i:s');
+                $order['credentials_data'] = array_merge(
+                  ['main_admin' => $schoolCredentials],
+                  ['dod' => $emailResult['dod_credentials']],
+                  ['dos' => $emailResult['dos_credentials']]
+                );
 
                 // Log the email sending
                 $emailLog = [
@@ -149,7 +217,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                 file_put_contents(__DIR__ . '/../recommendation_page/logs/email_logs.json', json_encode($emailLog) . "\n", FILE_APPEND);
               } else {
                 $_SESSION['status_message'] = "Order status updated but email could not be sent!";
-
                 // Log the failed attempt
                 $emailLog = [
                   'order_id' => $orderId,
@@ -175,63 +242,63 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
     }
 
     //Handle order deletion if requested
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_order'])) {
-    $orderId = filter_input(INPUT_POST, 'order_id', FILTER_SANITIZE_STRING);
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_order'])) {
+      $orderId = filter_input(INPUT_POST, 'order_id', FILTER_SANITIZE_STRING);
 
-    if ($orderId) {
+      if ($orderId) {
         $logFile = __DIR__ . '/../recommendation_page/logs/orders_2025-03.json';
-        $backupFile = __DIR__ . '/../recommendation_page/logs/orders_backup_'.date('Ymd_His').'.json';
+        $backupFile = __DIR__ . '/../recommendation_page/logs/orders_backup_' . date('Ymd_His') . '.json';
 
         if (file_exists($logFile)) {
-            // Create backup first
-            copy($logFile, $backupFile);
+          // Create backup first
+          copy($logFile, $backupFile);
 
-            $ordersInFile = json_decode(file_get_contents($logFile), true);
-            $updatedOrders = array();
+          $ordersInFile = json_decode(file_get_contents($logFile), true);
+          $updatedOrders = array();
 
-            if (is_array($ordersInFile)) {
-                $found = false;
-                foreach ($ordersInFile as $order) {
-                    if ($order['order_id'] !== $orderId) {
-                        $updatedOrders[] = $order;
-                    } else {
-                        $found = true;
-                    }
-                }
-
-                if ($found) {
-                    if (file_put_contents($logFile, json_encode($updatedOrders, JSON_PRETTY_PRINT))) {
-                        $_SESSION['status_message'] = "Order deleted successfully!";
-                        
-                        // Log the deletion
-                        $deletionLog = [
-                            'order_id' => $orderId,
-                            'deleted_at' => date('Y-m-d H:i:s'),
-                            'deleted_by' => $_SESSION['userName'] ?? 'system',
-                            'backup_file' => $backupFile
-                        ];
-                        file_put_contents(
-                            __DIR__ . '/../recommendation_page/logs/deletion_logs.json', 
-                            json_encode($deletionLog) . PHP_EOL, 
-                            FILE_APPEND
-                        );
-                    } else {
-                        $_SESSION['status_message'] = "Error: Could not write to orders file.";
-                    }
-                } else {
-                    $_SESSION['status_message'] = "Order not found!";
-                }
-            } else {
-                $_SESSION['status_message'] = "Error: Invalid orders file format.";
+          if (is_array($ordersInFile)) {
+            $found = false;
+            foreach ($ordersInFile as $order) {
+              if ($order['order_id'] !== $orderId) {
+                $updatedOrders[] = $order;
+              } else {
+                $found = true;
+              }
             }
+
+            if ($found) {
+              if (file_put_contents($logFile, json_encode($updatedOrders, JSON_PRETTY_PRINT))) {
+                $_SESSION['status_message'] = "Order deleted successfully!";
+
+                // Log the deletion
+                $deletionLog = [
+                  'order_id' => $orderId,
+                  'deleted_at' => date('Y-m-d H:i:s'),
+                  'deleted_by' => $_SESSION['userName'] ?? 'system',
+                  'backup_file' => $backupFile
+                ];
+                file_put_contents(
+                  __DIR__ . '/../recommendation_page/logs/deletion_logs.json',
+                  json_encode($deletionLog) . PHP_EOL,
+                  FILE_APPEND
+                );
+              } else {
+                $_SESSION['status_message'] = "Error: Could not write to orders file.";
+              }
+            } else {
+              $_SESSION['status_message'] = "Order not found!";
+            }
+          } else {
+            $_SESSION['status_message'] = "Error: Invalid orders file format.";
+          }
         } else {
-            $_SESSION['status_message'] = "Error: Orders file not found.";
+          $_SESSION['status_message'] = "Error: Orders file not found.";
         }
 
         header("Location: index.php");
         exit();
+      }
     }
-}
 
     if (!isset($_SESSION['status_message'])) {
       $_SESSION['status_message'] = "Order not found!";

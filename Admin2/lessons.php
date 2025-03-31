@@ -1,4 +1,4 @@
-<?php 
+<?php
 error_reporting(0);
 
 include '../Includes/dbcon.php';
@@ -8,60 +8,60 @@ $statusMsg = "";
 
 // Save Lesson
 if (isset($_POST['save'])) {
-    $teacherId = $_POST['teacher_id'];
-    $lessonTitle = $_POST['lesson_title'];
-    $lessonDescription = $_POST['lesson_description'];
+  $teacherId = $_POST['teacher_id'];
+  $lessonTitle = $_POST['lesson_title'];
+  $lessonDescription = $_POST['lesson_description'];
 
-    $query = "SELECT * FROM tbladmin WHERE Id = ".$_SESSION['userId']."";
-    $rs = $conn->query($query);
-    $num = $rs->num_rows;
-    $rows = $rs->fetch_assoc();
-    $school = $rows['school'];
+  $query = "SELECT * FROM tbladmin WHERE Id = " . $_SESSION['userId'] . "";
+  $rs = $conn->query($query);
+  $num = $rs->num_rows;
+  $rows = $rs->fetch_assoc();
+  $school = $rows['school'];
 
 
-    $query = mysqli_query($conn, "INSERT INTO lessons (teacher_id, lesson_title, lesson_description, school) 
+  $query = mysqli_query($conn, "INSERT INTO lessons (teacher_id, lesson_title, lesson_description, school) 
         VALUES ('$teacherId', '$lessonTitle', '$lessonDescription', '$school')");
 
-    if ($query) {
-        $statusMsg = "<div class='alert alert-success'>Lesson added successfully!</div>";
-    } else {
-        $statusMsg = "<div class='alert alert-danger'>An error occurred!</div>";
-    }
+  if ($query) {
+    $statusMsg = "<div class='alert alert-success'>Lesson added successfully!</div>";
+  } else {
+    $statusMsg = "<div class='alert alert-danger'>An error occurred!</div>";
+  }
 }
 
 // Edit Lesson
 if (isset($_GET['Id']) && $_GET['action'] == "edit") {
-    $lessonId = $_GET['Id'];
-    $query = mysqli_query($conn, "SELECT * FROM lessons WHERE id = '$lessonId'");
-    $lesson = mysqli_fetch_assoc($query);
+  $lessonId = $_GET['Id'];
+  $query = mysqli_query($conn, "SELECT * FROM lessons WHERE id = '$lessonId'");
+  $lesson = mysqli_fetch_assoc($query);
 
-    if (isset($_POST['update'])) {
-        $lessonTitle = $_POST['lesson_title'];
-        $lessonDescription = $_POST['lesson_description'];
+  if (isset($_POST['update'])) {
+    $lessonTitle = $_POST['lesson_title'];
+    $lessonDescription = $_POST['lesson_description'];
 
-        $query = mysqli_query($conn, "UPDATE lessons SET 
+    $query = mysqli_query($conn, "UPDATE lessons SET 
             lesson_title = '$lessonTitle', 
             lesson_description = '$lessonDescription'
             WHERE id = '$lessonId'");
 
-        if ($query) {
-            header("Location: lessons.php");
-        } else {
-            $statusMsg = "<div class='alert alert-danger'>An error occurred!</div>";
-        }
+    if ($query) {
+      header("Location: lessons.php");
+    } else {
+      $statusMsg = "<div class='alert alert-danger'>An error occurred!</div>";
     }
+  }
 }
 
 // Delete Lesson
 if (isset($_GET['Id']) && $_GET['action'] == "delete") {
-    $lessonId = $_GET['Id'];
-    $query = mysqli_query($conn, "DELETE FROM lessons WHERE id = '$lessonId'");
+  $lessonId = $_GET['Id'];
+  $query = mysqli_query($conn, "DELETE FROM lessons WHERE id = '$lessonId'");
 
-    if ($query) {
-        header("Location: lessons.php");
-    } else {
-        $statusMsg = "<div class='alert alert-danger'>An error occurred!</div>";
-    }
+  if ($query) {
+    header("Location: lessons.php");
+  } else {
+    $statusMsg = "<div class='alert alert-danger'>An error occurred!</div>";
+  }
 }
 ?>
 <!DOCTYPE html>
@@ -84,12 +84,12 @@ if (isset($_GET['Id']) && $_GET['action'] == "delete") {
 <body id="page-top">
   <div id="wrapper">
     <!-- Sidebar -->
-      <?php include "Includes/sidebar.php";?>
+    <?php include "Includes/sidebar.php"; ?>
     <!-- Sidebar -->
     <div id="content-wrapper" class="d-flex flex-column">
       <div id="content">
         <!-- TopBar -->
-       <?php include "Includes/topbar.php";?>
+        <?php include "Includes/topbar.php"; ?>
         <!-- Topbar -->
 
         <!-- Container Fluid-->
@@ -101,80 +101,81 @@ if (isset($_GET['Id']) && $_GET['action'] == "delete") {
               <li class="breadcrumb-item active" aria-current="page">Create Lessons</li>
             </ol>
           </div>
-    <div class="container mt-4">
-        <h3>Manage Lessons</h3>
-        <?php echo $statusMsg; ?>
+          <div class="container mt-4">
+            <?php echo $statusMsg; ?>
 
-        <form method="post">
-            <div class="form-group">
+            <form method="post">
+              <div class="form-group">
                 <label for="teacher_id">Select Teacher</label>
                 <select name="teacher_id" class="form-control" required>
-                    <option value="">-- Select Teacher --</option>
-                    <?php
-                    $teachers = mysqli_query($conn, "SELECT * FROM tblteachers WHERE school='$s' ORDER BY name ASC");
-                    while ($teacher = mysqli_fetch_assoc($teachers)) {
-                        echo "<option value='".$teacher['id']."'>".$teacher['name']."</option>";
-                    }
-                    ?>
+                  <option value="">-- Select Teacher --</option>
+                  <?php
+                  $teachers = mysqli_query($conn, "SELECT * FROM tblteachers WHERE school='$s' ORDER BY name ASC");
+                  while ($teacher = mysqli_fetch_assoc($teachers)) {
+                    echo "<option value='" . $teacher['id'] . "'>" . $teacher['name'] . "</option>";
+                  }
+                  ?>
                 </select>
-            </div>
+              </div>
 
-            <div class="form-group">
+              <div class="form-group">
                 <label for="lesson_title">Lesson Title</label>
-                <input type="text" name="lesson_title" class="form-control" value="<?php echo $lesson['lesson_title'];?>" required>
-            </div>
+                <input type="text" name="lesson_title" class="form-control" value="<?php echo $lesson['lesson_title']; ?>" required>
+              </div>
 
-            <div class="form-group">
+              <div class="form-group">
                 <label for="lesson_description">Lesson Description</label>
-                <textarea name="lesson_description" class="form-control" rows="3" value="<?php echo $lesson['lesson_description'];?>"></textarea>
-            </div>
+                <textarea name="lesson_description" class="form-control" rows="3" value="<?php echo $lesson['lesson_description']; ?>"></textarea>
+              </div>
 
-            <button type="submit" name="save" class="btn btn-primary">Add Lesson</button>
-        </form>
+              <button type="submit" name="save" class="btn btn-primary">Add Lesson</button>
+            </form>
 
-        <hr>
+            <hr>
 
-        <div class="row">
+            <div class="row">
               <div class="col-lg-12">
-              <div class="card mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">All Lessons</h6>
-                </div>
-                <div class="table-responsive p-3">
-                  <table class="table align-items-center table-flush table-hover" id="dataTableHover">
-                    <thead class="thead-light">                <tr>
-                    <th>#</th>
-                    <th>Teacher</th>
-                    <th>Lesson Title</th>
-                    <th>Description</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $lessons = mysqli_query($conn, 
-                    "SELECT lessons.*, tblteachers.name AS teacher_name 
-                     FROM lessons 
-                     INNER JOIN tblteachers ON lessons.teacher_id = tblteachers.id WHERE tblteachers.school='$s'");
-                $sn = 1;
-                while ($lesson = mysqli_fetch_assoc($lessons)) {
-                    echo "<tr>
-                        <td>".$sn++."</td>
-                        <td>".$lesson['teacher_name']."</td>
-                        <td>".$lesson['lesson_title']."</td>
-                        <td>".$lesson['lesson_description']."</td>
+                <div class="card mb-4">
+                  <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">All Lessons</h6>
+                  </div>
+                  <div class="table-responsive p-3">
+                    <table class="table align-items-center table-flush table-hover" id="dataTableHover">
+                      <thead class="thead-light">
+                        <tr>
+                          <th>#</th>
+                          <th>Teacher</th>
+                          <th>Lesson Title</th>
+                          <th>Description</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php
+                        $lessons = mysqli_query(
+                          $conn,
+                          "SELECT lessons.*, tblteachers.name AS teacher_name FROM lessons 
+     INNER JOIN tblteachers ON lessons.teacher_id = tblteachers.id 
+     WHERE lessons.school='$school'"
+                        );
+                        while ($lesson = mysqli_fetch_assoc($lessons)) {
+                          echo "<tr>
+                        <td>" . $sn++ . "</td>
+                        <td>" . $lesson['teacher_name'] . "</td>
+                        <td>" . $lesson['lesson_title'] . "</td>
+                        <td>" . $lesson['lesson_description'] . "</td>
                         <td>
-                            <a href='?action=edit&Id=".$lesson['id']."' class='btn btn-warning btn-sm'>Edit</a>
-                            <a href='?action=delete&Id=".$lesson['id']."' class='btn btn-danger btn-sm'>Delete</a>
+                            <a href='?action=edit&Id=" . $lesson['id'] . "' class='btn btn-warning btn-sm'>Edit</a>
+                            <a href='?action=delete&Id=" . $lesson['id'] . "' class='btn btn-danger btn-sm'>Delete</a>
                         </td>
                     </tr>";
-                }
-                ?>
-            </tbody>
-        </table>
-        </div>
+                        }
+                        ?>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
-            </div>
             </div>
           </div>
           <!--Row-->
@@ -194,7 +195,7 @@ if (isset($_GET['Id']) && $_GET['action'] == "delete") {
         <!---Container Fluid-->
       </div>
       <!-- Footer -->
-       <?php include "Includes/footer.php";?>
+      <?php include "Includes/footer.php"; ?>
       <!-- Footer -->
     </div>
   </div>
@@ -208,13 +209,13 @@ if (isset($_GET['Id']) && $_GET['action'] == "delete") {
   <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
   <script src="js/ruang-admin.min.js"></script>
-   <!-- Page level plugins -->
+  <!-- Page level plugins -->
   <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
   <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
   <!-- Page level custom scripts -->
   <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
       $('#dataTable').DataTable(); // ID From dataTable 
       $('#dataTableHover').DataTable(); // ID From dataTable with Hover
     });

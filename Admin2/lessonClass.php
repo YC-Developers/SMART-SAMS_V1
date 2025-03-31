@@ -2,7 +2,7 @@
 error_reporting(0);
 include '../Includes/dbcon.php';
 include '../Includes/session.php';
-$qm = "SELECT * FROM tbladmin WHERE Id = ".$_SESSION['userId']."";
+$qm = "SELECT * FROM tbladmin WHERE Id = " . $_SESSION['userId'] . "";
 $rs = $conn->query($qm);
 $num = $rs->num_rows;
 $rows = $rs->fetch_assoc();
@@ -12,27 +12,26 @@ $school = $rows['school'];
 // Fetch lessons and classes for the dropdowns
 $lessons = mysqli_query($conn, "SELECT * FROM lessons WHERE school='$school'  ORDER BY lesson_title ASC");
 $classes = mysqli_query($conn, "SELECT * FROM tblclass WHERE school='$school' ORDER BY className ASC");
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['assign_lesson'])) {
-    // Handle lesson assignment
-    $lessonId = $_POST['lesson_id'];
-    $classId = $_POST['classId'];
+  // Handle lesson assignment
+  $lessonId = $_POST['lesson_id'];
+  $classId = $_POST['classId'];
 
-    // Check if the lesson is already assigned to the class
-    $checkQuery = "SELECT * FROM class_lessons WHERE lesson_id = '$lessonId' AND class_id = '$classId'";
-    $checkResult = mysqli_query($conn, $checkQuery);
-    
-    if (mysqli_num_rows($checkResult) > 0) {
-        $statusMsg = "This lesson is already assigned to the selected class.";
+  // Check if the lesson is already assigned to the class
+  $checkQuery = "SELECT * FROM class_lessons WHERE lesson_id = '$lessonId' AND class_id = '$classId'";
+  $checkResult = mysqli_query($conn, $checkQuery);
+
+  if (mysqli_num_rows($checkResult) > 0) {
+    $statusMsg = "This lesson is already assigned to the selected class.";
+  } else {
+    // Insert the assignment into the database
+    $assignQuery = "INSERT INTO class_lessons (lesson_id, class_id) VALUES ('$lessonId', '$classId')";
+    if (mysqli_query($conn, $assignQuery)) {
+      $statusMsg = "Lesson assigned successfully.";
     } else {
-        // Insert the assignment into the database
-        $assignQuery = "INSERT INTO class_lessons (lesson_id, class_id) VALUES ('$lessonId', '$classId')";
-        if (mysqli_query($conn, $assignQuery)) {
-            $statusMsg = "Lesson assigned successfully.";
-        } else {
-            $statusMsg = "Error assigning lesson.";
-        }
+      $statusMsg = "Error assigning lesson.";
     }
+  }
 }
 
 // Fetch the assignments for displaying
@@ -41,6 +40,7 @@ $assignmentsQuery = "
     FROM class_lessons cl
     INNER JOIN lessons ON cl.lesson_id = lessons.id
     INNER JOIN tblclass ON cl.class_id = tblclass.Id
+    WHERE lessons.school='$school' AND tblclass.school='$school'
 ";
 $assignmentsResult = mysqli_query($conn, $assignmentsQuery);
 ?>
@@ -77,9 +77,9 @@ $assignmentsResult = mysqli_query($conn, $assignmentsQuery);
 
           <!-- Status Message -->
           <?php if ($statusMsg != "") { ?>
-          <div class="alert alert-info">
-            <?php echo $statusMsg; ?>
-          </div>
+            <div class="alert alert-info">
+              <?php echo $statusMsg; ?>
+            </div>
           <?php } ?>
 
           <!-- Assign Lesson Form -->
@@ -95,7 +95,7 @@ $assignmentsResult = mysqli_query($conn, $assignmentsQuery);
                     <option value="">-- Select a Lesson --</option>
                     <?php
                     while ($lesson = mysqli_fetch_assoc($lessons)) {
-                        echo "<option value='{$lesson['id']}'>{$lesson['lesson_title']}</option>";
+                      echo "<option value='{$lesson['id']}'>{$lesson['lesson_title']}</option>";
                     }
                     ?>
                   </select>
@@ -107,7 +107,7 @@ $assignmentsResult = mysqli_query($conn, $assignmentsQuery);
                     <option value="">-- Select a Class --</option>
                     <?php
                     while ($class = mysqli_fetch_assoc($classes)) {
-                        echo "<option value='{$class['Id']}'>{$class['className']}</option>";
+                      echo "<option value='{$class['Id']}'>{$class['className']}</option>";
                     }
                     ?>
                   </select>
@@ -136,12 +136,12 @@ $assignmentsResult = mysqli_query($conn, $assignmentsQuery);
                   <?php
                   $sn = 1;
                   while ($row = mysqli_fetch_assoc($assignmentsResult)) {
-                      echo "<tr>
+                    echo "<tr>
                           <td>{$sn}</td>
                           <td>{$row['className']}</td>
                           <td>{$row['lesson_title']}</td>
                       </tr>";
-                      $sn++;
+                    $sn++;
                   }
                   ?>
                 </tbody>
