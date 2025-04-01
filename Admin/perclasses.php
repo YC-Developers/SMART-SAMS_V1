@@ -68,19 +68,29 @@ include '../Includes/session.php';
                                             <select required name="date" class="form-control mb-3">
                                                 <option value="">---Select Week---</option>
                                                 <?php
-                                                $q = "SELECT * FROM tblsessionterm WHERE school='$s'";
+                                                  $qm = "SELECT * FROM tbladmin WHERE Id = ".$_SESSION['userId']."";
+                                                  $rs = $conn->query($qm);
+                                                  $num = $rs->num_rows;
+                                                  $rows = $rs->fetch_assoc();
+                                                  $school = $rows['school']; 
+                                                
+                                                $q = "SELECT * FROM tblsessionterm WHERE school='$school'";
                                                 $res = $conn->query($q);
-                                                while ($rows = $res->fetch_assoc()) {
-                                                    $start_date = $rows['start'];
-                                                    $end_date = date("Y-m-d");
-                                                    $weeks = get_weeks($start_date, $end_date);
-                                                    foreach ($weeks as $week) {
-                                                        if ($week['remaining_days'] === 0) {
-                                                            echo "<option value='{$week['start_date']} AND {$week['end_date']}'>{$week['week']}</option>";
-                                                        }
-                                                    }
-                                                }
-                                                ?>
+        // Loop through the sessions/terms
+        while ($rows = $res->fetch_assoc()) {
+            $start_date = $rows['start'];
+            $end_date = date("Y-m-d"); // Use today's date as the end date
+            $weeks = get_weeks($start_date, $end_date); // Get all weeks
+            
+            // Loop through the weeks
+            foreach ($weeks as $week) {
+                // Only display weeks with no remaining days
+                if ($week['remaining_days'] === 0) {
+                    echo "<option value='{$week['start_date']} AND {$week['end_date']}'>{$week['week']}</option>";
+                }
+            }
+        }
+        ?>
                                             </select>
                                         </div>
                                     </div>
@@ -94,36 +104,44 @@ include '../Includes/session.php';
                             $start_date_obj = new DateTime($start_date);
                             $end_date_obj = new DateTime($end_date);
                             $today = new DateTime();
+                        
                             if ($start_date_obj <= $today && $today <= $end_date_obj) {
-                                return $end_date_obj->diff($today)->format('%a') + 1;
+                                $remaining_days = $end_date_obj->diff($today)->format('%a');
+                                return $remaining_days + 1;
                             }
+                        
                             return 0;
                         }
+function get_weeks($start_date, $end_date) {
+    $start_date_obj = new DateTime($start_date);
+    $end_date_obj = new DateTime($end_date);
 
-                        function get_weeks($start_date, $end_date) {
-                            $start_date_obj = new DateTime($start_date);
-                            $end_date_obj = new DateTime($end_date);
-                            $week_dates = [];
-                            $week_number = 1;
+    $week_dates = array();
+    $week_number = 1;
 
-                            while ($start_date_obj <= $end_date_obj) {
-                                $end_of_week = clone $start_date_obj;
-                                $end_of_week->modify('+6 days');
-                                $wk = 'Week ' . $week_number;
-                                $remaining_days = remaining_days($start_date_obj->format('Y-m-d'), $end_of_week->format('Y-m-d'));
-                                $week_dates[] = [
-                                    'w' => $wk,
-                                    'week' => $wk . ' [' . $start_date_obj->format('Y-m-d') . ' to ' . $end_of_week->format('Y-m-d') . ']',
-                                    'start_date' => $start_date_obj->format('Y-m-d'),
-                                    'end_date' => $end_of_week->format('Y-m-d'),
-                                    'remaining_days' => $remaining_days
-                                ];
-                                $start_date_obj->modify('+7 days');
-                                $week_number++;
-                            }
-                            return $week_dates;
-                        }
+    while ($start_date_obj <= $end_date_obj) {
+        $end_of_week = clone $start_date_obj;
+        $end_of_week->modify('+7 days');
 
+        
+
+        $wk = 'Week ' . $week_number;
+
+        $remaining_days = remaining_days($start_date_obj->format('Y-m-d'), $end_of_week->format('Y-m-d'));
+        $week_dates[] = [
+            'w' => $wk,
+            'week' => $wk . ' [' . $start_date_obj->format('Y-m-d') . ' to ' . $end_of_week->format('Y-m-d') . ']',
+            'start_date' => $start_date_obj->format('Y-m-d'),
+            'end_date' => $end_of_week->format('Y-m-d'),
+            'remaining_days' => $remaining_days
+        ];        
+
+        $start_date_obj->modify('+8 days');
+        $week_number++;
+    }
+
+    return $week_dates;
+}
                         // Process form submission
                         if (isset($_POST['view'])) {
                             $classId = $_POST['classId'];
@@ -143,7 +161,7 @@ include '../Includes/session.php';
                                         </div>
                                     </div>
                                     <div class="table-responsive p-3" id="reportContent">
-                                                                            <h6 class="m-0 font-weight-bold text-dark">Weekly Attendance from '.$start_date.' to '.$end_date.'</h6>
+                                                                            <h6 class="m-0 font-weight-bold text-dark">Weekly Attendance In Prep from '.$start_date.' to '.$end_date.'</h6>
 
                                         <table class="table table-hover" id="dataTableHover" border="1">
                                             <thead>

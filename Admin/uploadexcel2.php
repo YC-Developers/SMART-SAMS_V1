@@ -55,26 +55,43 @@ if (isset($_POST['submit'])) {
                     $name = isset($row[1]) ? $row[1] : '';
                     $gender = isset($row[2]) ? $row[2] : '';
 
-                    // Fetch class details
-                    $q = "SELECT * FROM tblclass WHERE Id='$class'";
-                    $r = $conn->query($q);
-                    $rp = $r->fetch_assoc();
+  
+  //school code
+  $qm = "SELECT * FROM tbladmin WHERE Id = ".$_SESSION['userId']."";
+  $rs = $conn->query($qm);
+  $num = $rs->num_rows;
+  $rows = $rs->fetch_assoc();
+  $school = $rows['school']; 
 
-                    // Fetch class arms
-                    $a = "SELECT * FROM tblclassarms WHERE classId=" . $rp['Id'] . "";
-                    $re = $conn->query($a);
-                    $ro = $re->fetch_assoc();
 
-                    // Generate registration number
-                    $regNumber = $ro['classArmName'] . sprintf('%02d', $regCounter);
-                    $regCounter++; // Increment the counter
+  $a ="SELECT code FROM schools WHERE schoolName='$school'";
+  $ree = $conn->query($a);
+  $qs = $ree->fetch_assoc();
+  
+                      // Fetch class arms
+                      $a = "SELECT * FROM tblclass WHERE Id='$classId'";
+                      $re = $conn->query($a);
+                      $ro = $re->fetch_assoc();
+
+                      //YEAR
+                      $year = date("Y");
+
+                      $p = "SELECT * FROM tblstudents WHERE classId='$classId'";
+                      $s = $conn->query($p);
+                      $n = $s->num_rows;
+                      $regCounter = $n;
+                      $regCounter++; // Increment the counter
+
+
+                      // Generate registration number
+                      $admissionNumber = $qs['code'].$ro['level'] . sprintf('%03d', $regCounter) . $year;
 
                     // Build the table row
                     $html .= "<tr>";
                     $html .= "<td>" . $id . "</td>";
                     $html .= "<td>" . $name . "</td>";
                     $html .= "<td>" . $gender . "</td>";
-                    $html .= "<td>" . $regNumber . "</td>";
+                    $html .= "<td>" . $admissionNumber . "</td>";
                    $html .= "<td>" . $rp['Id'] . "</td>";
                    $html .= "<td>" . $ro['Id'] . "</td>";
                     $html .= "</tr>";

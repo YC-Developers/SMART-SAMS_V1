@@ -1,1 +1,1 @@
-  <title>SMART-SAMS | OWNER PANEL</title>
+  <title>AMS- sys</title>

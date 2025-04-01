@@ -21,42 +21,6 @@
         "school_name": "SAINT ANNIBALE",
         "payment_method": "momo",
         "comments": "swskwpsqwkpw",
-        "status": "completed",
-        "credentials_sent": true,
-        "credentials_sent_at": "2025-03-30 22:24:31",
-        "credentials_data": {
-            "username": "gisubizoshimaaimeyannick",
-            "password": "77ed4fba",
-            "login_url": "http:\/\/localhost:8000\/login.php"
-        }
-    },
-    {
-        "order_id": "SMART_67ea620804144",
-        "timestamp": "2025-03-31 11:36:08",
-        "billing_plan": "monthly",
-        "school_admin": "GISUBIZO SHIMA Aime Yannick",
-        "email": "gisubizoaimeyannick@gmail.com",
-        "phone": "+250791285293",
-        "school_name": "SAINT JOSEPH NYANZA",
-        "payment_method": "visa",
-        "comments": " i really need it right away",
-        "status": "completed",
-        "credentials_sent": true,
-        "credentials_sent_at": "2025-03-31 11:38:14",
-        "credentials_data": {
-            "main_admin": {
-                "username": "gisubizoshimaaimeyannick",
-                "password": "df28f1aa",
-                "login_url": "http:\/\/localhost:8000\/login.php"
-            },
-            "dod": {
-                "username": "dod.saintjosephnyanza",
-                "password": "9e38b060"
-            },
-            "dos": {
-                "username": "dos.saintjosephnyanza",
-                "password": "a2b2125b"
-            }
-        }
+        "status": "pending"
     }
 ]
