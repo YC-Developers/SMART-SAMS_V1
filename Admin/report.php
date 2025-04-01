@@ -64,10 +64,16 @@ include '../Includes/session.php';
                         <td><a href='absentReport.php' class='btn btn asa'>Make Report</a></td>
                         </tr>
                         <tr>
-                        <td>1</td>
+                        <td>2</td>
                         <td>All Classes Attendance (Today)</td>
                         <td><a href='classReport.php' class='btn btn asa'>Make Report</a></td>
                         </tr>
+                        <tr>
+                                                <td>3</td>
+                                                <td>Custom Date Attendance Report</td>
+                                                <td><a href='dateReport.php' class='btn btn asa'>Make Report</a></td>
+                                                </tr>
+                        
                     </tbody>
 
 </table>
