@@ -7,6 +7,7 @@ $statusMsg = '';
 // Initialize variables
 $selectedDate = '';
 $reportData = [];
+
 // Process form submission
 if(isset($_POST['generateReport'])) {
     $selectedDate = $_POST['reportDate'];
