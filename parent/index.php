@@ -32,6 +32,7 @@ include '../Includes/session2.php';
     .notification.warning { background-color: #ffc107; }
     .notification.danger { background-color: #dc3545; }
     .status-text { font-size: 1.2rem; margin: 5px 0; }
+    .student-image { width: 100px; height: 100px; object-fit: cover; border: 2px solid #231a6f; }
     </style>
 </head>
 
@@ -54,8 +55,7 @@ include '../Includes/session2.php';
                                 <h4>Today's Status</h4>
                                 <div id="todayStatus">
                                     <p class="status-text">Morning: <span id="morningStatus">Loading...</span></p>
-<p class="status-text">Evening: <span id="eveningStatus">Loading...</span></p>
-
+                                    <p class="status-text">Evening: <span id="eveningStatus">Loading...</span></p>
                                 </div>
                                 <p><?php echo date('F j, Y'); ?></p>
                             </div>
@@ -98,9 +98,12 @@ include '../Includes/session2.php';
                                     $R2 = $conn->query($z2);
                                     $cx2 = $R2->fetch_assoc();
                                     $sch = $cx2["school"];
+                                    
+                                    // Define image path
+                                    $imagePath = $row['image_path'] ? "../Admin2/student_images/" . $row['image_path'] : "../img/user-icn.png";
                                     ?>
                                     <div class="text-center mb-4">
-                                        <img src="../img/user-profile.png" class="rounded-circle" width="100">
+                                        <img src="<?php echo $imagePath; ?>" class="rounded-circle student-image">
                                         <h5 class="mt-3 text-dark"><?php echo $row['name']; ?></h5>
                                         <div class="student-details mt-3 text-left">
                                             <p><strong>School:</strong> <?php echo $sch; ?></p>
