@@ -44,8 +44,8 @@ class ComposerStaticInit21401e2fd69840d493d59bad13cbe5ac
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -73,16 +73,6 @@ class ComposerStaticInit21401e2fd69840d493d59bad13cbe5ac
         ),
     );
 
-    public static $prefixesPsr0 = array (
-        'P' => 
-        array (
-            'PHPExcel' => 
-            array (
-                0 => __DIR__ . '/..' . '/phpoffice/phpexcel/Classes',
-            ),
-        ),
-    );
-
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
@@ -92,7 +82,6 @@ class ComposerStaticInit21401e2fd69840d493d59bad13cbe5ac
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit21401e2fd69840d493d59bad13cbe5ac::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit21401e2fd69840d493d59bad13cbe5ac::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit21401e2fd69840d493d59bad13cbe5ac::$prefixesPsr0;
             $loader->classMap = ComposerStaticInit21401e2fd69840d493d59bad13cbe5ac::$classMap;
 
         }, null, ClassLoader::class);

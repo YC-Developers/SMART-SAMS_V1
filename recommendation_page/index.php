@@ -148,12 +148,6 @@
 
     <div class="hero_area">
 
-        <div class="hero_bg_box">
-            <div class="bg_img_box">
-                <img src="images/hero-bg.png" alt="">
-            </div>
-        </div>
-
         <!-- header section strats -->
         <header class="header_section">
             <div class="container-fluid">
@@ -192,35 +186,25 @@
                                 <a class="nav-link" href="team.php">Team</a>
                             </li> -->
                             <li class="nav-item">
-                                <a href="parent-portal.php" class="nav-link btn btn-outline-primary text-white">Parent
+                                <a href="../parent-portal.php" class="nav-link btn btn-outline-primary text-white">Parent
                                     Portal</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="login.php"> <i class="fa fa-user"
+                                <a class="nav-link" href="../login.php"> <i class="fa fa-user"
                                         aria-hidden="true"></i>&nbsp;LOGIN</a>
                             </li>
-                            <!-- <button class="get-it-now-btn">
-                                <a href="./recommendation_page/software_recommendation.php"
-                                    class="btn btn-danger text-white px-4 py-2 rounded-pill shadow-lg d-flex align-items-center">
-                                    <i class="fa fa-rocket mr-2"></i>Get It Now!
-                                </a>
-                            </button> -->
-
-
 
                         </ul>
                     </div>
                 </nav>
             </div>
         </header>
-        <section class="recommendation-section layout_padding"
-            style="background: linear-gradient(130deg, #231a6f, #0f054c); color: white;">
+        <section class="recommendation-section layout_padding" style="background: linear-gradient(130deg, #231a6f, #0f054c); color: white;">
             <div class="container">
                 <div class="heading_container heading_center mb-5">
                     <h2>
                         Software <span style="color: #fff;">Recommendation</span>
-                        <hr class="my-4 border-top border-light"
-                            style="width: 50%; height: 3px; background: rgba(255,255,255,0.2);">
+                        <hr class="my-4 " style="width: 50%; height: px; background: white; ">
                     </h2>
                 </div>
 

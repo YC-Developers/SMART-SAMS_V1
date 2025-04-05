@@ -139,7 +139,7 @@
     }
 
     .header_section.scrolled {
-        background: rgba(0, 64, 128, 0.9);
+        background: rgba(1, 22, 95, 0.9);
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 </style>
@@ -218,11 +218,11 @@
         <section class="slider_section">
             <div id="customCarousel1" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
-                    <div class="carousel-item active">
+                    <div class="carousel-item active" style="margin-top:50px;">
                         <div class="container">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="detail-box">
+                                    <div class="detail-box ml-0">
                                         <h1>
                                             Welcome to SMART-SAMS
                                         </h1>
@@ -264,7 +264,7 @@
                         </div>
                     </div>
                     <!-- Slide for Dashboards -->
-                    <div class="carousel-item">
+                    <div class="carousel-item" style="margin-top:60px;">
                         <div class="container">
                             <div class="row">
                                 <div class="col-md-6">
@@ -279,7 +279,7 @@
                                             helping educators make informed decisions.
                                         </p>
                                         <div class="btn-box">
-                                            <a href="#" class="btn btn-primary">
+                                            <a href="#" class="btn btn-primary ">
                                                 Dashboard Gallery
                                             </a>
                                         </div>
@@ -674,7 +674,7 @@
                                 </li>
                                 <li class="mb-2"><i class="fa fa-check-circle text-success mr-2"></i> Free Updates</li>
                             </ul>
-                            
+
                         </div>
                     </div>
 
@@ -692,7 +692,7 @@
                                 <li class="mb-2"><i class="fa fa-check-circle text-success mr-2"></i> Monthly Updates
                                 </li>
                             </ul>
-                           
+
                         </div>
                     </div>
                 </div>
@@ -732,8 +732,8 @@
                                     placeholder="Enter School Name" required>
                             </div>
                         </div> -->
-                        <!-- Add this inside the contact-form div, before the submit button -->
-                        <!-- <div class="row mt-4">
+                <!-- Add this inside the contact-form div, before the submit button -->
+                <!-- <div class="row mt-4">
                             <div class="col-12">
                                 <h4 style="color: #231a6f; padding-left: 20px;" class="mb-4">Payment Method</h4>
                                 <div class="payment-methods">
@@ -783,7 +783,7 @@
                                 </div>
                             </div>
                         </div> -->
-                        <!-- <div class="col-12">
+                <!-- <div class="col-12">
                             <div class="form-group">
                                 <textarea class="form-control custom-input" name="comments" rows="2"
                                     placeholder="Additional Comments"></textarea>
