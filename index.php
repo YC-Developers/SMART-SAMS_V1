@@ -14,7 +14,7 @@
     <meta name="author" content="Saint Kizito Trainees" />
     <link rel="shortcut icon" href="images/icon.jpg" type="">
 
-    <title>SMART-SAMS| Education System</title>
+    <title>SMART-SAMS | Education System</title>
     <!-- bootstrap core css -->
     <link rel="stylesheet" type="text/css" href="css1/bootstrap.css" />
 
