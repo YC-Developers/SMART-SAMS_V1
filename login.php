@@ -85,7 +85,7 @@ session_start();
       font-size: 1.8rem;
       font-weight: 700;
       background: linear-gradient(45deg, #231a6f, #0f054c);
-      --webkit-background-clip: text;
+      -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 0.5rem;
       animation: fadeInDown 1s ease;
@@ -231,68 +231,6 @@ session_start();
         opacity: 1;
         transform: translateY(0);
       }
-    }
-
-    /* Custom Select Styling */
-    select.form-control {
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23231a6f' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 15px center;
-      background-size: 12px;
-      padding-right: 35px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    select.form-control:focus {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%230f054c' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-    }
-
-    select.form-control option {
-      padding: 10px 15px;
-      background-color: white;
-      color: #231a6f;
-    }
-
-    select.form-control option:checked {
-      background-color: rgba(35, 26, 111, 0.1);
-      font-weight: 600;
-    }
-
-    select.form-control option:hover {
-      background-color: rgba(35, 26, 111, 0.05);
-    }
-
-    /* Remove default select styling in Firefox */
-    select.form-control::-moz-focus-inner {
-      border: 0;
-    }
-
-    /* Remove default select styling in IE */
-    select.form-control::-ms-expand {
-      display: none;
-    }
-
-    /* Custom scrollbar for select dropdown */
-    select.form-control option::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    select.form-control option::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 4px;
-    }
-
-    select.form-control option::-webkit-scrollbar-thumb {
-      background: #231a6f;
-      border-radius: 4px;
-    }
-
-    select.form-control option::-webkit-scrollbar-thumb:hover {
-      background: #0f054c;
     }
   </style>
 

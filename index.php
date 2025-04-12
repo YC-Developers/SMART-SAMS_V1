@@ -254,7 +254,7 @@
                                 <div class="col-md-6">
                                     <div class="img-box img-box-slider rounded-custom">
                                         <img src="images/dash.png" alt="SMART-SAMS System" class="img-fluid">
-                                        <div class="text-overlay font-weight-bold display-2 w-100 bg-secondary">
+                                        <div class="text-overlay font-weight-bold display-2 w-100" style="background-color: #0f054c;">
                                             <span class="text-light span-1">SMART - SAMS</span><br>
                                             <span class="text-primary span-2">SCHOOL ATTENDANCE MANAGEMENT SYSTEM</span>
                                         </div>
@@ -288,8 +288,8 @@
                                 <div class="col-md-6">
                                     <div class="img-box img-box-slider rounded-custom-2">
                                         <img src="images/dash.png" alt="Dashboard Overview" class="img-fluid">
-                                        <div class="text-overlay font-weight-bold display-2 w-100 bg-secondary">
-                                            <span class="text-dark-blue span-1 ">INSIGHTFUL DASHBOARDS</span><br>
+                                        <div class="text-overlay font-weight-bold display-2 w-100 " style="background-color: #0f054c;">
+                                            <span class="text-light span-1 ">INSIGHTFUL DASHBOARDS</span><br>
                                             <span class="text-primary span-2"> ADMINISTRATION PANEL</span>
                                         </div>
                                     </div>
