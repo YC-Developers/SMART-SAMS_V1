@@ -44,6 +44,12 @@
           </div>
         </div>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="generateStudentCards.php">
+          <i class="fas fa-id-card"></i>
+          <span>Generate Student Cards</span>
+        </a>
+      </li>
        <!-- <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBootstrapschemes"
           aria-expanded="true" aria-controls="collapseBootstrapschemes">

@@ -253,8 +253,8 @@
                                 </style>
                                 <div class="col-md-6">
                                     <div class="img-box img-box-slider rounded-custom">
-                                        <img src="images/slider-image.jpg" alt="SMART-SAMS System" class="img-fluid">
-                                        <div class="text-overlay font-weight-bold display-2 w-100">
+                                        <img src="images/dash.png" alt="SMART-SAMS System" class="img-fluid">
+                                        <div class="text-overlay font-weight-bold display-2 w-100 bg-secondary">
                                             <span class="text-light span-1">SMART - SAMS</span><br>
                                             <span class="text-primary span-2">SCHOOL ATTENDANCE MANAGEMENT SYSTEM</span>
                                         </div>
@@ -288,7 +288,7 @@
                                 <div class="col-md-6">
                                     <div class="img-box img-box-slider rounded-custom-2">
                                         <img src="images/dash.png" alt="Dashboard Overview" class="img-fluid">
-                                        <div class="text-overlay font-weight-bold display-2 w-100">
+                                        <div class="text-overlay font-weight-bold display-2 w-100 bg-secondary">
                                             <span class="text-dark-blue span-1 ">INSIGHTFUL DASHBOARDS</span><br>
                                             <span class="text-primary span-2"> ADMINISTRATION PANEL</span>
                                         </div>
@@ -696,334 +696,350 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Contact Information Form -->
-                <!-- <div class="contact-form bg-white rounded-lg shadow-lg p-4 mt-4">
-                    <h3 style="color: #231a6f;" class="mb-4">Contact Information</h3>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control custom-input" name="name"
-                                    placeholder="Enter School Administrator Name" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <input type="email" class="form-control custom-input" name="email"
-                                    placeholder="Enter your Email Address" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">+250</span>
-                                    </div>
-                                    <input type="tel" class="form-control custom-input" name="phone" pattern="[0-9]{9}"
-                                        placeholder="Enter phone number " maxlength="9" required>
-                                </div>
-                                <small class="form-text text-danger">*Enter 9 digits without the country code</small>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control custom-input" name="schoolname"
-                                    placeholder="Enter School Name" required>
-                            </div>
-                        </div> -->
-                <!-- Add this inside the contact-form div, before the submit button -->
-                <!-- <div class="row mt-4">
-                            <div class="col-12">
-                                <h4 style="color: #231a6f; padding-left: 20px;" class="mb-4">Payment Method</h4>
-                                <div class="payment-methods">
-                                    <div class="row">
-                                        <div class="col-md-3 col-6 mb-3">
-                                            <div class="payment-option">
-                                                <input type="radio" name="paymentMethod" id="momo" value="momo"
-                                                    required>
-                                                <label for="momo" class="payment-label">
-                                                    <img src="images/momo.png" alt="MTN Mobile Money"
-                                                        class="payment-icon">
-                                                    <span>MTN MoMo</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 col-6 mb-3">
-                                            <div class="payment-option">
-                                                <input type="radio" name="paymentMethod" id="airtel" value="airtel">
-                                                <label for="airtel" class="payment-label">
-                                                    <img src="images/airtel.png" alt="Airtel Money"
-                                                        class="payment-icon">
-                                                    <span>Airtel Money</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 col-6 mb-3">
-                                            <div class="payment-option">
-                                                <input type="radio" name="paymentMethod" id="visa" value="visa">
-                                                <label for="visa" class="payment-label">
-                                                    <img src="images/visa.png" alt="Visa Card" class="payment-icon">
-                                                    <span>Visa Card</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 col-6 mb-3">
-                                            <div class="payment-option">
-                                                <input type="radio" name="paymentMethod" id="mastercard"
-                                                    value="mastercard">
-                                                <label for="mastercard" class="payment-label">
-                                                    <img src="images/mastercard.png" alt="Mastercard"
-                                                        class="payment-icon">
-                                                    <span>Mastercard</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-                <!-- <div class="col-12">
-                            <div class="form-group">
-                                <textarea class="form-control custom-input" name="comments" rows="2"
-                                    placeholder="Additional Comments"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-center mt-4">
-                        <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 hover-effect">
-                            <i class="fa fa-paper-plane mr-2"></i>Submit Order
-                        </button>
-                    </div> -->
-                <!-- </div> -->
             </form>
         </div>
-
     </section>
 
     <!-- info section -->
-
-    <section class="info_section layout_padding2">
+    <section class="info_section">
         <div class="container">
-            <div class="row">
+            <div class="row mt-3">
+                <!-- Contact Information -->
                 <div class="col-md-6 col-lg-3 info_col">
                     <div class="info_contact">
-                        <h4>
-                            Contact Us
-                        </h4>
+                        <h4 class="section-title">Contact Us</h4>
                         <div class="contact_link_box">
-                            <a href="">
-                                <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                <span>
-                                    Southern Province - Rwanda
-                                </span>
+                            <a href="#" class="contact-item">
+                                <i class="fa fa-map-marker"></i>
+                                <span>Southern Province - Rwanda</span>
                             </a>
-                            <a href="">
-                                <i class="fa fa-phone" aria-hidden="true"></i>
-                                <span>
-                                    Call +250 794-897-943
-                                </span><br>
-                                <span>
-                                    Call +250 791-285-293
-                                </span>
+                            <a href="tel:+250794897943" class="contact-item">
+                                <i class="fa fa-phone"></i>
+                                <span>+250 794-897-943</span>
                             </a>
-                            <a href="">
-                                <i class="fa fa-envelope" aria-hidden="true"></i>
-                                <span>
-                                    ycsoft24@gmail.com
-                                </span>
+                            <a href="tel:+250791285293" class="contact-item">
+                                <i class="fa fa-phone"></i>
+                                <span>+250 791-285-293</span>
+                            </a>
+                            <a href="mailto:ycsoft24@gmail.com" class="contact-item">
+                                <i class="fa fa-envelope"></i>
+                                <span>ycsoft24@gmail.com</span>
+                            </a>
+                        </div>
+                        <div class="info_social">
+                            <a href="#" class="social-icon">
+                                <i class="fa fa-facebook"></i>
+                            </a>
+                            <a href="#" class="social-icon">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                            <a href="#" class="social-icon">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                            <a href="#" class="social-icon">
+                                <i class="fa fa-instagram"></i>
                             </a>
                         </div>
                     </div>
-                    <div class="info_social">
-                        <a href="" class="social-icon">
-                            <i class="fa fa-facebook"
-                                style="color: #4267B2; background: white; padding: 10px; border-radius: 50%; transition: all 0.3s ease;"></i>
-                        </a>
-                        <a href="" class="social-icon">
-                            <i class="fa fa-twitter"
-                                style="color: #1DA1F2; background: white; padding: 10px; border-radius: 50%; transition: all 0.3s ease;"></i>
-                        </a>
-                        <a href="" class="social-icon">
-                            <i class="fa fa-linkedin"
-                                style="color: #0077B5; background: white; padding: 10px; border-radius: 50%; transition: all 0.3s ease;"></i>
-                        </a>
-                        <a href="" class="social-icon">
-                            <i class="fa fa-instagram"
-                                style="color: #E1306C; background: white; padding: 10px; border-radius: 50%; transition: all 0.3s ease;"></i>
-                        </a>
-                        <a href="" class="social-icon">
-                            <i class="fa fa-youtube"
-                                style="color: #FF0000; background: white; padding: 10px; border-radius: 50%; transition: all 0.3s ease;"></i>
-                        </a>
-                    </div>
-
-                    <style>
-                        .info_social {
-                            display: flex;
-                            gap: 15px;
-                            margin-top: 20px;
-                        }
-
-                        .social-icon {
-                            display: inline-flex;
-                            align-items: center;
-                            justify-content: center;
-                            transition: transform 0.3s ease;
-                        }
-
-                        .social-icon:hover {
-                            transform: translateY(-5px);
-                        }
-
-                        .social-icon i {
-                            width: 35px;
-                            height: 35px;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                        }
-
-                        .social-icon i:hover {
-                            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-                        }
-                    </style>
-
-
                 </div>
+
+                <!-- Available Schools -->
                 <div class="col-md-6 col-lg-3 info_col">
                     <div class="info_contact">
-                        <h4 class="mb-4 text-white">
-                            Available Schools
-                        </h4>
-                        <ul class="list-group list-group-flush bg-transparent">
-                            <li class="list-group-item bg-transparent text-white border-0">
-                                Ecole Technique Saint KIZITO SAVE - Southern Province
-                            </li>
+                        <h4 class="section-title">Available Schools</h4>
+                        <div class="schools-list">
+                            <div class="school-item">
+                                <i class="fa fa-graduation-cap"></i>
+                                <span>Ecole Technique Saint KIZITO SAVE</span>
+                                <small>Southern Province</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-md-6 col-lg-2 info_col">
+                    <div class="info_contact">
+                        <h4 class="section-title">Quick Links</h4>
+                        <ul class="quick-links">
+                            <li><a href="index.php"><i class="fa fa-chevron-right"></i> Home</a></li>
+                            <li><a href="about.php"><i class="fa fa-chevron-right"></i> About Us</a></li>
+                            <li><a href="team.php"><i class="fa fa-chevron-right"></i> Team</a></li>
+                            <li><a href="service.php"><i class="fa fa-chevron-right"></i> Services</a></li>
+                            <li><a href="why.php"><i class="fa fa-chevron-right"></i> Why Us</a></li>
                         </ul>
                     </div>
                 </div>
 
-                <div class="col-md-6 col-lg-3 info_col">
+                <!-- Feedback Form -->
+                <div class="col-md-6 col-lg-4 info_col">
                     <div class="info_contact">
-                        <h4 class="mb-4 text-white">
-                            Quick Links
-                        </h4>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item bg-transparent border-0">
-                                <a href="#" class="text-white text-decoration-none hover-effect">
-                                    <i class="fa fa-chevron-right mr-2"></i> Home
-                                </a>
-                            </li>
-                            <li class="list-group-item bg-transparent border-0">
-                                <a href="about.php" class="text-white text-decoration-none hover-effect">
-                                    <i class="fa fa-chevron-right mr-2"></i> About Us
-                                </a>
-                            </li>
-                            <li class="list-group-item bg-transparent border-0">
-                                <a href="team.php" class="text-white text-decoration-none hover-effect">
-                                    <i class="fa fa-chevron-right mr-2"></i> Team
-                                </a>
-                            </li>
-                            <li class="list-group-item bg-transparent border-0">
-                                <a href="service.php" class="text-white text-decoration-none hover-effect">
-                                    <i class="fa fa-chevron-right mr-2"></i> Services
-                                </a>
-                            </li>
-                            <li class="list-group-item bg-transparent border-0">
-                                <a href="why.php" class="text-white text-decoration-none hover-effect">
-                                    <i class="fa fa-chevron-right mr-2"></i> Why Us
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <!-- feedback section -->
-
-                <div class="col-md-6 col-lg-3 info_col">
-                    <div class="info_contact">
-                        <h4 class="mb-4" style="color: #ffffff;">
-                            Send Us Feedback
-                        </h4>
-                        <form action="send_feedback.php" class="feedback-form" method="POST"
-                            style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px;">
-
-                            <div class="form-group mt-1">
-                                <input type="text" class="form-control bg-transparent text-white border-0 border-bottom"
-                                    placeholder="Your Name" name="name" required
-                                    style="border-radius: 0; border-bottom: 1px solid rgba(255,255,255,0.5) !important;">
+                        <h4 class="section-title">Send Us Feedback</h4>
+                        <form action="send_feedback.php" class="feedback-form" method="POST">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Your Name" name="name" required>
                             </div>
-
-                            <div class="form-group mt-1">
-                                <input type="email"
-                                    class="form-control bg-transparent text-white border-0 border-bottom"
-                                    placeholder="Email Address" name="email" required
-                                    style="border-radius: 0; border-bottom: 1px solid rgba(255,255,255,0.5) !important;">
+                            <div class="form-group">
+                                <input type="email" class="form-control" placeholder="Email Address" name="email" required>
                             </div>
-
-                            <div class="form-group mt-1">
-                                <select
-                                    class="form-control custom-select bg-transparent text-white border-0 border-bottom"
-                                    name="rating" required
-                                    style="border-radius: 4px; border-bottom: 2px solid rgba(255,255,255,0.3) !important;">
-                                    <option value="" class="text-dark bg-light">--Rate Your Experience--</option>
-                                    <option value="5" class="text-dark bg-light">⭐⭐⭐⭐⭐ Excellent</option>
-                                    <option value="4" class="text-dark bg-light">⭐⭐⭐⭐ Very Good</option>
-                                    <option value="3" class="text-dark bg-light">⭐⭐⭐ Good</option>
-                                    <option value="2" class="text-dark bg-light">⭐⭐ Fair</option>
-                                    <option value="1" class="text-dark bg-light">⭐ Poor</option>
+                            <div class="form-group">
+                                <select class="form-control" name="rating" required>
+                                    <option value="" class="text-secondary">--Rate Your Experience--</option>
+                                    <option value="5" class="text-secondary">⭐⭐⭐⭐⭐ Excellent</option>
+                                    <option value="4" class="text-secondary">⭐⭐⭐⭐ Very Good</option>
+                                    <option value="3" class="text-secondary">⭐⭐⭐ Good</option>
+                                    <option value="2" class="text-secondary">⭐⭐ Fair</option>
+                                    <option value="1" class="text-secondary">⭐ Poor</option>
                                 </select>
                             </div>
-
-                            <div class="form-group mt-1">
-                                <textarea class="form-control bg-transparent text-white border-0 border-bottom"
-                                    placeholder="Your Feedback Message" name="message" required rows="3"
-                                    style="border-radius: 0; border-bottom: 1px solid rgba(255,255,255,0.5) !important;"></textarea>
+                            <div class="form-group">
+                                <textarea class="form-control" placeholder="Your Feedback Message" name="message" required rows="3"></textarea>
                             </div>
-
-                            <button type="submit"
-                                class="btn btn-outline-light btn-block mt-4 rounded-pill d-flex align-items-center justify-content-center">
-                                <i class="fa fa-paper-plane mr-2"></i>
-                                <span>Send Feedback</span>
+                            <button type="submit" class="btn btn-primary-1 p-1 rounded-pill">
+                                <i class="fa fa-paper-plane"></i> Send Feedback
                             </button>
-
                         </form>
                     </div>
                 </div>
-
-
-
             </div>
         </div>
-        <!-- slider section for the appreciation
-    <div class="sliding-appreciation" style="text-align: center; color: #fff; overflow: hidden; padding: 10px 0;">
-      <div class="slide-text" style="animation: slide 20s linear infinite;">
-        Special thanks to our School ECOLE TECHNIQUE SAINT KIZITO-SAVE and Trainers assistance making SMART-SAMS a success - We grant the best experience as far as the system expands it branches - Leave an order by filling the above form if you are interested.
-      </div>
-      <style>
-        @keyframes slide {
-          0% {
-            transform: translateX(100%);
-          }
-
-          100% {
-            transform: translateX(-100%);
-          }
-        }
-
-        .sliding-appreciation {
-          background: transparent;
-          /* border-radius: 5px; */
-          /* margin: 10px 0; */
-        }
-
-        .slide-text {
-          white-space: nowrap;
-          display: inline-block;
-        }
-      </style> -->
     </section>
+
+    <style>
+        .info_section {
+            background:rgb(1, 2, 52) ;
+            padding: 40px 0;
+            color: #ffffff;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            position: relative;
+            padding-bottom: 0.4rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: #ffffff;
+        }
+
+        .contact_link_box {
+            margin-bottom: 1.2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .contact-item:hover {
+            color: #e6f2ff;
+            transform: translateX(5px);
+        }
+
+        .contact-item i {
+            margin-right: 0.8rem;
+            font-size: 1rem;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .info_social {
+            display: flex;
+            gap: 0.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-icon {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: #ffffff;
+            transform: translateY(-3px);
+        }
+
+        .social-icon i {
+            font-size: 1rem;
+        }
+
+        .schools-list {
+            margin-top: 0.8rem;
+        }
+
+        .school-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+        }
+
+        .school-item i {
+            font-size: 1.2rem;
+            margin-bottom: 0.4rem;
+            color: #ffffff;
+        }
+
+        .school-item span {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+            font-size: 0.95rem;
+        }
+
+        .school-item small {
+            color: #e6f2ff;
+            font-size: 0.85rem;
+        }
+
+        .quick-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .quick-links li {
+            margin-bottom: 0.6rem;
+        }
+
+        .quick-links a {
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .quick-links a:hover {
+            color: #e6f2ff;
+            transform: translateX(5px);
+        }
+
+        .quick-links i {
+            margin-right: 0.4rem;
+            font-size: 0.7rem;
+        }
+
+        .feedback-form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.2rem;
+            border-radius: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 0.8rem;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            padding: 0.6rem 0.8rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: none;
+            color: #ffffff;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .btn-primary-1 {
+            background: #ffffff;
+            color: #004080;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            margin-top: 0.4rem;
+        }
+
+        .btn-primary-1:hover {
+            background: #e6f2ff;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .info_section {
+                padding: 30px 0;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            .contact-item i,
+            .social-icon {
+                width: 32px;
+                height: 32px;
+            }
+
+            .row {
+                margin: 0 -10px;
+            }
+
+            .col-md-6,
+            .col-lg-3 {
+                padding: 0 10px;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Ensure consistent spacing between sections */
+        .info_col {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Improve form select styling */
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.8rem center;
+            padding-right: 2rem;
+        }
+
+        select.form-control:focus {
+            border-color: #ffffff;
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.2);
+        }
+    </style>
     <!-- end info section -->
 
     <!-- footer section -->
@@ -1037,28 +1053,210 @@
     </section>
     <!-- footer section -->
     <!-- loader -->
-    <!-- <div class="loader-container">
-        <img src="images/icon.jpg" alt="SMART-SAMS Logo" class="loader-logo">
-        <div class="loader-text">
-            SMART-SAMS<br>
-            <small> Attendance Management System</small>
+    <div class="loader-container">
+        <div class="loader-3d">
+            <div class="cube">
+                <div class="face front"></div>
+                <div class="face back"></div>
+                <div class="face left"></div>
+                <div class="face right"></div>
+                <div class="face top"></div>
+                <div class="face bottom"></div>
+            </div>
         </div>
-    </div> -->
+        <div class="loader-text text-center">
+            <span class="welcome-text">WELCOME TO</span>
+            <span class="digital-text">SMART-SAMS</span><br>
+            <small class="digital-subtext">School Attendance Management System</small>
+            <div class="loading-dots">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+    </div>
     <!-- end loader -->
-
     <!-- loader script -->
-    <!-- <script>
-    window.addEventListener('load', function() {
-        const loader = document.querySelector('.loader-container');
-        setTimeout(function() {
-            loader.style.opacity = '0';
+    <script>
+        window.addEventListener('load', function() {
+            const loader = document.querySelector('.loader-container');
             setTimeout(function() {
-                loader.style.display = 'none';
-            }, 500);
-        }, 2000);
-    });
-    </script> -->
+                loader.style.opacity = '0';
+                setTimeout(function() {
+                    loader.style.display = 'none';
+                }, 500);
+            }, 2000);
+        });
+    </script>
 
+    <style>
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #004080 0%, #0066cc 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader-3d {
+            perspective: 1000px;
+            margin-bottom: 2rem;
+        }
+
+        .cube {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotate 3s infinite linear;
+        }
+
+        .face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .front {
+            transform: translateZ(50px);
+        }
+
+        .back {
+            transform: translateZ(-50px) rotateY(180deg);
+        }
+
+        .left {
+            transform: translateX(-50px) rotateY(-90deg);
+        }
+
+        .right {
+            transform: translateX(50px) rotateY(90deg);
+        }
+
+        .top {
+            transform: translateY(-50px) rotateX(90deg);
+        }
+
+        .bottom {
+            transform: translateY(50px) rotateX(-90deg);
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotateX(0) rotateY(0) rotateZ(0);
+            }
+
+            100% {
+                transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+            }
+        }
+
+        .welcome-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            letter-spacing: 1px;
+        }
+
+        .digital-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ffffff, #e6f2ff);
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .digital-subtext {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            color: #e6f2ff;
+            margin-top: 0.5rem;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .loading-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: #ffffff;
+            border-radius: 50%;
+            margin: 0 5px;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes glitch {
+            0% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-2px, 2px);
+            }
+
+            40% {
+                transform: translate(-2px, -2px);
+            }
+
+            60% {
+                transform: translate(2px, 2px);
+            }
+
+            80% {
+                transform: translate(2px, -2px);
+            }
+
+            100% {
+                transform: translate(0);
+            }
+        }
+
+        .digital-text:hover {
+            animation: glitch 0.3s infinite;
+        }
+    </style>
+    <!-- end loader script -->
     <!-- end loader script -->
     <!-- jQery -->
     <script type="text/javascript" src="js1/jquery-3.4.1.min.js"></script>

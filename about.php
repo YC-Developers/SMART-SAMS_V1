@@ -140,7 +140,7 @@ html {
                             <li class="nav-item ">
                                 <a class="nav-link" href="service.php">Services</a>
                             </li>
-                            
+
                             <li class="nav-item">
                                 <a href="parent-portal.php" class="nav-link btn btn-outline-primary text-white">Parent
                                     Portal</a>
@@ -207,224 +207,348 @@ html {
         </section>
 
         <!-- end about section -->
-        <hr>
-        <!-- info section -->
 
-        <section class="info_section layout_padding2">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6 col-lg-3 info_col">
-                        <div class="info_contact">
-                            <h4>
-                                Contact Us
-                            </h4>
-                            <div class="contact_link_box">
-                                <a href="">
-                                    <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                    <span>
-                                        Southern Province - Rwanda
-                                    </span>
-                                </a>
-                                <a href="">
-                                    <i class="fa fa-phone" aria-hidden="true"></i>
-                                    <span>
-                                        Call +250 794-897-943
-                                    </span><br>
-                                    <span>
-                                        Call +250 791-285-293
-                                    </span>
-                                </a>
-                                <a href="">
-                                    <i class="fa fa-envelope" aria-hidden="true"></i>
-                                    <span>
-                                        ycsoft24@gmail.com
-                                    </span>
-                                </a>
-                            </div>
+    <!-- info section -->
+    <section class="info_section">
+        <div class="container">
+            <div class="row ">
+                <!-- Contact Information -->
+                <div class="col-md-6 col-lg-3 info_col -ml-5">
+                    <div class="info_contact">
+                        <h4 class="section-title">Contact Us</h4>
+                        <div class="contact_link_box">
+                            <a href="#" class="contact-item">
+                                <i class="fa fa-map-marker"></i>
+                                <span>Southern Province - Rwanda</span>
+                            </a>
+                            <a href="tel:+250794897943" class="contact-item">
+                                <i class="fa fa-phone"></i>
+                                <span>+250 794-897-943</span>
+                            </a>
+                            <a href="tel:+250791285293" class="contact-item">
+                                <i class="fa fa-phone"></i>
+                                <span>+250 791-285-293</span>
+                            </a>
+                            <a href="mailto:ycsoft24@gmail.com" class="contact-item">
+                                <i class="fa fa-envelope"></i>
+                                <span>ycsoft24@gmail.com</span>
+                            </a>
                         </div>
                         <div class="info_social">
-                            <a href="" class="social-icon">
-                                <i class="fa fa-facebook"
-                                    style="color: #4267B2; background: white; padding: 10px; border-radius: 50%; transition: all 0.3s ease;"></i>
+                            <a href="#" class="social-icon">
+                                <i class="fa fa-facebook"></i>
                             </a>
-                            <a href="" class="social-icon">
-                                <i class="fa fa-twitter"
-                                    style="color: #1DA1F2; background: white; padding: 10px; border-radius: 50%; transition: all 0.3s ease;"></i>
+                            <a href="#" class="social-icon">
+                                <i class="fa fa-twitter"></i>
                             </a>
-                            <a href="" class="social-icon">
-                                <i class="fa fa-linkedin"
-                                    style="color: #0077B5; background: white; padding: 10px; border-radius: 50%; transition: all 0.3s ease;"></i>
+                            <a href="#" class="social-icon">
+                                <i class="fa fa-linkedin"></i>
                             </a>
-                            <a href="" class="social-icon">
-                                <i class="fa fa-instagram"
-                                    style="color: #E1306C; background: white; padding: 10px; border-radius: 50%; transition: all 0.3s ease;"></i>
-                            </a>
-                            <a href="" class="social-icon">
-                                <i class="fa fa-youtube"
-                                    style="color: #FF0000; background: white; padding: 10px; border-radius: 50%; transition: all 0.3s ease;"></i>
+                            <a href="#" class="social-icon">
+                                <i class="fa fa-instagram"></i>
                             </a>
                         </div>
-
-                        <style>
-                        .info_social {
-                            display: flex;
-                            gap: 15px;
-                            margin-top: 20px;
-                        }
-
-                        .social-icon {
-                            display: inline-flex;
-                            align-items: center;
-                            justify-content: center;
-                            transition: transform 0.3s ease;
-                        }
-
-                        .social-icon:hover {
-                            transform: translateY(-5px);
-                        }
-
-                        .social-icon i {
-                            width: 35px;
-                            height: 35px;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                        }
-
-                        .social-icon i:hover {
-                            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-                        }
-                        </style>
-
-
                     </div>
-                    <div class="col-md-6 col-lg-3 info_col">
-                        <div class="info_contact">
-                            <h4 class="mb-4 text-white">
-                                Available Schools
-                            </h4>
-                            <ul class="list-group list-group-flush bg-transparent">
-                                <li class="list-group-item bg-transparent text-white border-0">
-                                    Ecole Technique Saint KIZITO SAVE - Southern Province
-                                </li>
-                            </ul>
+                </div>
+
+                <!-- Available Schools -->
+                <div class="col-md-6 col-lg-3 info_col">
+                    <div class="info_contact">
+                        <h4 class="section-title">Available Schools</h4>
+                        <div class="schools-list">
+                            <div class="school-item">
+                                <i class="fa fa-graduation-cap"></i>
+                                <span>Ecole Technique Saint KIZITO SAVE</span>
+                                <small>Southern Province</small>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-md-6 col-lg-3 info_col">
-                        <div class="info_contact">
-                            <h4 class="mb-4 text-white">
-                                Quick Links
-                            </h4>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item bg-transparent border-0">
-                                    <a href="#" class="text-white text-decoration-none hover-effect">
-                                        <i class="fa fa-chevron-right mr-2"></i> Home
-                                    </a>
-                                </li>
-                                <li class="list-group-item bg-transparent border-0">
-                                    <a href="about.php" class="text-white text-decoration-none hover-effect">
-                                        <i class="fa fa-chevron-right mr-2"></i> About Us
-                                    </a>
-                                </li>
-                                
-                                <li class="list-group-item bg-transparent border-0">
-                                    <a href="service.php" class="text-white text-decoration-none hover-effect">
-                                        <i class="fa fa-chevron-right mr-2"></i> Services
-                                    </a>
-                                </li>
-                                
-                            </ul>
-                        </div>
+                <!-- Quick Links -->
+                <div class="col-md-6 col-lg-2 info_col">
+                    <div class="info_contact">
+                        <h4 class="section-title">Quick Links</h4>
+                        <ul class="quick-links">
+                            <li><a href="index.php"><i class="fa fa-chevron-right"></i> Home</a></li>
+                            <li><a href="about.php"><i class="fa fa-chevron-right"></i> About Us</a></li>
+                            <li><a href="team.php"><i class="fa fa-chevron-right"></i> Team</a></li>
+                            <li><a href="service.php"><i class="fa fa-chevron-right"></i> Services</a></li>
+                            <li><a href="why.php"><i class="fa fa-chevron-right"></i> Why Us</a></li>
+                        </ul>
                     </div>
-                    <!-- feedback section -->
+                </div>
 
-                    <div class="col-md-6 col-lg-3 info_col">
-                        <div class="info_contact">
-                            <h4 class="mb-4" style="color: #ffffff;">
-                                Send Us Feedback
-                            </h4>
-                            <form action="send_feedback.php" class="feedback-form" method="POST"
-                                style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px;">
-
-                                <div class="form-group mt-1">
-                                    <input type="text"
-                                        class="form-control bg-transparent text-white border-0 border-bottom"
-                                        placeholder="Your Name" name="name" required
-                                        style="border-radius: 0; border-bottom: 1px solid rgba(255,255,255,0.5) !important;">
-                                </div>
-
-                                <div class="form-group mt-1">
-                                    <input type="email"
-                                        class="form-control bg-transparent text-white border-0 border-bottom"
-                                        placeholder="Email Address" name="email" required
-                                        style="border-radius: 0; border-bottom: 1px solid rgba(255,255,255,0.5) !important;">
-                                </div>
-
-                                <div class="form-group mt-1">
-                                    <select
-                                        class="form-control custom-select bg-transparent text-white border-0 border-bottom"
-                                        name="rating" required
-                                        style="border-radius: 4px; border-bottom: 2px solid rgba(255,255,255,0.3) !important;">
-                                        <option value="" class="text-dark bg-light">--Rate Your Experience--</option>
-                                        <option value="5" class="text-dark bg-light">⭐⭐⭐⭐⭐ Excellent</option>
-                                        <option value="4" class="text-dark bg-light">⭐⭐⭐⭐ Very Good</option>
-                                        <option value="3" class="text-dark bg-light">⭐⭐⭐ Good</option>
-                                        <option value="2" class="text-dark bg-light">⭐⭐ Fair</option>
-                                        <option value="1" class="text-dark bg-light">⭐ Poor</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group mt-1">
-                                    <textarea class="form-control bg-transparent text-white border-0 border-bottom"
-                                        placeholder="Your Feedback Message" name="message" required rows="3"
-                                        style="border-radius: 0; border-bottom: 1px solid rgba(255,255,255,0.5) !important;"></textarea>
-                                </div>
-
-                                <button type="submit"
-                                    class="btn btn-outline-light btn-block mt-4 rounded-pill d-flex align-items-center justify-content-center">
-                                    <i class="fa fa-paper-plane mr-2"></i>
-                                    <span>Send Feedback</span>
-                                </button>
-                            </form>
-                        </div>
+                <!-- Feedback Form -->
+                <div class="col-md-6 col-lg-4 info_col">
+                    <div class="info_contact">
+                        <h4 class="section-title">Send Us Feedback</h4>
+                        <form action="send_feedback.php" class="feedback-form" method="POST">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Your Name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" class="form-control" placeholder="Email Address" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <select class="form-control" name="rating" required>
+                                    <option value="" class="text-secondary">--Rate Your Experience--</option>
+                                    <option value="5" class="text-secondary">⭐⭐⭐⭐⭐ Excellent</option>
+                                    <option value="4" class="text-secondary">⭐⭐⭐⭐ Very Good</option>
+                                    <option value="3" class="text-secondary">⭐⭐⭐ Good</option>
+                                    <option value="2" class="text-secondary">⭐⭐ Fair</option>
+                                    <option value="1" class="text-secondary">⭐ Poor</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control" placeholder="Your Feedback Message" name="message" required rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary-1 p-1 rounded-pill">
+                                <i class="fa fa-paper-plane"></i> Send Feedback
+                            </button>
+                        </form>
                     </div>
-
-
-
                 </div>
             </div>
-            <!-- slider section for the appreciation
-    <div class="sliding-appreciation" style="text-align: center; color: #fff; overflow: hidden; padding: 10px 0;">
-      <div class="slide-text" style="animation: slide 20s linear infinite;">
-        Special thanks to our School ECOLE TECHNIQUE SAINT KIZITO-SAVE and Trainers assistance making SMART-SAMS a success - We grant the best experience as far as the system expands it branches - Leave an order by filling the above form if you are interested.
-      </div>
-      <style>
-        @keyframes slide {
-          0% {
-            transform: translateX(100%);
-          }
+        </div>
+    </section>
 
-          100% {
-            transform: translateX(-100%);
-          }
+    <style>
+        .info_section {
+            background: rgb(1, 2, 52);
+            padding: 40px 0;
+            color: #ffffff;
         }
 
-        .sliding-appreciation {
-          background: transparent;
-          /* border-radius: 5px; */
-          /* margin: 10px 0; */
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            position: relative;
+            padding-bottom: 0.4rem;
         }
 
-        .slide-text {
-          white-space: nowrap;
-          display: inline-block;
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: #ffffff;
         }
-      </style> -->
-        </section>
-        <!-- end info section -->
 
+        .contact_link_box {
+            margin-bottom: 1.2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .contact-item:hover {
+            color: #e6f2ff;
+            transform: translateX(5px);
+        }
+
+        .contact-item i {
+            margin-right: 0.8rem;
+            font-size: 1rem;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .info_social {
+            display: flex;
+            gap: 0.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-icon {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: #ffffff;
+            transform: translateY(-3px);
+        }
+
+        .social-icon i {
+            font-size: 1rem;
+        }
+
+        .schools-list {
+            margin-top: 0.8rem;
+        }
+
+        .school-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+        }
+
+        .school-item i {
+            font-size: 1.2rem;
+            margin-bottom: 0.4rem;
+            color: #ffffff;
+        }
+
+        .school-item span {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+            font-size: 0.95rem;
+        }
+
+        .school-item small {
+            color: #e6f2ff;
+            font-size: 0.85rem;
+        }
+
+        .quick-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .quick-links li {
+            margin-bottom: 0.6rem;
+        }
+
+        .quick-links a {
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .quick-links a:hover {
+            color: #e6f2ff;
+            transform: translateX(5px);
+        }
+
+        .quick-links i {
+            margin-right: 0.4rem;
+            font-size: 0.7rem;
+        }
+
+        .feedback-form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.2rem;
+            border-radius: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 0.8rem;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            padding: 0.6rem 0.8rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: none;
+            color: #ffffff;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .btn-primary-1 {
+            background: #ffffff;
+            color: #004080;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            margin-top: 0.4rem;
+        }
+
+        .btn-primary-1:hover {
+            background: #e6f2ff;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .info_section {
+                padding: 30px 0;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            .contact-item i,
+            .social-icon {
+                width: 32px;
+                height: 32px;
+            }
+
+            .row {
+                margin: 0 -10px;
+            }
+
+            .col-md-6,
+            .col-lg-3 {
+                padding: 0 10px;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Ensure consistent spacing between sections */
+        .info_col {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Improve form select styling */
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.8rem center;
+            padding-right: 2rem;
+        }
+
+        select.form-control:focus {
+            border-color: #ffffff;
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.2);
+        }
+    </style>
+    <!-- end info section -->
 
         <!-- footer section -->
         <section class="footer_section">

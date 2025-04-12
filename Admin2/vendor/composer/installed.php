@@ -3,7 +3,7 @@
         'name' => 'admin/phpexcel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '7dc249c6497779a310ff10d0eb0dc796c3ed7120',
+        'reference' => 'e3e2aa401871f0290805e2fb793d1dbdc6f55cd4',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'admin/phpexcel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '7dc249c6497779a310ff10d0eb0dc796c3ed7120',
+            'reference' => 'e3e2aa401871f0290805e2fb793d1dbdc6f55cd4',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
