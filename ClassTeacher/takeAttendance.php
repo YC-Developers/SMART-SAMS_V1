@@ -2,6 +2,16 @@
 error_reporting(0);
 include '../Includes/dbcon.php';
 include '../Includes/session.php'; 
+
+// Function to check if current time is morning (before 12 PM)
+function isMorning() {
+    return date('H') < 12;
+}
+
+// Function to check if current time is evening (after 12 PM)
+function isEvening() {
+    return date('H') >= 12;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -88,6 +98,22 @@ include '../Includes/session.php';
             border-radius: 8px;
             text-align: center;
         }
+        .time-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        .morning {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .evening {
+            background-color: #fff3cd;
+            color: #856404;
+        }
     </style>
 </head>
 <body id="page-top">
@@ -118,6 +144,9 @@ include '../Includes/session.php';
                                 <div class="scanner-header">
                                     <h4 class="text-primary font-weight-bold">
                                         <i class="fas fa-qrcode mr-2"></i>Class Attendance Scanner
+                                        <span class="time-indicator <?php echo isMorning() ? 'morning' : 'evening'; ?>">
+                                            <?php echo isMorning() ? 'Morning Session' : 'Evening Session'; ?>
+                                        </span>
                                     </h4>
                                 </div>
                                 
@@ -126,7 +155,7 @@ include '../Includes/session.php';
                                     <ol>
                                         <li>Point your camera at the class QR code</li>
                                         <li>Hold steady until the code is recognized</li>
-                                        <li>You'll be automatically redirected to the attendance page</li>
+                                        <li>You'll be automatically redirected if attendance is allowed</li>
                                     </ol>
                                 </div>
                                 
@@ -192,30 +221,66 @@ include '../Includes/session.php';
                 let currentFacingMode = "environment";
                 let html5QrCode;
                 
+                // Function to check attendance status via AJAX
+                function checkAttendanceStatus(className, callback) {
+                    $.ajax({
+                        url: 'check_attendance.php',
+                        type: 'POST',
+                        data: {
+                            className: className,
+                            isMorning: <?php echo isMorning() ? 'true' : 'false'; ?>
+                        },
+                        success: function(response) {
+                            callback(response);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error checking attendance:", error);
+                            callback({allowed: false, message: "Error checking attendance status"});
+                        }
+                    });
+                }
+                
                 // Initialize the QR scanner
                 function startQRScanner(facingMode = "environment") {
                     function onScanSuccess(decodedText, decodedResult) {
                         console.log(`Code scanned: ${decodedText}`);
                         if (validClassNames.includes(decodedText)) {
-                            // Show success overlay
-                            const reader = document.getElementById("reader");
-                            const overlay = document.createElement("div");
-                            overlay.className = "scanner-overlay";
-                            overlay.innerHTML = `
-                                <div class="scanner-overlay-content">
-                                    <h4 class="text-success"><i class="fas fa-check-circle"></i> Success!</h4>
-                                    <p>Redirecting to class attendance...</p>
-                                    <div class="spinner-border text-primary" role="status">
-                                        <span class="sr-only">Loading...</span>
-                                    </div>
-                                </div>
-                            `;
-                            reader.appendChild(overlay);
-                            
-                            // Redirect after short delay
-                            setTimeout(() => {
-                                window.location.href = `classat.php?data=${encodeURIComponent(decodedText)}`;
-                            }, 1500);
+                            // First check if attendance is allowed
+                            checkAttendanceStatus(decodedText, function(response) {
+                                const reader = document.getElementById("reader");
+                                const overlay = document.createElement("div");
+                                overlay.className = "scanner-overlay";
+                                
+                                if (response.allowed) {
+                                    // Show success overlay
+                                    overlay.innerHTML = `
+                                        <div class="scanner-overlay-content">
+                                            <h4 class="text-success"><i class="fas fa-check-circle"></i> Success!</h4>
+                                            <p>${response.message}</p>
+                                            <p>Redirecting to class attendance...</p>
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                        </div>
+                                    `;
+                                    reader.appendChild(overlay);
+                                    
+                                    // Redirect after short delay
+                                    setTimeout(() => {
+                                        window.location.href = `classat.php?data=${encodeURIComponent(decodedText)}`;
+                                    }, 1500);
+                                } else {
+                                    // Show error overlay
+                                    overlay.innerHTML = `
+                                        <div class="scanner-overlay-content">
+                                            <h4 class="text-danger"><i class="fas fa-exclamation-circle"></i> Attendance Already Taken</h4>
+                                            <p>${response.message}</p>
+                                            <button class="btn btn-primary" onclick="this.closest('.scanner-overlay').remove()">OK</button>
+                                        </div>
+                                    `;
+                                    reader.appendChild(overlay);
+                                }
+                            });
                         } else {
                             document.getElementById("error").innerHTML = `
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -230,7 +295,6 @@ include '../Includes/session.php';
 
                     function onScanError(errorMessage) {
                         console.error("Scan error:", errorMessage);
-                        // Don't show error message to user unless it's critical
                     }
 
                     // If scanner already exists, stop it first
@@ -240,7 +304,7 @@ include '../Includes/session.php';
                     
                     html5QrCode = new Html5Qrcode("reader");
                     html5QrCode.start(
-                        { facingMode: facingMode },
+                        { facingMode: "environment" },
                         { fps: 10, qrbox: 250 },
                         onScanSuccess,
                         onScanError
@@ -261,19 +325,6 @@ include '../Includes/session.php';
                 $("#toggleCameraBtn").click(function() {
                     currentFacingMode = currentFacingMode === "environment" ? "user" : "environment";
                     startQRScanner(currentFacingMode);
-                });
-                
-                // Manual entry button
-                $("#manualEntryBtn").click(function() {
-                    $("#manualEntryModal").modal("show");
-                });
-                
-                // Confirm manual entry
-                $("#confirmManualEntry").click(function() {
-                    const selectedClass = $("#classSelect").val();
-                    if (validClassNames.includes(selectedClass)) {
-                        window.location.href = `classat.php?data=${encodeURIComponent(selectedClass)}`;
-                    }
                 });
                 
                 // Start QR scanner on page load

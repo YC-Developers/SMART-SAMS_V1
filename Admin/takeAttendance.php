@@ -2,6 +2,19 @@
 error_reporting(0);
 include '../Includes/dbcon.php';
 include '../Includes/session.php'; 
+
+
+
+// Function to check if current time is morning (before 12 PM)
+function isMorning() {
+    return date('H') < 12;
+}
+
+// Function to check if current time is evening (after 12 PM)
+function isEvening() {
+    return date('H') >= 12;
+}
+?>
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -41,7 +54,6 @@ include '../Includes/session.php';
             overflow: hidden;
         }
         #reader::after {
-            content: "Align QR code within frame";
             position: absolute;
             bottom: 10px;
             left: 0;
@@ -118,6 +130,9 @@ include '../Includes/session.php';
                                 <div class="scanner-header">
                                     <h4 class="text-primary font-weight-bold">
                                         <i class="fas fa-qrcode mr-2"></i>Class Attendance Scanner
+                                        <span class="time-indicator <?php echo isMorning() ? 'morning' : 'evening'; ?>">
+                                            <?php echo isMorning() ? 'Morning Session' : 'Evening Session'; ?>
+                                        </span>
                                     </h4>
                                 </div>
                                 
@@ -126,7 +141,7 @@ include '../Includes/session.php';
                                     <ol>
                                         <li>Point your camera at the class QR code</li>
                                         <li>Hold steady until the code is recognized</li>
-                                        <li>You'll be automatically redirected to the attendance page</li>
+                                        <li>You'll be automatically redirected if attendance is allowed</li>
                                     </ol>
                                 </div>
                                 
@@ -139,9 +154,11 @@ include '../Includes/session.php';
                                     <button id="toggleCameraBtn" class="btn btn-secondary btn-sm mr-2">
                                         <i class="fas fa-sync-alt"></i> Switch Camera
                                     </button>
+
                                     <button id="manualEntryBtn" class="btn btn-outline-primary btn-sm manual-entry-btn">
                                         <i class="fas fa-keyboard"></i> Manual Entry
                                     </button>
+
                                 </div>
                                 
                                 <div class="scanner-footer">
@@ -150,7 +167,7 @@ include '../Includes/session.php';
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>                               
                 <!-- Container Fluid Ends -->
                 
                 <!-- Footer -->
@@ -282,7 +299,7 @@ include '../Includes/session.php';
                     
                     html5QrCode = new Html5Qrcode("reader");
                     html5QrCode.start(
-                        { facingMode: facingMode },
+                        { facingMode: "environment" },
                         { fps: 10, qrbox: 250 },
                         onScanSuccess,
                         onScanError

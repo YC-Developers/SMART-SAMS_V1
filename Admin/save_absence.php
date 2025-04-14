@@ -4,7 +4,7 @@ include '../Includes/session.php';
 
 if (isset($_POST['save'])) {
     $absentees = $_POST['check']; // Selected absent student IDs
-    $reasons = $_POST['reason'];
+    $reasons = $_POST['status'];
     $arriveds = $_POST['late_time'];
     $mode = $_POST['mode'];
     $dateTaken = date("Y-m-d");

@@ -4,7 +4,8 @@ include '../Includes/session.php';
 
 if (isset($_POST['save'])) {
     $absentees = $_POST['check']; // Selected absent student IDs
-    $reasons = $_POST['reason']; // Reasons for absence
+    $reasons = $_POST['status'];
+    $arriveds = $_POST['late_time'];
     $mode = $_POST['mode'];
     $dateTaken = date("Y-m-d");
     $day = date('N', strtotime($dateTaken));
@@ -12,6 +13,7 @@ if (isset($_POST['save'])) {
     for ($i = 0; $i < count($absentees); $i++) {
         $studentId = $absentees[$i];
         $reason = mysqli_real_escape_string($conn, $reasons[$i]);
+        $arrived = $arriveds[$i];
 
         // Fetch student details
         $query = "SELECT tblstudents.Id,tblclass.className,tblclassarms.classArmName,tblclassarms.Id AS classArmId,tblstudents.name,tblstudents.gender,
@@ -32,10 +34,11 @@ $rs = $conn->query($query);
         $num = $rs->num_rows;
         $rows = $rs->fetch_assoc();
         $s = $rows['school'];
+
       
         // Insert absence record
-        $sql = "INSERT INTO absents (name, gender, className, regNumber, mode, day, reason,school, date) 
-                VALUES ('$name', '$gender', '$className', '$reg', '$mode', '$day', '$reason','$s', '$dateTaken')";
+        $sql = "INSERT INTO absents (name, gender, className, regNumber, mode, day, reason,tArrived,school, date) 
+                VALUES ('$name', '$gender', '$className', '$reg', '$mode', '$day', '$reason','$arrived','$s', '$dateTaken')";
         mysqli_query($conn, $sql);
     }
 

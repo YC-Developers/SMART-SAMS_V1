@@ -88,6 +88,9 @@ if (isset($_POST['check'])) {
       if (selectedValue === 'Late') {
         statusCell.classList.add('badge-late');
         statusCell.textContent = 'Late';
+      } else if (selectedValue === 'Present') {
+        statusCell.classList.add('badge-present');
+        statusCell.textContent = 'Present';
       } else if (selectedValue === 'Sick' || selectedValue === 'Absent' || selectedValue === 'Went Home') {
         statusCell.classList.add('badge-absent');
         statusCell.textContent = 'Absent';
@@ -134,8 +137,7 @@ if (isset($_POST['check'])) {
                     <div class="alert alert-info">
                       <i class="fas fa-info-circle"></i> Please set the status for each student. 
                       Mark students as <span class="badge-absent status-badge">Absent</span>, 
-                      <span class="badge-late status-badge">Late</span>
-                    as appropriate.
+                      <span class="badge-late status-badge">Late</span>as appropriate.
                     </div>
                     
                     <div class="table-responsive">
@@ -166,7 +168,7 @@ if (isset($_POST['check'])) {
                                 </td>
                                 <td class="status-display status-badge">Not Set</td>
                                 <td>
-                                  <select name="reason[]" class="form-control reason-select" onchange="updateStatusDisplay(this)" required>
+                                  <select name="status[]" class="form-control reason-select" onchange="updateStatusDisplay(this)" required>
                                     <option value="" disabled selected>Select Status</option>
                                     <option value="Late">Late</option>
                                     <option value="Sick">Sick (Absent)</option>
