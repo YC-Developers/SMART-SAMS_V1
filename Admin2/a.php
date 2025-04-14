@@ -11,11 +11,11 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Function to get all promoted students with their current and historical data
+// Function to get all promoted students
 function getPromotedStudents($conn, $search = null) {
     $sql = "SELECT s.Id, s.name, s.admissionNumber, s.gender, 
                    c_current.className as current_class, 
-                   GROUP_CONCAT(DISTINCT CONCAT(h.class_id, ':', c_hist.className) as history_classes
+                   GROUP_CONCAT(DISTINCT c_hist.className ORDER BY h.start_date DESC SEPARATOR ', ') as history_classes
             FROM tblstudents s
             JOIN tblclass c_current ON s.classId = c_current.Id
             LEFT JOIN student_class_history h ON s.Id = h.student_id
@@ -26,15 +26,23 @@ function getPromotedStudents($conn, $search = null) {
         $searchTerm = "%$search%";
     }
     
-    $sql .= " GROUP BY s.Id HAVING COUNT(h.history_id) > 0";
+    $sql .= " GROUP BY s.Id, s.name, s.admissionNumber, s.gender, c_current.className
+              HAVING COUNT(h.history_id) > 0";
     
     $stmt = $conn->prepare($sql);
+    
+    if (!$stmt) {
+        die("Error preparing statement: " . $conn->error);
+    }
     
     if ($search) {
         $stmt->bind_param("ss", $searchTerm, $searchTerm);
     }
     
-    $stmt->execute();
+    if (!$stmt->execute()) {
+        die("Error executing query: " . $stmt->error);
+    }
+    
     $result = $stmt->get_result();
     
     $students = array();
@@ -43,10 +51,9 @@ function getPromotedStudents($conn, $search = null) {
             // Parse class history
             $history = array();
             if ($row['history_classes']) {
-                $pairs = explode(',', $row['history_classes']);
-                foreach ($pairs as $pair) {
-                    list($class_id, $class_name) = explode(':', $pair);
-                    $history[] = array('id' => $class_id, 'name' => $class_name);
+                $classNames = explode(', ', $row['history_classes']);
+                foreach ($classNames as $className) {
+                    $history[] = array('name' => $className);
                 }
             }
             $row['history'] = $history;
@@ -126,6 +133,48 @@ function getStudentClassHistory($conn, $studentId) {
     return $history;
 }
 
+// Function to get attendance statistics
+function getAttendanceStatistics($conn, $studentId) {
+    // Get present/absent counts
+    $sql = "SELECT 
+                SUM(CASE WHEN status = 'Present' THEN 1 ELSE 0 END) as present_count,
+                SUM(CASE WHEN status = 'Absent' THEN 1 ELSE 0 END) as absent_count
+            FROM student_attendance_archive
+            WHERE studentId = ?";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $studentId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $counts = $result->fetch_assoc();
+    
+    // Get most common absence reason
+    $sql = "SELECT reason, COUNT(*) as count 
+            FROM student_absents_archive a
+            JOIN tblstudents s ON a.regNumber = s.admissionNumber
+            WHERE s.Id = ?
+            GROUP BY reason
+            ORDER BY count DESC
+            LIMIT 1";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $studentId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $reason = $result->fetch_assoc();
+    
+    // Calculate attendance rate
+    $total = $counts['present_count'] + $counts['absent_count'];
+    $rate = ($total > 0) ? round(($counts['present_count'] / $total) * 100, 2) : 0;
+    
+    return [
+        'present' => $counts['present_count'],
+        'absent' => $counts['absent_count'],
+        'rate' => $rate,
+        'common_reason' => $reason['reason'] ?? 'N/A'
+    ];
+}
+
 // Handle search
 $search = isset($_GET['search']) ? trim($_GET['search']) : null;
 $students = getPromotedStudents($conn, $search);
@@ -135,6 +184,7 @@ $studentDetails = null;
 $attendanceArchive = array();
 $absentsArchive = array();
 $classHistory = array();
+$attendanceStats = array();
 
 if (isset($_GET['student_id'])) {
     $studentId = intval($_GET['student_id']);
@@ -155,6 +205,7 @@ if (isset($_GET['student_id'])) {
         $attendanceArchive = getStudentAttendanceArchive($conn, $studentId);
         $absentsArchive = getStudentAbsentsArchive($conn, $studentId);
         $classHistory = getStudentClassHistory($conn, $studentId);
+        $attendanceStats = getAttendanceStatistics($conn, $studentId);
     }
 }
 ?>
@@ -165,6 +216,14 @@ if (isset($_GET['student_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Promoted Students Data Management</title>
+    <!-- Include Chart.js for statistics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Include pdf-lib for PDF generation -->
+    <script src="https://unpkg.com/pdf-lib@1.16.0/dist/pdf-lib.min.js"></script>
+    <!-- Include downloadjs for file downloads -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/downloadjs/1.4.8/download.min.js"></script>
+    <!-- Include FileSaver for alternative download method -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         .container { max-width: 1200px; margin: 0 auto; }
@@ -182,6 +241,12 @@ if (isset($_GET['student_id'])) {
         .info-row { margin-bottom: 10px; }
         .info-label { font-weight: bold; display: inline-block; width: 150px; }
         .back-link { display: inline-block; margin-bottom: 15px; }
+        .action-buttons { margin: 15px 0; }
+        .button { background-color: #4CAF50; border: none; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 5px; }
+        .chart-container { width: 100%; max-width: 600px; margin: 20px auto; }
+        .stats-container { display: flex; flex-wrap: wrap; gap: 20px; margin: 20px 0; }
+        .stat-box { flex: 1; min-width: 200px; background: #f8f9fa; padding: 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .stat-value { font-size: 24px; font-weight: bold; color: #007bff; }
     </style>
 </head>
 <body>
@@ -246,6 +311,10 @@ if (isset($_GET['student_id'])) {
             <a href="?" class="back-link">&laquo; Back to list</a>
             
             <?php if ($studentDetails): ?>
+                <div class="action-buttons">
+                    <button class="button" onclick="generatePDF()">Export to PDF</button>
+                </div>
+                
                 <div class="student-info">
                     <h2>Student Information</h2>
                     <div class="info-row">
@@ -264,6 +333,31 @@ if (isset($_GET['student_id'])) {
                         <span class="info-label">Current Class:</span>
                         <?php echo htmlspecialchars($studentDetails['current_class']); ?>
                     </div>
+                </div>
+                
+                <!-- Statistics Section -->
+                <div class="stats-container">
+                    <div class="stat-box">
+                        <h3>Attendance Rate</h3>
+                        <div class="stat-value"><?php echo $attendanceStats['rate']; ?>%</div>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Present Days</h3>
+                        <div class="stat-value"><?php echo $attendanceStats['present']; ?></div>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Absent Days</h3>
+                        <div class="stat-value"><?php echo $attendanceStats['absent']; ?></div>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Common Reason</h3>
+                        <div class="stat-value"><?php echo $attendanceStats['common_reason']; ?></div>
+                    </div>
+                </div>
+                
+                <!-- Attendance Chart -->
+                <div class="chart-container">
+                    <canvas id="attendanceChart"></canvas>
                 </div>
                 
                 <div class="tab">
@@ -368,6 +462,7 @@ if (isset($_GET['student_id'])) {
                 </div>
                 
                 <script>
+                    // Tab functionality
                     function openTab(evt, tabName) {
                         var i, tabcontent, tablinks;
                         
@@ -386,6 +481,165 @@ if (isset($_GET['student_id'])) {
                         // Show the current tab and add active class to the button
                         document.getElementById(tabName).style.display = "block";
                         evt.currentTarget.className += " active";
+                    }
+                    
+                    // Attendance chart
+                    const ctx = document.getElementById('attendanceChart').getContext('2d');
+                    const chart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: ['Present', 'Absent'],
+                            datasets: [{
+                                data: [
+                                    <?php echo $attendanceStats['present']; ?>,
+                                    <?php echo $attendanceStats['absent']; ?>
+                                ],
+                                backgroundColor: [
+                                    '#4e73df',
+                                    '#e74a3b'
+                                ],
+                                hoverBackgroundColor: [
+                                    '#2e59d9',
+                                    '#be2617'
+                                ],
+                                hoverBorderColor: "rgba(234, 236, 244, 1)",
+                            }]
+                        },
+                        options: {
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Attendance Overview'
+                                },
+                                legend: {
+                                    position: 'bottom'
+                                }
+                            }
+                        }
+                    });
+                    
+                    // PDF Generation using pdf-lib
+                    async function generatePDF() {
+                        const { PDFDocument, rgb } = PDFLib;
+                        
+                        // Create a new PDF document
+                        const pdfDoc = await PDFDocument.create();
+                        const page = pdfDoc.addPage([600, 800]);
+                        
+                        // Set font and size
+                        const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+                        
+                        // Add title
+                        page.drawText('Student Academic Report', {
+                            x: 50,
+                            y: 750,
+                            size: 18,
+                            font,
+                            color: rgb(0, 0, 0)
+                        });
+                        
+                        // Add student information
+                        page.drawText('Student Information:', {
+                            x: 50,
+                            y: 700,
+                            size: 14,
+                            font,
+                            color: rgb(0, 0, 0)
+                        });
+                        
+                        let yPosition = 670;
+                        const studentInfo = [
+                            `Name: ${<?php echo json_encode($studentDetails['name']); ?>}`,
+                            `Admission Number: ${<?php echo json_encode($studentDetails['admissionNumber']); ?>}`,
+                            `Gender: ${<?php echo json_encode($studentDetails['gender']); ?>}`,
+                            `Current Class: ${<?php echo json_encode($studentDetails['current_class']); ?>}`
+                        ];
+                        
+                        studentInfo.forEach(info => {
+                            page.drawText(info, {
+                                x: 50,
+                                y: yPosition,
+                                size: 12,
+                                font,
+                                color: rgb(0, 0, 0)
+                            });
+                            yPosition -= 20;
+                        });
+                        
+                        // Add attendance statistics
+                        yPosition -= 20;
+                        page.drawText('Attendance Statistics:', {
+                            x: 50,
+                            y: yPosition,
+                            size: 14,
+                            font,
+                            color: rgb(0, 0, 0)
+                        });
+                        yPosition -= 20;
+                        
+                        const statsInfo = [
+                            `Present Days: ${<?php echo $attendanceStats['present']; ?>}`,
+                            `Absent Days: ${<?php echo $attendanceStats['absent']; ?>}`,
+                            `Attendance Rate: ${<?php echo $attendanceStats['rate']; ?>}%`,
+                            `Most Common Reason: ${<?php echo json_encode($attendanceStats['common_reason']); ?>}`
+                        ];
+                        
+                        statsInfo.forEach(info => {
+                            page.drawText(info, {
+                                x: 50,
+                                y: yPosition,
+                                size: 12,
+                                font,
+                                color: rgb(0, 0, 0)
+                            });
+                            yPosition -= 20;
+                        });
+                        
+                        // Add class history
+                        yPosition -= 20;
+                        page.drawText('Class History:', {
+                            x: 50,
+                            y: yPosition,
+                            size: 14,
+                            font,
+                            color: rgb(0, 0, 0)
+                        });
+                        yPosition -= 20;
+                        
+                        <?php foreach ($classHistory as $history): ?>
+                            page.drawText(`${<?php echo json_encode($history['className']); ?>} (${<?php echo json_encode($history['level']); ?>)`, {
+                                x: 50,
+                                y: yPosition,
+                                size: 12,
+                                font,
+                                color: rgb(0, 0, 0)
+                            });
+                            yPosition -= 15;
+                            page.drawText(`From ${<?php echo json_encode($history['start_date']); ?>} to ${<?php echo json_encode($history['end_date']); ?>}`, {
+                                x: 50,
+                                y: yPosition,
+                                size: 10,
+                                font,
+                                color: rgb(0.5, 0.5, 0.5)
+                            });
+                            yPosition -= 15;
+                            page.drawText(`Admission: ${<?php echo json_encode($history['admission_number']); ?>}`, {
+                                x: 50,
+                                y: yPosition,
+                                size: 10,
+                                font,
+                                color: rgb(0.5, 0.5, 0.5)
+                            });
+                            yPosition -= 25;
+                        <?php endforeach; ?>
+                        
+                        // Serialize the PDF to bytes
+                        const pdfBytes = await pdfDoc.save();
+                        
+                        // Download the PDF
+                        download(new Blob([pdfBytes], { type: 'application/pdf' }), 
+                            `student_report_${<?php echo json_encode($studentDetails['admissionNumber']); ?>}.pdf`);
                     }
                 </script>
                 
