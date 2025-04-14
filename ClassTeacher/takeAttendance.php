@@ -3,12 +3,12 @@ error_reporting(0);
 include '../Includes/dbcon.php';
 include '../Includes/session.php'; 
 
-// Function to check if current time is morning (before 12 PM)
+// Function to check if it's morning (before 12 PM)
 function isMorning() {
     return date('H') < 12;
 }
 
-// Function to check if current time is evening (after 12 PM)
+// Function to check if it's evening (after 12 PM)
 function isEvening() {
     return date('H') >= 12;
 }
@@ -106,11 +106,11 @@ function isEvening() {
             border-radius: 20px;
             font-weight: bold;
         }
-        .morning {
+        .morning-indicator {
             background-color: #d4edda;
             color: #155724;
         }
-        .evening {
+        .evening-indicator {
             background-color: #fff3cd;
             color: #856404;
         }
@@ -132,6 +132,10 @@ function isEvening() {
                 <div class="container-fluid" id="container-wrapper">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">QR Code Scanner</h1>
+                        <div class="time-indicator <?php echo isMorning() ? 'morning-indicator' : 'evening-indicator'; ?>">
+                            <i class="fas fa-clock mr-1"></i>
+                            <?php echo isMorning() ? 'Morning Session' : 'Evening Session'; ?>
+                        </div>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="./">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Scan Class QR Code</li>
@@ -144,9 +148,6 @@ function isEvening() {
                                 <div class="scanner-header">
                                     <h4 class="text-primary font-weight-bold">
                                         <i class="fas fa-qrcode mr-2"></i>Class Attendance Scanner
-                                        <span class="time-indicator <?php echo isMorning() ? 'morning' : 'evening'; ?>">
-                                            <?php echo isMorning() ? 'Morning Session' : 'Evening Session'; ?>
-                                        </span>
                                     </h4>
                                 </div>
                                 
@@ -155,8 +156,11 @@ function isEvening() {
                                     <ol>
                                         <li>Point your camera at the class QR code</li>
                                         <li>Hold steady until the code is recognized</li>
-                                        <li>You'll be automatically redirected if attendance is allowed</li>
+                                        <li>You'll be automatically redirected to the attendance page</li>
                                     </ol>
+                                    <div class="alert alert-warning mt-2">
+                                        <i class="fas fa-exclamation-triangle"></i> Attendance can only be taken once per session (morning/evening)
+                                    </div>
                                 </div>
                                 
                                 <!-- QR Code Scanner -->
@@ -221,66 +225,74 @@ function isEvening() {
                 let currentFacingMode = "environment";
                 let html5QrCode;
                 
-                // Function to check attendance status via AJAX
-                function checkAttendanceStatus(className, callback) {
-                    $.ajax({
-                        url: 'check_attendance.php',
-                        type: 'POST',
-                        data: {
-                            className: className,
-                            isMorning: <?php echo isMorning() ? 'true' : 'false'; ?>
-                        },
-                        success: function(response) {
-                            callback(response);
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("Error checking attendance:", error);
-                            callback({allowed: false, message: "Error checking attendance status"});
-                        }
+                // Function to check if attendance already taken for this class in current session
+                function checkAttendanceTaken(className) {
+                    return new Promise((resolve) => {
+                        $.ajax({
+                            url: 'check_attendance.php',
+                            type: 'POST',
+                            data: { 
+                                className: className,
+                                mode: '<?php echo isMorning() ? "morning" : "evening"; ?>',
+                                date: '<?php echo date("Y-m-d"); ?>'
+                            },
+                            success: function(response) {
+                                resolve(response.taken);
+                            },
+                            error: function() {
+                                resolve(false); // Assume not taken if error occurs
+                            }
+                        });
                     });
                 }
                 
                 // Initialize the QR scanner
                 function startQRScanner(facingMode = "environment") {
-                    function onScanSuccess(decodedText, decodedResult) {
+                    async function onScanSuccess(decodedText, decodedResult) {
                         console.log(`Code scanned: ${decodedText}`);
+                        
                         if (validClassNames.includes(decodedText)) {
-                            // First check if attendance is allowed
-                            checkAttendanceStatus(decodedText, function(response) {
+                            // Extract just the class name without school code
+                            const className = decodedText.replace('<?php echo $schoolCode; ?>', '');
+                            
+                            // Check if attendance already taken for this session
+                            const isTaken = await checkAttendanceTaken(className);
+                            
+                            if (isTaken) {
+                                // Show error overlay
                                 const reader = document.getElementById("reader");
                                 const overlay = document.createElement("div");
                                 overlay.className = "scanner-overlay";
-                                
-                                if (response.allowed) {
-                                    // Show success overlay
-                                    overlay.innerHTML = `
-                                        <div class="scanner-overlay-content">
-                                            <h4 class="text-success"><i class="fas fa-check-circle"></i> Success!</h4>
-                                            <p>${response.message}</p>
-                                            <p>Redirecting to class attendance...</p>
-                                            <div class="spinner-border text-primary" role="status">
-                                                <span class="sr-only">Loading...</span>
-                                            </div>
-                                        </div>
-                                    `;
-                                    reader.appendChild(overlay);
-                                    
-                                    // Redirect after short delay
-                                    setTimeout(() => {
-                                        window.location.href = `classat.php?data=${encodeURIComponent(decodedText)}`;
-                                    }, 1500);
-                                } else {
-                                    // Show error overlay
-                                    overlay.innerHTML = `
-                                        <div class="scanner-overlay-content">
-                                            <h4 class="text-danger"><i class="fas fa-exclamation-circle"></i> Attendance Already Taken</h4>
-                                            <p>${response.message}</p>
-                                            <button class="btn btn-primary" onclick="this.closest('.scanner-overlay').remove()">OK</button>
-                                        </div>
-                                    `;
-                                    reader.appendChild(overlay);
-                                }
-                            });
+                                overlay.innerHTML = `
+                                    <div class="scanner-overlay-content">
+                                        <h4 class="text-danger"><i class="fas fa-exclamation-circle"></i> Attendance Already Taken</h4>
+                                        <p>Attendance for ${className} has already been recorded for the <?php echo isMorning() ? "morning" : "evening"; ?> session.</p>
+                                        <button class="btn btn-primary" onclick="this.closest('.scanner-overlay').remove()">OK</button>
+                                    </div>
+                                `;
+                                reader.appendChild(overlay);
+                                return;
+                            }
+                            
+                            // Show success overlay
+                            const reader = document.getElementById("reader");
+                            const overlay = document.createElement("div");
+                            overlay.className = "scanner-overlay";
+                            overlay.innerHTML = `
+                                <div class="scanner-overlay-content">
+                                    <h4 class="text-success"><i class="fas fa-check-circle"></i> Success!</h4>
+                                    <p>Redirecting to class attendance...</p>
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                            `;
+                            reader.appendChild(overlay);
+                            
+                            // Redirect after short delay
+                            setTimeout(() => {
+                                window.location.href = `classat.php?data=${encodeURIComponent(decodedText)}`;
+                            }, 1500);
                         } else {
                             document.getElementById("error").innerHTML = `
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -304,7 +316,7 @@ function isEvening() {
                     
                     html5QrCode = new Html5Qrcode("reader");
                     html5QrCode.start(
-                        { facingMode: "environment" },
+                        { facingMode: facingMode },
                         { fps: 10, qrbox: 250 },
                         onScanSuccess,
                         onScanError

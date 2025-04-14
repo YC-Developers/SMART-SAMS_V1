@@ -3,18 +3,15 @@ error_reporting(0);
 include '../Includes/dbcon.php';
 include '../Includes/session.php'; 
 
-
-
-// Function to check if current time is morning (before 12 PM)
+// Function to check if it's morning (before 12 PM)
 function isMorning() {
     return date('H') < 12;
 }
 
-// Function to check if current time is evening (after 12 PM)
+// Function to check if it's evening (after 12 PM)
 function isEvening() {
     return date('H') >= 12;
 }
-?>
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -54,6 +51,7 @@ function isEvening() {
             overflow: hidden;
         }
         #reader::after {
+            content: "Align QR code within frame";
             position: absolute;
             bottom: 10px;
             left: 0;
@@ -100,6 +98,22 @@ function isEvening() {
             border-radius: 8px;
             text-align: center;
         }
+        .time-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        .morning-indicator {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .evening-indicator {
+            background-color: #fff3cd;
+            color: #856404;
+        }
     </style>
 </head>
 <body id="page-top">
@@ -118,6 +132,10 @@ function isEvening() {
                 <div class="container-fluid" id="container-wrapper">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">QR Code Scanner</h1>
+                        <div class="time-indicator <?php echo isMorning() ? 'morning-indicator' : 'evening-indicator'; ?>">
+                            <i class="fas fa-clock mr-1"></i>
+                            <?php echo isMorning() ? 'Morning Session' : 'Evening Session'; ?>
+                        </div>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="./">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Scan Class QR Code</li>
@@ -130,9 +148,6 @@ function isEvening() {
                                 <div class="scanner-header">
                                     <h4 class="text-primary font-weight-bold">
                                         <i class="fas fa-qrcode mr-2"></i>Class Attendance Scanner
-                                        <span class="time-indicator <?php echo isMorning() ? 'morning' : 'evening'; ?>">
-                                            <?php echo isMorning() ? 'Morning Session' : 'Evening Session'; ?>
-                                        </span>
                                     </h4>
                                 </div>
                                 
@@ -141,8 +156,11 @@ function isEvening() {
                                     <ol>
                                         <li>Point your camera at the class QR code</li>
                                         <li>Hold steady until the code is recognized</li>
-                                        <li>You'll be automatically redirected if attendance is allowed</li>
+                                        <li>You'll be automatically redirected to the attendance page</li>
                                     </ol>
+                                    <div class="alert alert-warning mt-2">
+                                        <i class="fas fa-exclamation-triangle"></i> Attendance can only be taken once per session (morning/evening)
+                                    </div>
                                 </div>
                                 
                                 <!-- QR Code Scanner -->
@@ -154,11 +172,6 @@ function isEvening() {
                                     <button id="toggleCameraBtn" class="btn btn-secondary btn-sm mr-2">
                                         <i class="fas fa-sync-alt"></i> Switch Camera
                                     </button>
-
-                                    <button id="manualEntryBtn" class="btn btn-outline-primary btn-sm manual-entry-btn">
-                                        <i class="fas fa-keyboard"></i> Manual Entry
-                                    </button>
-
                                 </div>
                                 
                                 <div class="scanner-footer">
@@ -167,7 +180,7 @@ function isEvening() {
                             </div>
                         </div>
                     </div>
-                </div>                               
+                </div>
                 <!-- Container Fluid Ends -->
                 
                 <!-- Footer -->
@@ -180,45 +193,6 @@ function isEvening() {
         <a class="scroll-to-top rounded" href="#page-top">
             <i class="fas fa-angle-up"></i>
         </a>
-
-        <!-- Manual Entry Modal -->
-        <div class="modal fade" id="manualEntryModal" tabindex="-1" role="dialog" aria-labelledby="manualEntryModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title" id="manualEntryModalLabel">Manual Class Entry</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="manualEntryForm">
-                            <div class="form-group">
-                                <label for="classSelect">Select Class</label>
-                                <select class="form-control" id="classSelect">
-                                    <?php
-                                    $a = "SELECT * FROM schools WHERE schoolName='$s'";
-                                    $r = $conn->query($a);
-                                    $ro = $r->fetch_assoc();
-                                    $schoolCode = $ro['code'];
-                                    
-                                    $sql = "SELECT className FROM tblclass where school='$s'";
-                                    $result = $conn->query($sql);
-                                    while ($row = $result->fetch_assoc()) {
-                                        echo "<option value='{$schoolCode}{$row['className']}'>{$row['className']}</option>";
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary" id="confirmManualEntry">Confirm</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <script src="../vendor/jquery/jquery.min.js"></script>
         <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -251,11 +225,55 @@ function isEvening() {
                 let currentFacingMode = "environment";
                 let html5QrCode;
                 
+                // Function to check if attendance already taken for this class in current session
+                function checkAttendanceTaken(className) {
+                    return new Promise((resolve) => {
+                        $.ajax({
+                            url: 'check_attendance.php',
+                            type: 'POST',
+                            data: { 
+                                className: className,
+                                mode: '<?php echo isMorning() ? "morning" : "evening"; ?>',
+                                date: '<?php echo date("Y-m-d"); ?>'
+                            },
+                            success: function(response) {
+                                resolve(response.taken);
+                            },
+                            error: function() {
+                                resolve(false); // Assume not taken if error occurs
+                            }
+                        });
+                    });
+                }
+                
                 // Initialize the QR scanner
                 function startQRScanner(facingMode = "environment") {
-                    function onScanSuccess(decodedText, decodedResult) {
+                    async function onScanSuccess(decodedText, decodedResult) {
                         console.log(`Code scanned: ${decodedText}`);
+                        
                         if (validClassNames.includes(decodedText)) {
+                            // Extract just the class name without school code
+                            const className = decodedText.replace('<?php echo $schoolCode; ?>', '');
+                            
+                            // Check if attendance already taken for this session
+                            const isTaken = await checkAttendanceTaken(className);
+                            
+                            if (isTaken) {
+                                // Show error overlay
+                                const reader = document.getElementById("reader");
+                                const overlay = document.createElement("div");
+                                overlay.className = "scanner-overlay";
+                                overlay.innerHTML = `
+                                    <div class="scanner-overlay-content">
+                                        <h4 class="text-danger"><i class="fas fa-exclamation-circle"></i> Attendance Already Taken</h4>
+                                        <p>Attendance for ${className} has already been recorded for the <?php echo isMorning() ? "morning" : "evening"; ?> session.</p>
+                                        <button class="btn btn-primary" onclick="this.closest('.scanner-overlay').remove()">OK</button>
+                                    </div>
+                                `;
+                                reader.appendChild(overlay);
+                                return;
+                            }
+                            
                             // Show success overlay
                             const reader = document.getElementById("reader");
                             const overlay = document.createElement("div");
@@ -289,7 +307,6 @@ function isEvening() {
 
                     function onScanError(errorMessage) {
                         console.error("Scan error:", errorMessage);
-                        // Don't show error message to user unless it's critical
                     }
 
                     // If scanner already exists, stop it first
@@ -299,7 +316,7 @@ function isEvening() {
                     
                     html5QrCode = new Html5Qrcode("reader");
                     html5QrCode.start(
-                        { facingMode: "environment" },
+                        { facingMode: facingMode },
                         { fps: 10, qrbox: 250 },
                         onScanSuccess,
                         onScanError
@@ -320,19 +337,6 @@ function isEvening() {
                 $("#toggleCameraBtn").click(function() {
                     currentFacingMode = currentFacingMode === "environment" ? "user" : "environment";
                     startQRScanner(currentFacingMode);
-                });
-                
-                // Manual entry button
-                $("#manualEntryBtn").click(function() {
-                    $("#manualEntryModal").modal("show");
-                });
-                
-                // Confirm manual entry
-                $("#confirmManualEntry").click(function() {
-                    const selectedClass = $("#classSelect").val();
-                    if (validClassNames.includes(selectedClass)) {
-                        window.location.href = `classat.php?data=${encodeURIComponent(selectedClass)}`;
-                    }
                 });
                 
                 // Start QR scanner on page load

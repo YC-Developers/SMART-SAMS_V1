@@ -12,13 +12,12 @@ if (isset($_POST['take'])) {
     $dateTaken = DATE("Y-m-d");
     $day = date('N', strtotime($dateTaken));
     
-    $query = "SELECT * FROM tbladmin WHERE Id = ".$_SESSION['userId']."";
-    $rs = $conn->query($query);
-    $num = $rs->num_rows;
-    $rows = $rs->fetch_assoc();
-    $fullName = $rows['username'];
-    $school = $rows['school'];
-  
+    $q = "SELECT * FROM tblclassteacher WHERE Id = ".$_SESSION['userId']."";
+    $rs = $conn->query($q);
+            $num = $rs->num_rows;
+            $rows = $rs->fetch_assoc();
+            $school = $rows['school'];
+      
     $sql = "INSERT INTO atdetails (className,mode,presentboys,absentboys,presentgirls,absentgirls,day,school,date) 
             VALUES ('$className','$mode','$presentboys','$absentboys','$presentgirls','$absentgirls','$day','$school','$dateTaken')";
     mysqli_query($conn,$sql);
