@@ -1,0 +1,3 @@
+Excel file rows: 2, columns: 5
+Row 2, Col A: e.g., jmv
+Row 2, Col B: e.g., Male or Female

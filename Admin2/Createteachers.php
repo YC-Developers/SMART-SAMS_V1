@@ -13,7 +13,7 @@ if (isset($_POST['save'])) {
     $username1 = $_POST['username'];
     $phone = $_POST['phoneNo'];
     $address = $_POST['address'];
-    $role = $_POST['roleId'];
+    //$role = $_POST['roleId'];
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
     $dateCreated = date("Y-m-d");
@@ -37,8 +37,8 @@ if (isset($_POST['save'])) {
             $school = $rows['school'];
       
       
-            $query = mysqli_query($conn, "INSERT INTO tblteachers (name, gender, username, password, phoneNo, address, roleId, school, created_at) 
-                VALUES ('$Name', '$gender', '$username1', '$password', '$phone', '$address', '$role', '$school', '$dateCreated')");
+            $query = mysqli_query($conn, "INSERT INTO tblteachers (name, gender, username, password, phoneNo, address, school, created_at) 
+                VALUES ('$Name', '$gender', '$username1', '$password', '$phone', '$address', '$school', '$dateCreated')");
 
             if ($query) {
                 $statusMsg = "<div class='alert alert-success' style='margin-right:700px;'>Teacher created successfully!</div>";
@@ -56,10 +56,9 @@ $school = $rows['school'];
 
 
 // Fetch all teachers for display
-$query = "SELECT roles.roleName, tblteachers.id, tblteachers.name, tblteachers.gender, tblteachers.username, 
+$query = "SELECT tblteachers.id, tblteachers.name, tblteachers.gender, tblteachers.username, 
           tblteachers.password, tblteachers.phoneNo, tblteachers.address, tblteachers.created_at 
           FROM tblteachers 
-          INNER JOIN roles ON roles.id = tblteachers.roleId
           WHERE tblteachers.school='$school'
           ";
 $rs = $conn->query($query);
@@ -89,7 +88,7 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "edit") {
         $username1 = $_POST['username'];
         $phone = $_POST['phoneNo'];
         $address = $_POST['address'];
-        $role = $_POST['roleId'];
+        //$role = $_POST['roleId'];
 
         $qo = "SELECT * FROM tbladmin WHERE Id = ".$_SESSION['userId']."";
         $rs = $conn->query($qo);
@@ -99,7 +98,7 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "edit") {
 
 
         $query = mysqli_query($conn, "UPDATE tblteachers SET name='$Name', gender='$gender', username='$username1', 
-            phoneNo='$phone', address='$address', roleId='$role', school='$school' WHERE id='$Id'");
+            phoneNo='$phone', address='$address', school='$school' WHERE id='$Id'");
 
         if ($query) {
             echo "<script type='text/javascript'>
@@ -217,20 +216,21 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
                     placeholder="Enter Address" 
                     value="<?php echo isset($editAddress) ? $editAddress : ''; ?>" required>
             </div>
-            <div class="col-md-6">
+            <!--<div class="col-md-6">
                 <label>Role</label>
                 <select class="form-control" name="roleId" required>
                     <option value="">--Select Role--</option>
                     <?php
-                    $roleQuery = "SELECT * FROM roles ORDER BY roleName ASC";
-                    $result = $conn->query($roleQuery);
-                    while ($role = $result->fetch_assoc()) {
-                        $selected = (isset($editRole) && $editRole == $role['id']) ? 'selected' : '';
-                        echo "<option value='".$role['id']."' $selected>".$role['roleName']."</option>";
-                    }
+                    
+                    //$roleQuery = "SELECT * FROM roles ORDER BY roleName ASC";
+                    //$result = $conn->query($roleQuery);
+                    //while ($role = $result->fetch_assoc()) {
+                        //$selected = (isset($editRole) && $editRole == $role['id']) ? 'selected' : '';
+                        //echo "<option value='".$role['id']."' $selected>".$role['roleName']."</option>";
+                    //}
                     ?>
                 </select>
-            </div>
+            </div>-->
         </div>
 
         <!-- Button text changes based on action -->
@@ -260,7 +260,7 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
                                     <th>Username</th>
                                     <th>Password</th>
                                     <th>Phone</th>
-                                    <th>Role</th>
+                                    <!--<th>Role</th>-->
                                     <th>Date Registered</th>
                                     <th>Edit</th>
                                     <th>Delete</th>
@@ -280,7 +280,6 @@ if (isset($_GET['Id']) && isset($_GET['action']) && $_GET['action'] == "delete")
                                             <td>".$teacher['username']."</td>
                                             <td>".$teacher['password']."</td>
                                             <td>".$teacher['phoneNo']."</td>
-                                            <td>".$teacher['roleName']."</td>
                                             <td>".$teacher['created_at']."</td>
                                             <td><a href='?action=edit&Id=".$teacher['id']."' class='aso'><i class='fas fa-fw fa-edit aso'></i></a></td>
                                             <td><a href='?action=delete&Id=".$teacher['id']."' style='color: red'><i class='fas fa-fw fa-trash' style='color: red'></i></a></td>

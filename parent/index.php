@@ -45,7 +45,7 @@ include '../Includes/session2.php';
 
                 <div class="container-fluid">
                     <div class="welcome-section">
-                        <h2>Welcome Back, Parent of <?php echo $fullName; ?>!</h2>
+                        <h2>Welcome Back, Parent of <?php echo htmlspecialchars($fullName); ?>!</h2>
                         <p>Monitor your child's attendance and academic progress in real-time</p>
                     </div>
 
@@ -82,39 +82,34 @@ include '../Includes/session2.php';
                                 <h4 class="text-center mb-4">Student Information</h4>
                                 <?php
                                 $studentId = $_SESSION['regNumber'];
-                                $query = "SELECT s.*, c.className FROM tblstudents s 
+                                $query = "SELECT s.*, c.className, c.school 
+                                         FROM tblstudents s 
                                          JOIN tblclass c ON s.classId = c.Id 
-                                         WHERE s.admissionNumber = '$studentId'";
-                                $result = mysqli_query($conn, $query);
+                                         WHERE s.admissionNumber = ?";
+                                $stmt = $conn->prepare($query);
+                                $stmt->bind_param("s", $studentId);
+                                $stmt->execute();
+                                $result = $stmt->get_result();
 
-                                if ($row = mysqli_fetch_array($result)) {
+                                if ($row = $result->fetch_assoc()) {
                                     $admissionNumber = $row['admissionNumber'];
-                                    $z = "SELECT classId FROM tblstudents WHERE admissionNumber = '$admissionNumber'";
-                                    $R = $conn->query($z);
-                                    $cx = $R->fetch_assoc();
-                                    $cid = $cx["classId"];
-
-                                    $z2 = "SELECT * FROM tblclass WHERE Id = '$cid'";
-                                    $R2 = $conn->query($z2);
-                                    $cx2 = $R2->fetch_assoc();
-                                    $sch = $cx2["school"];
-                                    
-                                    // Define image path
                                     $imagePath = $row['image_path'] ? "../Admin2/student_images/" . $row['image_path'] : "../img/user-icn.png";
                                     ?>
                                     <div class="text-center mb-4">
-                                        <img src="<?php echo $imagePath; ?>" class="rounded-circle student-image">
-                                        <h5 class="mt-3 text-dark"><?php echo $row['name']; ?></h5>
+                                        <img src="<?php echo htmlspecialchars($imagePath); ?>" class="rounded-circle student-image">
+                                        <h5 class="mt-3 text-dark"><?php echo htmlspecialchars($row['name']); ?></h5>
                                         <div class="student-details mt-3 text-left">
-                                            <p><strong>School:</strong> <?php echo $sch; ?></p>
-                                            <p><strong>Class:</strong> <?php echo $row['className']; ?></p>
-                                            <p><strong>Admission No:</strong> <?php echo $admissionNumber; ?></p>
-                                            <p><strong>Gender:</strong> <?php echo $row['gender']; ?></p>
+                                            <p><strong>School:</strong> <?php echo htmlspecialchars($row['school']); ?></p>
+                                            <p><strong>Class:</strong> <?php echo htmlspecialchars($row['className']); ?></p>
+                                            <p><strong>Admission No:</strong> <?php echo htmlspecialchars($admissionNumber); ?></p>
+                                            <p><strong>Gender:</strong> <?php echo htmlspecialchars($row['gender']); ?></p>
                                         </div>
                                     </div>
                                 <?php } else { ?>
                                     <div class="alert alert-info">No student information found.</div>
-                                <?php } ?>
+                                <?php } 
+                                $stmt->close();
+                                ?>
                             </div>
                         </div>
 
@@ -202,6 +197,14 @@ include '../Includes/session2.php';
             setTimeout(() => { notification.style.display = 'none'; }, 5000);
         }
 
+        // Function to check if current time is morning or evening
+        function isMorning() {
+            const now = new Date();
+            const hours = now.getHours();
+            // Morning is before 12:00 PM (adjustable threshold)
+            return hours < 12;
+        }
+
         // Real-time update function
         function updateDashboard() {
             $.ajax({
@@ -210,16 +213,36 @@ include '../Includes/session2.php';
                 data: { regNumber: '<?php echo $studentId; ?>' },
                 dataType: 'json',
                 success: function(data) {
+                    // Check current time for morning/evening status
+                    const isMorningTime = isMorning();
+
                     // Update Today's Status
-                    document.getElementById('morningStatus').textContent = data.morningPresent ? 'Present' : 'Absent';
-                    document.getElementById('eveningStatus').textContent = data.eveningPresent ? 'Present' : 'Absent';
-                    if (data.morningPresent && data.eveningPresent) {
+                    document.getElementById('morningStatus').textContent = isMorningTime || data.morningPresent !== undefined 
+                        ? (data.morningPresent ? 'Present' : 'Absent') 
+                        : 'Pending';
+                    document.getElementById('eveningStatus').textContent = !isMorningTime || data.eveningPresent !== undefined 
+                        ? (data.eveningPresent ? 'Present' : 'Absent') 
+                        : 'Pending';
+
+                    // Show notifications based on status
+                    if (isMorningTime && data.morningPresent !== undefined) {
+                        if (data.morningPresent) {
+                            showNotification('Your child is present this morning!', 'success');
+                        } else {
+                            showNotification('Your child is absent this morning!', 'danger');
+                        }
+                    }
+                    if (!isMorningTime && data.eveningPresent !== undefined) {
+                        if (data.eveningPresent) {
+                            showNotification('Your child is present this evening!', 'success');
+                        } else {
+                            showNotification('Your child is absent this evening!', 'danger');
+                        }
+                    }
+                    if (data.morningPresent && data.eveningPresent && !isMorningTime) {
                         showNotification('Your child is present for both morning and evening today!', 'success');
-                    } else if (!data.morningPresent && !data.eveningPresent) {
+                    } else if (!data.morningPresent && !data.eveningPresent && !isMorningTime) {
                         showNotification('Your child is absent for both morning and evening today!', 'danger');
-                    } else {
-                        if (!data.morningPresent) showNotification('Your child is absent this morning!', 'danger');
-                        if (!data.eveningPresent) showNotification('Your child is absent this evening!', 'danger');
                     }
 
                     // Update Monthly Stats (Absents Table)
@@ -246,6 +269,8 @@ include '../Includes/session2.php';
                 error: function(xhr, status, error) {
                     console.error('Error fetching real-time data:', error);
                     showNotification('Error fetching attendance data.', 'danger');
+                    document.getElementById('morningStatus').textContent = 'Error';
+                    document.getElementById('eveningStatus').textContent = 'Error';
                 }
             });
         }

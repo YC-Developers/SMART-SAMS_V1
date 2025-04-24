@@ -10,5 +10,17 @@
         "payment_method": "visa",
         "comments": "we need it soon and make it ready for deployment",
         "status": "pending"
+    },
+    {
+        "order_id": "SMART_68065e6d025b1",
+        "timestamp": "2025-04-21 17:04:13",
+        "billing_plan": "monthly",
+        "school_admin": "xeeed",
+        "email": "nizeyimanaplacide2@gmail.com",
+        "phone": "+250734272918",
+        "school_name": "es juru",
+        "payment_method": "visa",
+        "comments": "bjkknjknjkk",
+        "status": "pending"
     }
 ]

@@ -2,6 +2,8 @@
     "require": {
         "arkitecht/laravel-twilio": "^1.7",
         "phpmailer/phpmailer": "^6.9",
-        "setasign/fpdf": "^1.8"
+        "setasign/fpdf": "^1.8",
+        "phpoffice/phpspreadsheet": "^4.2",
+        "phpoffice/phpexcel": "^1.8"
     }
 }

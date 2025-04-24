@@ -63,7 +63,6 @@
         box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
     }
 
-
     .btn-primary {
         background: #004080;
         border: none;
@@ -221,7 +220,7 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="login.php"> <i class="fa fa-user"
-                                        aria-hidden="true"></i>&nbsp;LOGIN</a>
+                                        aria-hidden="true"></i> LOGIN</a>
                             </li>
                             <button class="get-it-now-btn">
                                 <a href="./recommendation_page/index.php"
@@ -637,53 +636,34 @@
     <section class="footer_section">
         <div class="container">
             <p>
-                &copy; <span id="displayYear"></span> All Rights Reserved By
+                © <span id="displayYear"></span> All Rights Reserved By
                 <a href="#">SMART-SAMS 2024</a>
             </p>
         </div>
     </section>
     <!-- footer section -->
+
     <!-- loader -->
     <div class="loader-container">
-        <div class="loader-3d">
-            <div class="cube">
-                <div class="face front"></div>
-                <div class="face back"></div>
-                <div class="face left"></div>
-                <div class="face right"></div>
-                <div class="face top"></div>
-                <div class="face bottom"></div>
-            </div>
+        <div class="loader-checkmark">
+            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            </svg>
         </div>
         <div class="loader-text text-center">
-            <span class="welcome-text">WELCOME TO</span>
-            <span class="digital-text">SMART-SAMS</span><br>
-            <small class="digital-subtext">School Attendance Management System</small>
-            <div class="portal-message">
-                <p class="portal-text">Parent Portal</p>
-                <p class="portal-subtext">Connecting Parents to Student Success</p>
+            <span class="welcome-text">SMART-SAMS</span>
+            <span class="digital-text">Attendance System</span>
+            <div class="digital-clock" id="digitalClock"></div>
+            <div class="progress-bar">
+                <div class="progress-bar-fill"></div>
             </div>
-            <div class="loading-dots">
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-            </div>
+            <small class="digital-subtext">Tracking Student Success</small>
         </div>
     </div>
     <!-- end loader -->
-    <!-- loader script -->
-    <script>
-        window.addEventListener('load', function() {
-            const loader = document.querySelector('.loader-container');
-            setTimeout(function() {
-                loader.style.opacity = '0';
-                setTimeout(function() {
-                    loader.style.display = 'none';
-                }, 500);
-            }, 2000);
-        });
-    </script>
 
+    <!-- loader styles -->
     <style>
         .loader-container {
             position: fixed;
@@ -700,67 +680,54 @@
             transition: opacity 0.5s ease;
         }
 
-        .loader-3d {
-            perspective: 1000px;
-            margin-bottom: 2rem;
+        .loader-checkmark {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1.5rem;
         }
 
-        .cube {
-            width: 100px;
-            height: 100px;
-            position: relative;
-            transform-style: preserve-3d;
-            animation: rotate 3s infinite linear;
+        .checkmark__circle {
+            stroke: rgba(255, 255, 255, 0.2);
+            stroke-width: 2;
+            stroke-miterlimit: 10;
+            animation: circle 1.5s ease-in-out infinite;
         }
 
-        .face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        .checkmark__check {
+            stroke: #ffffff;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: check 0.6s ease-in-out 0.3s forwards;
         }
 
-        .front {
-            transform: translateZ(50px);
-        }
-
-        .back {
-            transform: translateZ(-50px) rotateY(180deg);
-        }
-
-        .left {
-            transform: translateX(-50px) rotateY(-90deg);
-        }
-
-        .right {
-            transform: translateX(50px) rotateY(90deg);
-        }
-
-        .top {
-            transform: translateY(-50px) rotateX(90deg);
-        }
-
-        .bottom {
-            transform: translateY(50px) rotateX(-90deg);
-        }
-
-        @keyframes rotate {
+        @keyframes circle {
             0% {
-                transform: rotateX(0) rotateY(0) rotateZ(0);
+                stroke-dasharray: 0 100;
+                stroke-dashoffset: 0;
             }
-
+            50% {
+                stroke-dasharray: 80 100;
+                stroke-dashoffset: -20;
+            }
             100% {
-                transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+                stroke-dasharray: 0 100;
+                stroke-dashoffset: -100;
+            }
+        }
+
+        @keyframes check {
+            100% {
+                stroke-dashoffset: 0;
             }
         }
 
         .welcome-text {
             font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
+            font-size: 2rem;
             color: #ffffff;
-            margin-bottom: 0.5rem;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
             letter-spacing: 1px;
         }
@@ -777,106 +744,93 @@
             margin-bottom: 0.5rem;
         }
 
+        .digital-clock {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: #e6f2ff;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            margin: 0.5rem 0;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-bar-fill {
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #ffffff, #e6f2ff);
+            animation: progress 2s ease-in-out forwards;
+        }
+
+        @keyframes progress {
+            0% {
+                width: 0;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
         .digital-subtext {
             font-family: 'Orbitron', sans-serif;
             font-size: 1rem;
             color: #e6f2ff;
-            margin-top: 0.5rem;
             text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
         }
 
-        .portal-message {
-            margin: 1.5rem 0;
-            padding: 1rem;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-        }
-
-        .portal-text {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.8rem;
-            color: #ffffff;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            letter-spacing: 1px;
-        }
-
-        .portal-subtext {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
-            color: #e6f2ff;
-            margin: 0;
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-        }
-
-        .loading-dots {
-            display: flex;
-            justify-content: center;
-            margin-top: 1.5rem;
-        }
-
-        .dot {
-            width: 10px;
-            height: 10px;
-            background: #ffffff;
-            border-radius: 50%;
-            margin: 0 5px;
-            animation: bounce 1.4s infinite ease-in-out;
-        }
-
-        .dot:nth-child(1) {
-            animation-delay: -0.32s;
-        }
-
-        .dot:nth-child(2) {
-            animation-delay: -0.16s;
-        }
-
-        @keyframes bounce {
-
-            0%,
-            80%,
-            100% {
-                transform: scale(0);
+        @media (max-width: 576px) {
+            .welcome-text {
+                font-size: 1.5rem;
             }
-
-            40% {
-                transform: scale(1);
+            .digital-text {
+                font-size: 2rem;
             }
-        }
-
-        @keyframes glitch {
-            0% {
-                transform: translate(0);
+            .digital-clock {
+                font-size: 1rem;
             }
-
-            20% {
-                transform: translate(-2px, 2px);
+            .progress-bar {
+                width: 150px;
             }
-
-            40% {
-                transform: translate(-2px, -2px);
+            .loader-checkmark {
+                width: 60px;
+                height: 60px;
             }
-
-            60% {
-                transform: translate(2px, 2px);
-            }
-
-            80% {
-                transform: translate(2px, -2px);
-            }
-
-            100% {
-                transform: translate(0);
-            }
-        }
-
-        .digital-text:hover {
-            animation: glitch 0.3s infinite;
         }
     </style>
-    <!-- end loader script -->
+
+    <!-- loader script -->
+    <script>
+        window.addEventListener('load', function() {
+            const loader = document.querySelector('.loader-container');
+            setTimeout(function() {
+                loader.style.opacity = '0';
+                setTimeout(function() {
+                    loader.style.display = 'none';
+                }, 500);
+            }, 2500);
+        });
+
+        // Digital clock
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('digitalClock').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+
     <!-- jQery -->
     <script type="text/javascript" src="js1/jquery-3.4.1.min.js"></script>
     <!-- popper js -->

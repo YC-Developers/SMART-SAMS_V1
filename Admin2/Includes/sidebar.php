@@ -78,6 +78,10 @@
             <h6 class="collapse-header">Manage Students</h6>
             <a class="collapse-item" href="createStudents.php">Create Students</a>
             <a class="collapse-item" href="imageS.php">Students Images</a>
+            <a class="collapse-item" href="promo.php">Promote Students</a>
+            <a class="collapse-item" href="promoD.php">PS Data Management</a>
+
+
 
           </div>
         </div>
@@ -97,7 +101,7 @@
         <div id="collapseBootstrap09" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Manage teachers</h6>
-            <a class="collapse-item" href="roles.php">Manage Roles</a>
+            <!--<a class="collapse-item" href="roles.php">Manage Roles</a>-->
             <a class="collapse-item" href="Createteachers.php">Create teachers</a>
             <a class="collapse-item" href="lessons.php">Manage Lessons</a>
 

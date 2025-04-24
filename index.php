@@ -20,27 +20,25 @@
 
     <!-- fonts style -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 
-<!--owl slider stylesheet -->
-<link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <!--owl slider stylesheet -->
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
 
-<!-- font awesome style -->
-<link href="css1/font-awesome.min.css" rel="stylesheet" />
+    <!-- font awesome style -->
+    <link href="css1/font-awesome.min.css" rel="stylesheet" />
 
-<!-- Custom styles for this template -->
-<link href="css1/style.css" rel="stylesheet" />
-<!-- responsive style -->
-<link href="css1/responsive.css" rel="stylesheet" />
-<!-- scrollbar css -->
-<link rel="stylesheet" href="css1/scrollbar.css">
-<!-- subscribe section style  -->
-<link rel="stylesheet" href="css1/subscribe.css">
-<!-- recommendation styles -->
-<link rel="stylesheet" href="css1/recommendation.css">
-
+    <!-- Custom styles for this template -->
+    <link href="css1/style.css" rel="stylesheet" />
+    <!-- responsive style -->
+    <link href="css1/responsive.css" rel="stylesheet" />
+    <!-- scrollbar css -->
+    <link rel="stylesheet" href="css1/scrollbar.css">
+    <!-- subscribe section style  -->
+    <link rel="stylesheet" href="css1/subscribe.css">
+    <!-- recommendation styles -->
+    <link rel="stylesheet" href="css1/recommendation.css">
 </head>
 
 <style>
@@ -105,7 +103,6 @@
     }
 
     /* parent portal section */
-
     .img-box video {
         width: 100%;
         height: auto;
@@ -145,16 +142,38 @@
 </style>
 
 <body>
+    <!-- Loader -->
+    <div class="loader-container">
+        <div class="loader-checkmark">
+            <svg class="checkmark" viewBox="0 0 52 52">
+                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+            </svg>
+            <div class="loader-gears">
+                <div class="gear gear1"></div>
+                <div class="gear gear2"></div>
+            </div>
+        </div>
+        <div class="loader-text text-center">
+            <span class="welcome-text">LOADING</span>
+            <span class="digital-text">SMART-SAMS</span><br>
+            <small class="digital-subtext">School Attendance Management System</small>
+            <div class="loading-dots">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+    </div>
 
     <div class="hero_area">
-
         <div class="hero_bg_box">
             <div class="bg_img_box">
                 <img src="images/hero-bg.png" alt="">
             </div>
         </div>
 
-        <!-- header section strats -->
+        <!-- header section starts -->
         <header class="header_section">
             <div class="container-fluid">
                 <nav class="navbar navbar-expand-lg custom_nav-container ">
@@ -171,7 +190,7 @@
                     <button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
-                        <span class=""> </span>
+                        <span class="navbar-toggler-icon"></span>
                     </button>
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -185,19 +204,13 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="service.php">Services</a>
                             </li>
-                            <!-- <li class="nav-item">
-                                <a class="nav-link" href="why.php">Why Us</a>
-                            </li> -->
-                            <!-- <li class="nav-item">
-                                <a class="nav-link" href="team.php">Team</a>
-                            </li> -->
                             <li class="nav-item">
                                 <a href="parent-portal.php" class="nav-link btn btn-outline-primary text-white">Parent
                                     Portal</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="login.php"> <i class="fa fa-user"
-                                        aria-hidden="true"></i>&nbsp;LOGIN</a>
+                                        aria-hidden="true"></i> LOGIN</a>
                             </li>
                             <button class="get-it-now-btn">
                                 <a href="./recommendation_page/index.php"
@@ -205,9 +218,6 @@
                                     <i class="fa fa-rocket mr-2"></i>Get It Now!
                                 </a>
                             </button>
-
-
-
                         </ul>
                     </div>
                 </nav>
@@ -248,7 +258,6 @@
                                     .rounded-custom-2 {
                                         border-top-right-radius: 25px;
                                         border-bottom-right-radius: 25px;
-
                                     }
                                 </style>
                                 <div class="col-md-6">
@@ -318,9 +327,7 @@
                     </h2>
                     <p>
                         SMART-SAMS offers a range of services to enhance attendance management and educational support
-                        at
-                        Saint
-                        Kizito and other schools.
+                        at Saint Kizito and other schools.
                     </p>
                 </div>
                 <div class="row">
@@ -417,13 +424,11 @@
                         </h3>
                         <p>
                             Our mission is to provide a reliable and efficient system for managing student attendance,
-                            ensuring that
-                            educators have the tools they need to support student success.
+                            ensuring that educators have the tools they need to support student success.
                         </p>
                         <p>
                             By leveraging technology, we aim to simplify attendance processes and provide valuable
-                            insights through
-                            data analysis and reporting.
+                            insights through data analysis and reporting.
                         </p>
                         <a href="" class="rounded-pill">
                             Read More
@@ -433,7 +438,6 @@
             </div>
         </div>
     </section>
-
     <!-- end about section -->
 
     <!-- why section -->
@@ -586,733 +590,723 @@
                             </div>
                         </div>
                     </div>
-
-    </section>
-
-    <!-- end team section -->
-
-    <!-- parent portal content -->
-    <section class="parent_portal_content layout_padding py-5 bg-light">
-        <div class="container">
-            <div class="heading_container heading_center mb-4">
-                <h2 class="text-primary">
-                    Parent <span class="text-dark">Portal</span>
-                    <hr class="my-4 border-top border-primary" style="width: 50%; height: 5px;">
-                </h2>
-                <p class="text-muted">
-                    Access the Parent Portal to stay updated with your child's attendance and academic progress. Our
-                    system is
-                    designed to help students perform well in class by providing parents with timely insights and
-                    resources.
-                    Additionally, it serves as a security measure, ensuring that parents are informed about their
-                    child's
-                    whereabouts and school activities. The portal offers tools for tracking statistical reports,
-                    monitoring class
-                    performance of the student, and empowering parents to support their child's educational journey
-                    effectively.
-                    It also includes alerts for any unusual activities, enhancing the safety and security of students.
-                </p>
-            </div>
-            <div class="row">
-                <!-- Replace the existing video section with this optimized version -->
-                <div class="col-md-6">
-                    <div class="img-box video-container">
-                        <video class="responsive-video" autoplay muted loop>
-                            <source src="images/parent-portal-intro/parent-portal-intro.mp4" type="video/mp4">
-                            <source src="images/parent-portal-intro/parent-portal-intro.webm" type="video/webm">
-                            Your browser does not support the video tag.
-                        </video>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="detail-box">
-                        <h3 class="text-secondary">
-                            Key Features
-                        </h3>
-                        <ul class="text-muted">
-                            <li>Real-time Attendance tracking and updates.</li>
-                            <li>Access to Attendance performance reports.</li>
-                            <li>Communication tools for interacting with School Staff.</li>
-                            <li>Alerts for unusual activities to ensure student safety.</li>
-                            <li>Resources and insights to support student success.</li>
-                        </ul>
-                        <a href="parentlogin.php" class="btn btn-primary mt-3">
-                            Access Parent Portal
-                        </a>
-                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <!-- end parent portal content -->
-    <!-- Recommendation section -->
-    <section class="recommendation-section layout_padding"
-        style="background: linear-gradient(130deg, #231a6f, #0f054c); color: white;">
-        <div class="container">
-            <div class="heading_container heading_center mb-5">
-                <h2>
-                    Software <span style="color: #fff;">Plan</span>
-                    <hr class="my-4 border-top border-light"
-                        style="width: 50%; height: 3px; background: rgba(255,255,255,0.2);">
-                </h2>
-            </div>
+        </section>
+        <!-- end team section -->
 
-            <form id="recommendationForm" action="process_recommendation.php" method="post">
+        <!-- parent portal content -->
+        <section class="parent_portal_content layout_padding py-5 bg-light">
+            <div class="container">
+                <div class="heading_container heading_center mb-4">
+                    <h2 class="text-primary">
+                        Parent <span class="text-dark">Portal</span>
+                        <hr class="my-4 border-top border-primary" style="width: 50%; height: 5px;">
+                    </h2>
+                    <p class="text-muted">
+                        Access the Parent Portal to stay updated with your child's attendance and academic progress. Our
+                        system is designed to help students perform well in class by providing parents with timely insights and
+                        resources. Additionally, it serves as a security measure, ensuring that parents are informed about their
+                        child's whereabouts and school activities. The portal offers tools for tracking statistical reports,
+                        monitoring class performance of the student, and empowering parents to support their child's educational journey
+                        effectively. It also includes alerts for any unusual activities, enhancing the safety and security of students.
+                    </p>
+                </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="billing-option mb-4 p-4 bg-white rounded-lg shadow-lg hover-effect">
-                            <h3 style="color: #231a6f;" class="mb-3">Premium Plan</h3>
-                            <div class="price-tag">
-                                <h4 class="mb-3 text-dark">$500 <span class="text-muted">/year</span></h4>
-                            </div>
-                            <ul class="list-unstyled feature-list">
-                                <li class="mb-2"><i class="fa fa-check-circle text-success mr-2"></i> Full System Access
-                                </li>
-                                <li class="mb-2"><i class="fa fa-check-circle text-success mr-2"></i> Priority Support
-                                    24/7</li>
-                                <li class="mb-2"><i class="fa fa-check-circle text-success mr-2"></i> Unlimited Storage
-                                </li>
-                                <li class="mb-2"><i class="fa fa-check-circle text-success mr-2"></i> Free Updates</li>
-                            </ul>
-
+                        <div class="img-box video-container">
+                            <video class="responsive-video" autoplay muted loop>
+                                <source src="images/parent-portal-intro/parent-portal-intro.mp4" type="video/mp4">
+                                <source src="images/parent-portal-intro/parent-portal-intro.webm" type="video/webm">
+                                Your browser does not support the video tag.
+                            </video>
                         </div>
                     </div>
-
                     <div class="col-md-6">
-                        <div class="billing-option mb-4 p-4 bg-white rounded-lg shadow-lg hover-effect">
-                            <h3 style="color: #231a6f;" class="mb-3">Standard Plan</h3>
-                            <div class="price-tag">
-                                <h4 class="mb-3 text-dark">$150 <span class="text-muted">/month</span></h4>
-                            </div>
-                            <ul class="list-unstyled feature-list">
-                                <li class="mb-2"><i class="fa fa-check-circle text-success mr-2"></i> Core Features</li>
-                                <li class="mb-2"><i class="fa fa-check-circle text-success mr-2"></i> Standard Support
-                                </li>
-                                <li class="mb-2"><i class="fa fa-check-circle text-success mr-2"></i> 2GB Storage</li>
-                                <li class="mb-2"><i class="fa fa-check-circle text-success mr-2"></i> Monthly Updates
-                                </li>
+                        <div class="detail-box">
+                            <h3 class="text-secondary">
+                                Key Features
+                            </h3>
+                            <ul class="text-muted">
+                                <li>Real-time Attendance tracking and updates.</li>
+                                <li>Access to Attendance performance reports.</li>
+                                <li>Communication tools for interacting with School Staff.</li>
+                                <li>Alerts for unusual activities to ensure student safety.</li>
+                                <li>Resources and insights to support student success.</li>
                             </ul>
-
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </section>
-
-    <!-- info section -->
-    <section class="info_section">
-        <div class="container">
-            <div class="row mt-3">
-                <!-- Contact Information -->
-                <div class="col-md-6 col-lg-3 info_col">
-                    <div class="info_contact">
-                        <h4 class="section-title">Contact Us</h4>
-                        <div class="contact_link_box">
-                            <a href="#" class="contact-item">
-                                <i class="fa fa-map-marker"></i>
-                                <span>Southern Province - Rwanda</span>
-                            </a>
-                            <a href="tel:+250794897943" class="contact-item">
-                                <i class="fa fa-phone"></i>
-                                <span>+250 794-897-943</span>
-                            </a>
-                            <a href="tel:+250791285293" class="contact-item">
-                                <i class="fa fa-phone"></i>
-                                <span>+250 791-285-293</span>
-                            </a>
-                            <a href="mailto:ycsoft24@gmail.com" class="contact-item">
-                                <i class="fa fa-envelope"></i>
-                                <span>ycsoft24@gmail.com</span>
+                            <a href="parentlogin.php" class="btn btn-primary mt-3">
+                                Access Parent Portal
                             </a>
                         </div>
-                        <div class="info_social">
-                            <a href="#" class="social-icon">
-                                <i class="fa fa-facebook"></i>
-                            </a>
-                            <a href="#" class="social-icon">
-                                <i class="fa fa-twitter"></i>
-                            </a>
-                            <a href="#" class="social-icon">
-                                <i class="fa fa-linkedin"></i>
-                            </a>
-                            <a href="#" class="social-icon">
-                                <i class="fa fa-instagram"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Available Schools -->
-                <div class="col-md-6 col-lg-3 info_col">
-                    <div class="info_contact">
-                        <h4 class="section-title">Available Schools</h4>
-                        <div class="schools-list">
-                            <div class="school-item">
-                                <i class="fa fa-graduation-cap"></i>
-                                <span>Ecole Technique Saint KIZITO SAVE</span>
-                                <small>Southern Province</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quick Links -->
-                <div class="col-md-6 col-lg-2 info_col">
-                    <div class="info_contact">
-                        <h4 class="section-title">Quick Links</h4>
-                        <ul class="quick-links">
-                            <li><a href="index.php"><i class="fa fa-chevron-right"></i> Home</a></li>
-                            <li><a href="about.php"><i class="fa fa-chevron-right"></i> About Us</a></li>
-                            <li><a href="team.php"><i class="fa fa-chevron-right"></i> Team</a></li>
-                            <li><a href="service.php"><i class="fa fa-chevron-right"></i> Services</a></li>
-                            <li><a href="why.php"><i class="fa fa-chevron-right"></i> Why Us</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Feedback Form -->
-                <div class="col-md-6 col-lg-4 info_col">
-                    <div class="info_contact">
-                        <h4 class="section-title">Send Us Feedback</h4>
-                        <form action="send_feedback.php" class="feedback-form" method="POST">
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Your Name" name="name" required>
-                            </div>
-                            <div class="form-group">
-                                <input type="email" class="form-control" placeholder="Email Address" name="email" required>
-                            </div>
-                            <div class="form-group">
-                                <select class="form-control" name="rating" required>
-                                    <option value="" class="text-secondary">--Rate Your Experience--</option>
-                                    <option value="5" class="text-secondary">⭐⭐⭐⭐⭐ Excellent</option>
-                                    <option value="4" class="text-secondary">⭐⭐⭐⭐ Very Good</option>
-                                    <option value="3" class="text-secondary">⭐⭐⭐ Good</option>
-                                    <option value="2" class="text-secondary">⭐⭐ Fair</option>
-                                    <option value="1" class="text-secondary">⭐ Poor</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <textarea class="form-control" placeholder="Your Feedback Message" name="message" required rows="3"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary-1 p-1 rounded-pill">
-                                <i class="fa fa-paper-plane"></i> Send Feedback
-                            </button>
-                        </form>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+        <!-- end parent portal content -->
 
-    <style>
-        .info_section {
-            background:rgb(1, 2, 52) ;
-            padding: 40px 0;
-            color: #ffffff;
-        }
+        <!-- Recommendation section -->
+        <section class="recommendation-section layout_padding"
+            style="background: linear-gradient(130deg, #231a6f, #0f054c); color: white;">
+            <div class="container">
+                <div class="heading_container heading_center mb-5">
+                    <h2>
+                        Software <span style="color: #fff;">Plan</span>
+                        <hr class="my-4 border-top border-light"
+                            style="width: 50%; height: 3px; background: rgba(255,255,255,0.2);">
+                    </h2>
+                </div>
 
-        .section-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 1.2rem;
-            position: relative;
-            padding-bottom: 0.4rem;
-        }
+                <form id="recommendationForm" action="process_recommendation.php" method="post">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="billing-option mb-4 p-4 bg-white rounded-lg shadow-lg hover-effect">
+                                <h3 style="color: #231a6f;" class="mb-3">Premium Plan</h3>
+                                <div class="price-tag">
+                                    <h4 class="mb-3 text-dark">$500 <span class="text-muted">/year</span></h4>
+                                </div>
+                                <ul class="list-unstyled feature-list">
+                                    <li class="mb-2"><i class="fa fa-check-circle text-success mr-2"></i> Full System Access
+                                    </li>
+                                    <li class="mb-2"><i class="fa fa-check-circle text-success mr-2"></i> Priority Support
+                                        24/7</li>
+                                    <li class="mb-2"><i class="fa fa-check-circle text-success mr-2"></i> Unlimited Storage
+                                    </li>
+                                    <li class="mb-2"><i class="fa fa-check-circle text-success mr-2"></i> Free Updates</li>
+                                </ul>
+                            </div>
+                        </div>
 
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 40px;
-            height: 2px;
-            background: #ffffff;
-        }
+                        <div class="col-md-6">
+                            <div class="billing-option mb-4 p-4 bg-white rounded-lg shadow-lg hover-effect">
+                                <h3 style="color: #231a6f;" class="mb-3">Standard Plan</h3>
+                                <div class="price-tag">
+                                    <h4 class="mb-3 text-dark">$150 <span class="text-muted">/month</span></h4>
+                                </div>
+                                <ul class="list-unstyled feature-list">
+                                    <li class="mb-2"><i class="fa fa-check-circle text-success mr-2"></i> Core Features</li>
+                                    <li class="mb-2"><i class="fa fa-check-circle text-success mr-2"></i> Standard Support
+                                    </li>
+                                    <li class="mb-2"><i class="fa fa-check-circle text-success mr-2"></i> 2GB Storage</li>
+                                    <li class="mb-2"><i class="fa fa-check-circle text-success mr-2"></i> Monthly Updates
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
 
-        .contact_link_box {
-            margin-bottom: 1.2rem;
-        }
+        <!-- info section -->
+        <section class="info_section">
+            <div class="container">
+                <div class="row mt-3">
+                    <!-- Contact Information -->
+                    <div class="col-md-6 col-lg-3 info_col">
+                        <div class="info_contact">
+                            <h4 class="section-title">Contact Us</h4>
+                            <div class="contact_link_box">
+                                <a href="#" class="contact-item">
+                                    <i class="fa fa-map-marker"></i>
+                                    <span>Southern Province - Rwanda</span>
+                                </a>
+                                <a href="tel:+250794897943" class="contact-item">
+                                    <i class="fa fa-phone"></i>
+                                    <span>+250 794-897-943</span>
+                                </a>
+                                <a href="tel:+250791285293" class="contact-item">
+                                    <i class="fa fa-phone"></i>
+                                    <span>+250 791-285-293</span>
+                                </a>
+                                <a href="mailto:ycsoft24@gmail.com" class="contact-item">
+                                    <i class="fa fa-envelope"></i>
+                                    <span>ycsoft24@gmail.com</span>
+                                </a>
+                            </div>
+                            <div class="info_social">
+                                <a href="#" class="social-icon">
+                                    <i class="fa fa-facebook"></i>
+                                </a>
+                                <a href="#" class="social-icon">
+                                    <i class="fa fa-twitter"></i>
+                                </a>
+                                <a href="#" class="social-icon">
+                                    <i class="fa fa-linkedin"></i>
+                                </a>
+                                <a href="#" class="social-icon">
+                                    <i class="fa fa-instagram"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
 
-        .contact-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0.8rem;
-            color: #ffffff;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-        }
+                    <!-- Available Schools -->
+                    <div class="col-md-6 col-lg-3 info_col">
+                        <div class="info_contact">
+                            <h4 class="section-title">Available Schools</h4>
+                            <div class="schools-list">
+                                <div class="school-item">
+                                    <i class="fa fa-graduation-cap"></i>
+                                    <span>Ecole Technique Saint KIZITO SAVE</span>
+                                    <small>Southern Province</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-        .contact-item:hover {
-            color: #e6f2ff;
-            transform: translateX(5px);
-        }
+                    <!-- Quick Links -->
+                    <div class="col-md-6 col-lg-2 info_col">
+                        <div class="info_contact">
+                            <h4 class="section-title">Quick Links</h4>
+                            <ul class="quick-links">
+                                <li><a href="index.php"><i class="fa fa-chevron-right"></i> Home</a></li>
+                                <li><a href="about.php"><i class="fa fa-chevron-right"></i> About Us</a></li>
+                                <li><a href="team.php"><i class="fa fa-chevron-right"></i> Team</a></li>
+                                <li><a href="service.php"><i class="fa fa-chevron-right"></i> Services</a></li>
+                                <li><a href="why.php"><i class="fa fa-chevron-right"></i> Why Us</a></li>
+                            </ul>
+                        </div>
+                    </div>
 
-        .contact-item i {
-            margin-right: 0.8rem;
-            font-size: 1rem;
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-        }
+                    <!-- Feedback Form -->
+                    <div class="col-md-6 col-lg-4 info_col">
+                        <div class="info_contact">
+                            <h4 class="section-title">Send Us Feedback</h4>
+                            <form action="send_feedback.php" class="feedback-form" method="POST">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Your Name" name="name" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" class="form-control" placeholder="Email Address" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control" name="rating" required>
+                                        <option value="" class="text-secondary">--Rate Your Experience--</option>
+                                        <option value="5" class="text-secondary">⭐⭐⭐⭐⭐ Excellent</option>
+                                        <option value="4" class="text-secondary">⭐⭐⭐⭐ Very Good</option>
+                                        <option value="3" class="text-secondary">⭐⭐⭐ Good</option>
+                                        <option value="2" class="text-secondary">⭐⭐ Fair</option>
+                                        <option value="1" class="text-secondary">⭐ Poor</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <textarea class="form-control" placeholder="Your Feedback Message" name="message" required rows="3"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary-1 p-1 rounded-pill">
+                                    <i class="fa fa-paper-plane"></i> Send Feedback
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        .info_social {
-            display: flex;
-            gap: 0.2rem;
-            margin-top: 1.5rem;
-        }
-
-        .social-icon {
-            width: 35px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: #ffffff;
-            transition: all 0.3s ease;
-        }
-
-        .social-icon:hover {
-            background: #ffffff;
-            transform: translateY(-3px);
-        }
-
-        .social-icon i {
-            font-size: 1rem;
-        }
-
-        .schools-list {
-            margin-top: 0.8rem;
-        }
-
-        .school-item {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 0.8rem;
-            border-radius: 8px;
-            margin-bottom: 0.8rem;
-        }
-
-        .school-item i {
-            font-size: 1.2rem;
-            margin-bottom: 0.4rem;
-            color: #ffffff;
-        }
-
-        .school-item span {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 0.2rem;
-            font-size: 0.95rem;
-        }
-
-        .school-item small {
-            color: #e6f2ff;
-            font-size: 0.85rem;
-        }
-
-        .quick-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .quick-links li {
-            margin-bottom: 0.6rem;
-        }
-
-        .quick-links a {
-            color: #ffffff;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-        }
-
-        .quick-links a:hover {
-            color: #e6f2ff;
-            transform: translateX(5px);
-        }
-
-        .quick-links i {
-            margin-right: 0.4rem;
-            font-size: 0.7rem;
-        }
-
-        .feedback-form {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 1.2rem;
-            border-radius: 12px;
-        }
-
-        .form-group {
-            margin-bottom: 0.8rem;
-        }
-
-        .form-control {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-            padding: 0.6rem 0.8rem;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-        }
-
-        .form-control:focus {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: none;
-            color: #ffffff;
-        }
-
-        .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
-        }
-
-        .btn-primary-1 {
-            background: #ffffff;
-            color: #004080;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-            margin-top: 0.4rem;
-        }
-
-        .btn-primary-1:hover {
-            background: #e6f2ff;
-            transform: translateY(-2px);
-        }
-
-        @media (max-width: 768px) {
+        <style>
             .info_section {
-                padding: 30px 0;
+                background: rgb(1, 2, 52);
+                padding: 40px 0;
+                color: #ffffff;
             }
 
             .section-title {
-                font-size: 1.2rem;
+                font-size: 1.3rem;
+                font-weight: 600;
+                margin-bottom: 1.2rem;
+                position: relative;
+                padding-bottom: 0.4rem;
             }
 
-            .contact-item i,
+            .section-title::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 40px;
+                height: 2px;
+                background: #ffffff;
+            }
+
+            .contact_link_box {
+                margin-bottom: 1.2rem;
+            }
+
+            .contact-item {
+                display: flex;
+                align-items: center;
+                margin-bottom: 0.8rem;
+                color: #ffffff;
+                text-decoration: none;
+                transition: all 0.3s ease;
+                font-size: 0.95rem;
+            }
+
+            .contact-item:hover {
+                color: #e6f2ff;
+                transform: translateX(5px);
+            }
+
+            .contact-item i {
+                margin-right: 0.8rem;
+                font-size: 1rem;
+                width: 28px;
+                height: 28px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 50%;
+            }
+
+            .info_social {
+                display: flex;
+                gap: 0.2rem;
+                margin-top: 1.5rem;
+            }
+
             .social-icon {
-                width: 32px;
-                height: 32px;
+                width: 35px;
+                height: 35px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 50%;
+                color: #ffffff;
+                transition: all 0.3s ease;
             }
 
-            .row {
-                margin: 0 -10px;
+            .social-icon:hover {
+                background: #ffffff;
+                transform: translateY(-3px);
             }
 
-            .col-md-6,
-            .col-lg-3 {
-                padding: 0 10px;
-                margin-bottom: 20px;
+            .social-icon i {
+                font-size: 1rem;
             }
-        }
 
-        /* Ensure consistent spacing between sections */
-        .info_col {
-            margin-bottom: 1.5rem;
-        }
+            .schools-list {
+                margin-top: 0.8rem;
+            }
 
-        /* Improve form select styling */
-        select.form-control {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 0.8rem center;
-            padding-right: 2rem;
-        }
+            .school-item {
+                background: rgba(255, 255, 255, 0.1);
+                padding: 0.8rem;
+                border-radius: 8px;
+                margin-bottom: 0.8rem;
+            }
 
-        select.form-control:focus {
-            border-color: #ffffff;
-            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.2);
-        }
-    </style>
-    <!-- end info section -->
+            .school-item i {
+                font-size: 1.2rem;
+                margin-bottom: 0.4rem;
+                color: #ffffff;
+            }
 
-    <!-- footer section -->
-    <section class="footer_section">
-        <div class="container">
-            <p>
-                &copy; <span id="displayYear"></span> All Rights Reserved By
-                <a href="#">SMART-SAMS </a>
-            </p>
-        </div>
-    </section>
-    <!-- footer section -->
-    <!-- loader -->
-    <div class="loader-container">
-        <div class="loader-3d">
-            <div class="cube">
-                <div class="face front"></div>
-                <div class="face back"></div>
-                <div class="face left"></div>
-                <div class="face right"></div>
-                <div class="face top"></div>
-                <div class="face bottom"></div>
+            .school-item span {
+                display: block;
+                font-weight: 500;
+                margin-bottom: 0.2rem;
+                font-size: 0.95rem;
+            }
+
+            .school-item small {
+                color: #e6f2ff;
+                font-size: 0.85rem;
+            }
+
+            .quick-links {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .quick-links li {
+                margin-bottom: 0.6rem;
+            }
+
+            .quick-links a {
+                color: #ffffff;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                transition: all 0.3s ease;
+                font-size: 0.95rem;
+            }
+
+            .quick-links a:hover {
+                color: #e6f2ff;
+                transform: translateX(5px);
+            }
+
+            .quick-links i {
+                margin-right: 0.4rem;
+                font-size: 0.7rem;
+            }
+
+            .feedback-form {
+                background: rgba(255, 255, 255, 0.1);
+                padding: 1.2rem;
+                border-radius: 12px;
+            }
+
+            .form-group {
+                margin-bottom: 0.8rem;
+            }
+
+            .form-control {
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                color: #ffffff;
+                padding: 0.6rem 0.8rem;
+                border-radius: 6px;
+                transition: all 0.3s ease;
+                font-size: 0.95rem;
+            }
+
+            .form-control:focus {
+                background: rgba(255, 255, 255, 0.15);
+                border-color: rgba(255, 255, 255, 0.3);
+                box-shadow: none;
+                color: #ffffff;
+            }
+
+            .form-control::placeholder {
+                color: rgba(255, 255, 255, 0.7);
+                font-size: 0.9rem;
+            }
+
+            .btn-primary-1 {
+                background: #ffffff;
+                color: #004080;
+                border: none;
+                padding: 0.6rem 1.2rem;
+                border-radius: 6px;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                font-size: 0.95rem;
+                margin-top: 0.4rem;
+            }
+
+            .btn-primary-1:hover {
+                background: #e6f2ff;
+                transform: translateY(-2px);
+            }
+
+            @media (max-width: 768px) {
+                .info_section {
+                    padding: 30px 0;
+                }
+
+                .section-title {
+                    font-size: 1.2rem;
+                }
+
+                .contact-item i,
+                .social-icon {
+                    width: 32px;
+                    height: 32px;
+                }
+
+                .row {
+                    margin: 0 -10px;
+                }
+
+                .col-md-6,
+                .col-lg-3 {
+                    padding: 0 10px;
+                    margin-bottom: 20px;
+                }
+            }
+
+            select.form-control {
+                appearance: none;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: right 0.8rem center;
+                padding-right: 2rem;
+            }
+
+            select.form-control:focus {
+                border-color: #ffffff;
+                box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.2);
+            }
+        </style>
+        <!-- end info section -->
+
+        <!-- footer section -->
+        <section class="footer_section">
+            <div class="container">
+                <p>
+                    © <span id="displayYear"></span> All Rights Reserved By
+                    <a href="#">SMART-SAMS </a>
+                </p>
             </div>
-        </div>
-        <div class="loader-text text-center">
-            <span class="welcome-text">WELCOME TO</span>
-            <span class="digital-text">SMART-SAMS</span><br>
-            <small class="digital-subtext">School Attendance Management System</small>
-            <div class="loading-dots">
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-            </div>
-        </div>
-    </div>
-    <!-- end loader -->
-    <!-- loader script -->
-    <script>
-        window.addEventListener('load', function() {
-            const loader = document.querySelector('.loader-container');
-            setTimeout(function() {
-                loader.style.opacity = '0';
+        </section>
+        <!-- footer section -->
+
+        <!-- Loader Styles -->
+        <style>
+            .loader-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, #004080 0%, #0066cc 100%);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+                transition: opacity 0.5s ease;
+            }
+
+            .loader-checkmark {
+                position: relative;
+                margin-bottom: 2rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .checkmark__circle {
+                stroke: rgba(255, 255, 255, 0.2);
+                stroke-width: 2;
+                stroke-miterlimit: 10;
+                animation: circle 1.5s ease-in-out infinite;
+            }
+
+            .checkmark {
+                width: 100px;
+                height: 100px;
+            }
+
+            .checkmark__check {
+                stroke: #ffffff;
+                stroke-width: 4;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                stroke-dasharray: 48;
+                stroke-dashoffset: 48;
+                animation: check 0.6s ease-in-out 0.5s forwards;
+            }
+
+            @keyframes circle {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            @keyframes check {
+                100% {
+                    stroke-dashoffset: 0;
+                }
+            }
+
+            .loader-gears {
+                position: absolute;
+                display: flex;
+                gap: 10px;
+            }
+
+            .gear {
+                width: 30px;
+                height: 30px;
+                background: radial-gradient(circle, transparent 40%, rgba(255, 255, 255, 0.3) 45%);
+                border-radius: 50%;
+                position: relative;
+                animation: spin 1.5s linear infinite;
+            }
+
+            .gear1 {
+                animation-direction: normal;
+            }
+
+            .gear2 {
+                animation-direction: reverse;
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            .welcome-text {
+                font-family: 'Roboto', sans-serif;
+                font-size: 1.8rem;
+                color: #ffffff;
+                margin-bottom: 0.3rem;
+                text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+                letter-spacing: 1px;
+            }
+
+            .digital-text {
+                font-family: 'Roboto', sans-serif;
+                font-size: 2.5rem;
+                font-weight: bold;
+                background: linear-gradient(45deg, #ffffff, #e6f2ff);
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+                letter-spacing: 2px;
+                margin-bottom: 0.3rem;
+                position: relative;
+                animation: glitch 2s infinite;
+            }
+
+            .digital-subtext {
+                font-family: 'Roboto', sans-serif;
+                font-size: 0.9rem;
+                color: #e6f2ff;
+                margin-top: 0.3rem;
+                text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            }
+
+            .loading-dots {
+                display: flex;
+                justify-content: center;
+                margin-top: 1rem;
+            }
+
+            .dot {
+                width: 8px;
+                height: 8px;
+                background: #ffffff;
+                border-radius: 50%;
+                margin: 0 4px;
+                animation: bounce 1.2s infinite ease-in-out;
+            }
+
+            .dot:nth-child(1) {
+                animation-delay: -0.32s;
+            }
+
+            .dot:nth-child(2) {
+                animation-delay: -0.16s;
+            }
+
+            @keyframes bounce {
+                0%, 80%, 100% {
+                    transform: scale(0);
+                }
+                40% {
+                    transform: scale(1);
+                }
+            }
+
+            @keyframes glitch {
+                0% {
+                    transform: translate(0);
+                }
+                20% {
+                    transform: translate(-2px, 2px);
+                }
+                40% {
+                    transform: translate(-2px, -2px);
+                }
+                60% {
+                    transform: translate(2px, 2px);
+                }
+                80% {
+                    transform: translate(2px, -2px);
+                }
+                100% {
+                    transform: translate(0);
+                }
+            }
+
+            @media (max-width: 576px) {
+                .checkmark {
+                    width: 80px;
+                    height: 80px;
+                }
+                .gear {
+                    width: 25px;
+                    height: 25px;
+                }
+                .welcome-text {
+                    font-size: 1.5rem;
+                }
+                .digital-text {
+                    font-size: 2rem;
+                }
+                .digital-subtext {
+                    font-size: 0.8rem;
+                }
+            }
+        </style>
+
+        <!-- Loader Script -->
+        <script>
+            window.addEventListener('load', function() {
+                const loader = document.querySelector('.loader-container');
                 setTimeout(function() {
-                    loader.style.display = 'none';
-                }, 500);
-            }, 2000);
-        });
-    </script>
+                    loader.style.opacity = '0';
+                    setTimeout(function() {
+                        loader.style.display = 'none';
+                    }, 500);
+                }, 2500); // Increased duration for better visibility
+            });
+        </script>
 
-    <style>
-        .loader-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #004080 0%, #0066cc 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
-        }
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        <!-- popper js -->
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+        </script>
+        <!-- bootstrap js -->
+        <script type="text/javascript" src="js1/bootstrap.js"></script>
+        <!-- owl slider -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+        </script>
+        <!-- custom js -->
+        <script type="text/javascript" src="js1/custom.js"></script>
+        <!-- Google Map -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
+        </script>
+        <!-- End Google Map -->
 
-        .loader-3d {
-            perspective: 1000px;
-            margin-bottom: 2rem;
-        }
+        <!-- nav bar on scroll -->
+        <script>
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('.header_section');
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+            let prevScrollpos = window.pageYOffset;
+            let timeoutId;
 
-        .cube {
-            width: 100px;
-            height: 100px;
-            position: relative;
-            transform-style: preserve-3d;
-            animation: rotate 3s infinite linear;
-        }
+            window.onscroll = function() {
+                const header = document.querySelector('.header_section');
+                let currentScrollPos = window.pageYOffset;
 
-        .face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-        }
+                clearTimeout(timeoutId);
 
-        .front {
-            transform: translateZ(50px);
-        }
+                if (prevScrollpos > currentScrollPos) {
+                    header.style.top = "0";
+                } else {
+                    header.style.top = "-100px";
+                }
 
-        .back {
-            transform: translateZ(-50px) rotateY(180deg);
-        }
+                prevScrollpos = currentScrollPos;
 
-        .left {
-            transform: translateX(-50px) rotateY(-90deg);
-        }
-
-        .right {
-            transform: translateX(50px) rotateY(90deg);
-        }
-
-        .top {
-            transform: translateY(-50px) rotateX(90deg);
-        }
-
-        .bottom {
-            transform: translateY(50px) rotateX(-90deg);
-        }
-
-        @keyframes rotate {
-            0% {
-                transform: rotateX(0) rotateY(0) rotateZ(0);
+                timeoutId = setTimeout(() => {
+                    header.style.top = "-100px";
+                }, 5000);
             }
-
-            100% {
-                transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
-            }
-        }
-
-        .welcome-text {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
-            color: #ffffff;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            letter-spacing: 1px;
-        }
-
-        .digital-text {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
-            font-weight: bold;
-            background: linear-gradient(45deg, #ffffff, #e6f2ff);
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            letter-spacing: 2px;
-            margin-bottom: 0.5rem;
-        }
-
-        .digital-subtext {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
-            color: #e6f2ff;
-            margin-top: 0.5rem;
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-        }
-
-        .loading-dots {
-            display: flex;
-            justify-content: center;
-            margin-top: 1.5rem;
-        }
-
-        .dot {
-            width: 10px;
-            height: 10px;
-            background: #ffffff;
-            border-radius: 50%;
-            margin: 0 5px;
-            animation: bounce 1.4s infinite ease-in-out;
-        }
-
-        .dot:nth-child(1) {
-            animation-delay: -0.32s;
-        }
-
-        .dot:nth-child(2) {
-            animation-delay: -0.16s;
-        }
-
-        @keyframes bounce {
-
-            0%,
-            80%,
-            100% {
-                transform: scale(0);
-            }
-
-            40% {
-                transform: scale(1);
-            }
-        }
-
-        @keyframes glitch {
-            0% {
-                transform: translate(0);
-            }
-
-            20% {
-                transform: translate(-2px, 2px);
-            }
-
-            40% {
-                transform: translate(-2px, -2px);
-            }
-
-            60% {
-                transform: translate(2px, 2px);
-            }
-
-            80% {
-                transform: translate(2px, -2px);
-            }
-
-            100% {
-                transform: translate(0);
-            }
-        }
-
-        .digital-text:hover {
-            animation: glitch 0.3s infinite;
-        }
-    </style>
-    <!-- end loader script -->
-    <!-- end loader script -->
-    <!-- jQery -->
-    <script type="text/javascript" src="js1/jquery-3.4.1.min.js"></script>
-    <!-- popper js -->
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-    </script>
-    <!-- bootstrap js -->
-    <script type="text/javascript" src="js1/bootstrap.js"></script>
-    <!-- owl slider -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
-    </script>
-    <!-- custom js -->
-    <script type="text/javascript" src="js1/custom.js"></script>
-    <!-- Google Map -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
-    </script>
-    <!-- End Google Map -->
-
-    <!-- nav bar on scroll -->
-    <script>
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('.header_section');
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
-        let prevScrollpos = window.pageYOffset;
-        let timeoutId;
-
-        window.onscroll = function() {
-            const header = document.querySelector('.header_section');
-            let currentScrollPos = window.pageYOffset;
-
-            // Clear the previous timeout
-            clearTimeout(timeoutId);
-
-            // Show/hide based on scroll direction
-            if (prevScrollpos > currentScrollPos) {
-                header.style.top = "0";
-            } else {
-                header.style.top = "-100px";
-            }
-
-            prevScrollpos = currentScrollPos;
-
-            // Set timeout to hide navbar after stopping scroll
-            timeoutId = setTimeout(() => {
-                header.style.top = "-100px";
-            }, 5000);
-        }
-    </script>
-
-    <!-- end of nav scroll -->
+        </script>
+        <!-- end of nav scroll -->
 </body>
 
 </html>

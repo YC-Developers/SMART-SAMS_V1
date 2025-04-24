@@ -41,6 +41,7 @@ $assignmentsQuery = "
     FROM class_lessons cl
     INNER JOIN lessons ON cl.lesson_id = lessons.id
     INNER JOIN tblclass ON cl.class_id = tblclass.Id
+    WHERE tblclass.school = '$school'
 ";
 $assignmentsResult = mysqli_query($conn, $assignmentsQuery);
 ?>
@@ -155,6 +156,8 @@ $assignmentsResult = mysqli_query($conn, $assignmentsQuery);
 
   <script src="../vendor/jquery/jquery.min.js"></script>
   <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="js/ruang-admin.min.js"></script>
+
 </body>
 
 </html>

@@ -1,11 +1,72 @@
-
 <?php 
 include '../Includes/dbcon.php';
 include '../Includes/session.php';
 
+// Query to count distinct students taught by the teacher
+$studentQuery = "
+    SELECT COUNT(DISTINCT ts.Id) as student_count
+    FROM tblstudents ts
+    INNER JOIN tblclass tc ON tc.Id = ts.classId
+    INNER JOIN class_lessons cl ON cl.class_id = tc.Id
+    INNER JOIN lessons l ON l.id = cl.lesson_id
+    WHERE l.teacher_id = ?
+";
+$stmt = $conn->prepare($studentQuery);
+$stmt->bind_param("i", $_SESSION['userId']);
+$stmt->execute();
+$studentResult = $stmt->get_result();
+$studentCount = $studentResult->fetch_assoc()['student_count'];
+$stmt->close();
 
+// Query to count distinct classes taught by the teacher
+$classQuery = "
+    SELECT COUNT(DISTINCT cl.class_id) as class_count
+    FROM class_lessons cl
+    INNER JOIN lessons l ON l.id = cl.lesson_id
+    WHERE l.teacher_id = ?
+";
+$stmt = $conn->prepare($classQuery);
+$stmt->bind_param("i", $_SESSION['userId']);
+$stmt->execute();
+$classResult = $stmt->get_result();
+$classCount = $classResult->fetch_assoc()['class_count'];
+$stmt->close();
 
+// Query to count lessons assigned to the teacher
+$lessonQuery = "
+    SELECT COUNT(*) as lesson_count
+    FROM lessons
+    WHERE teacher_id = ?
+";
+$stmt = $conn->prepare($lessonQuery);
+$stmt->bind_param("i", $_SESSION['userId']);
+$stmt->execute();
+$lessonResult = $stmt->get_result();
+$lessonCount = $lessonResult->fetch_assoc()['lesson_count'];
+$stmt->close();
 
+// Query to get attendance statistics (Present/Absent) for students in teacher's lessons
+$attendanceQuery = "
+    SELECT ta.status, COUNT(*) as count
+    FROM tblattendance ta
+    INNER JOIN lessons l ON ta.lessonId = l.id
+    WHERE l.teacher_id = ?
+    GROUP BY ta.status
+";
+$stmt = $conn->prepare($attendanceQuery);
+$stmt->bind_param("i", $_SESSION['userId']);
+$stmt->execute();
+$attendanceResult = $stmt->get_result();
+$presentCount = 0;
+$absentCount = 0;
+while ($row = $attendanceResult->fetch_assoc()) {
+    if ($row['status'] === 'Present') {
+        $presentCount = $row['count'];
+    } elseif ($row['status'] === 'Absent') {
+        $absentCount = $row['count'];
+    }
+}
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -22,22 +83,36 @@ include '../Includes/session.php';
   <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="css/ruang-admin.min.css" rel="stylesheet">
+  <style>
+    .chart-container {
+      position: relative;
+      margin: auto;
+      height: 400px;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 768px) {
+      .chart-container {
+        height: 300px;
+      }
+    }
+  </style>
 </head>
 
 <body id="page-top">
   <div id="wrapper">
     <!-- Sidebar -->
-   <?php include "Includes/sidebar.php";?>
+    <?php include "Includes/sidebar.php";?>
     <!-- Sidebar -->
     <div id="content-wrapper" class="d-flex flex-column">
       <div id="content">
         <!-- TopBar -->
-           <?php include "Includes/topbar.php";?>
+        <?php include "Includes/topbar.php";?>
         <!-- Topbar -->
         <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800"><?php echo $s?> Teacher Dashboard</h1>
+            <h1 class="h3 mb-0 text-gray-800"><?php echo isset($s) ? $s : 'Teacher'; ?> Dashboard</h1>
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="./">Home</a></li>
               <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
@@ -45,28 +120,14 @@ include '../Includes/session.php';
           </div>
 
           <div class="row mb-3">
-          <!-- New User Card Example -->
-          <?php 
-$query = "SELECT tblstudents.Id,tblstudents.classId
-FROM tblstudents
-INNER JOIN tblclass ON tblclass.Id = tblstudents.classId
-INNER JOIN class_lessons ON class_lessons.class_id = tblclass.Id
-INNER JOIN lessons ON lessons.id = class_lessons.lesson_id
-WHERE lessons.teacher_id = ".$_SESSION['userId']."
-";
-$rs = $conn->query($query);
-$num = $rs->num_rows;?>
+            <!-- Students Card -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card h-100">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-uppercase mb-1">Students</div>
-                      <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?php echo $num;?></div>
-                      <div class="mt-2 mb-0 text-muted text-xs">
-                        <!-- <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 20.4%</span>
-                        <span>Since last month</span> -->
-                      </div>
+                      <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?php echo $studentCount;?></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-users fa-2x text-info"></i>
@@ -75,28 +136,15 @@ $num = $rs->num_rows;?>
                 </div>
               </div>
             </div>
-            <!-- Earnings (Monthly) Card Example -->
-             <?php 
-                      $query = "SELECT class_lessons.lesson_id,class_lessons.class_id 
-                      FROM class_lessons
-                      INNER JOIN lessons ON lessons.id = class_lessons.lesson_id
-                      INNER JOIN tblclass ON tblclass.Id = class_lessons.class_id
-                      WHERE lessons.teacher_id = ".$_SESSION['userId']."
-                      ";
-                      $rs = $conn->query($query);
-                      $num = $rs->num_rows;
-?>
+
+            <!-- Classes Card -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card h-100">
                 <div class="card-body">
                   <div class="row align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-uppercase mb-1">Classes You Teach</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $num;?></div>
-                      <div class="mt-2 mb-0 text-muted text-xs">
-                        <!-- <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                        <span>Since last month</span> -->
-                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $classCount;?></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-chalkboard fa-2x text-primary"></i>
@@ -105,47 +153,58 @@ $num = $rs->num_rows;?>
                 </div>
               </div>
             </div>
-            <!-- Earnings (Annual) Card Example -->
-             <?php 
 
-             
-$query="SELECT * from lessons WHERE teacher_id= ".$_SESSION['userId']."";                       
-$rs = $conn->query($query);
-$num = $rs->num_rows;
-?>
+            <!-- Lessons Card -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card h-100">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-uppercase mb-1">Your Lessons</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $num;?></div>
-                      <div class="mt-2 mb-0 text-muted text-xs">
-                        <!-- <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 12%</span>
-                        <span>Since last years</span> -->
-                      </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $lessonCount;?></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-book fa-2x text-success"></i>
-
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            
-          <!--Row-->
+          </div>
 
-          <!-- <div class="row">
-            <div class="col-lg-12 text-center">
-              <p>Do you like this template ? you can download from <a href="https://github.com/indrijunanda/RuangAdmin"
-                  class="btn btn-primary btn-sm" target="_blank"><i class="fab fa-fw fa-github"></i>&nbsp;GitHub</a></p>
+          <!-- Charts Section -->
+          <div class="row">
+            <!-- Teacher Statistics Bar Chart -->
+            <div class="col-xl-6 col-lg-6">
+              <div class="card mb-4">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">Teacher Statistics</h6>
+                </div>
+                <div class="card-body">
+                  <div class="chart-container">
+                    <canvas id="teacherStatsChart"></canvas>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div> -->
 
+            <!-- Student Attendance Pie Chart -->
+            <div class="col-xl-6 col-lg-6">
+              <div class="card mb-4">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">Student Attendance in Your Lessons</h6>
+                </div>
+                <div class="card-body">
+                  <div class="chart-container">
+                    <canvas id="attendanceStatsChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <!---Container Fluid-->
-      </div></div>
+      </div>
 
       <!-- Footer -->
       <?php include 'includes/footer.php';?>
@@ -162,8 +221,99 @@ $num = $rs->num_rows;
   <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
   <script src="js/ruang-admin.min.js"></script>
-  <script src="../vendor/chart.js/Chart.min.js"></script>
-  <script src="js/demo/chart-area-demo.js"></script>  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  
+  <script>
+    // Teacher Statistics Bar Chart
+    const teacherStatsChart = new Chart(document.getElementById('teacherStatsChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Classes', 'Students', 'Lessons'],
+        datasets: [{
+          label: 'Teacher Statistics',
+          data: [<?php echo $classCount; ?>, <?php echo $studentCount; ?>, <?php echo $lessonCount; ?>],
+          backgroundColor: [
+            'rgba(54, 162, 235, 0.6)',  // Blue for Classes
+            'rgba(75, 192, 192, 0.6)',  // Teal for Students
+            'rgba(255, 159, 64, 0.6)'   // Orange for Lessons
+          ],
+          borderColor: [
+            'rgba(54, 162, 235, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Count'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Metrics'
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            enabled: true
+          }
+        }
+      }
+    });
+
+    // Student Attendance Pie Chart
+    const attendanceStatsChart = new Chart(document.getElementById('attendanceStatsChart'), {
+      type: 'pie',
+      data: {
+        labels: ['Present', 'Absent'],
+        datasets: [{
+          label: 'Attendance Status',
+          data: [<?php echo $presentCount; ?>, <?php echo $absentCount; ?>],
+          backgroundColor: [
+            'rgba(40, 167, 69, 0.6)',  // Green for Present
+            'rgba(220, 53, 69, 0.6)'   // Red for Absent
+          ],
+          borderColor: [
+            'rgba(40, 167, 69, 1)',
+            'rgba(220, 53, 69, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top'
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                let label = context.label || '';
+                let value = context.parsed || 0;
+                let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                let percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                return `${label}: ${value} (${percentage}%)`;
+              }
+            }
+          }
+        }
+      }
+    });
+  </script>
 </body>
 
 </html>
